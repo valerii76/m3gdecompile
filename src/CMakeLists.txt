@@ -18,8 +18,8 @@ project (m3gdecompile-bin)
 #)
 
 set(m3gdecompile_SRCS
-	main.c
-	m3gfile.c
+	main.cpp
+	m3gfile.cpp
 )
 
 add_executable (
