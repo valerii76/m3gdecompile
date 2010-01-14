@@ -1,3 +1,4 @@
+# vim:set ts=8 sts=8 sw=8 noet:
 project (m3gdecompile-bin)
 
 #add_custom_command (
