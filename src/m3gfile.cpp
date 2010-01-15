@@ -97,7 +97,7 @@ int m3g_check_file(char const* file_name)
 
 int m3g_check_data(char const* data)
 {
-
+    return 0;
 }
 
 
