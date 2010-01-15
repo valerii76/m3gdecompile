@@ -78,6 +78,6 @@ int m3g_last_error();
 char* m3g_error_string(int error);
 
 int m3g_check_file(char const* file_name);
-int m3g_check_data(char const* data);
+int m3g_check_data(char const* data, int size);
 
 #endif//__M3GFILE_H__
