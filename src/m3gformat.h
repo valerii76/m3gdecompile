@@ -19,11 +19,35 @@
 #if !defined(__M3G_FORMAT_H__)
 #define __M3G_FORMAT_H__
 
+#include <stdio.h>
 #include "m3gfile.h"
+#include "stream.h"
+
+int const SECTION_COUNT = 256;
+struct base_object;
+typedef base_object* (*make_t)();
+make_t create_object[SECTION_COUNT];
+
+template<class T>
+void register_object()
+{
+	create_object[T::object_type] = T::make;
+}
+
+struct base_object
+{
+	virtual int load(Stream& strm) = 0;
+	virtual void print(FILE* out) = 0;
+};
 
 // Header object
-struct header_section
+struct header_object : base_object
 {
+	static base_object* make()
+	{
+		return new header_object();
+	}
+
 	enum
 	{
 		object_type = 0,
@@ -34,21 +58,56 @@ struct header_section
 	UInt32 total_file_size;
 	UInt32 approximate_content_size;
 	StringUTF8 authoring_field;
+
+	virtual int load(Stream& strm)
+	{
+		int size = 0;
+		size += strm.read(&version_number);
+		size += strm.read(&has_external_references);
+		size += strm.read(&total_file_size);
+		size += strm.read(&approximate_content_size);
+		size += strm.read(&authoring_field);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		fprintf(out, "version: %d.%d\n", version_number[0],
+			version_number[1]);
+		fprintf(out, "external refs: %d\n", has_external_references);
+		fprintf(out, "total file size: %d\n", total_file_size);
+		fprintf(out, "approximate context size: %d\n",
+			approximate_content_size);
+		fprintf(out, "authoring field: %s\n", authoring_field.c_str());
+	}
 };
 
 // External reference
-struct external_ref_section
+struct external_ref_object : base_object
 {
+	static base_object* make()
+	{
+		return new external_ref_object();
+	}
 	enum
 	{
 		object_type = 0xff,
 	};
 
 	StringUTF8 URI;
+
+	virtual int load(Stream& strm)
+	{
+		return strm.read(&URI);
+	}
+
+	virtual void print(FILE* out)
+	{
+		fprintf(out, "URI: %s\n", URI.c_str());
+	}
 };
 
 // External image reference
-struct external_image_ref_section : external_ref_section
+struct external_image_ref_object : external_ref_object
 {
 	enum
 	{
@@ -59,7 +118,7 @@ struct external_image_ref_section : external_ref_section
 };
 
 // External object reference
-struct external_object_ref_section : external_ref_section
+struct external_object_ref_object : external_ref_object
 {
 	enum
 	{
@@ -70,13 +129,8 @@ struct external_object_ref_section : external_ref_section
 };
 
 // Object3D
-struct object3d_section
+struct object3d_object : base_object
 {
-	enum
-	{
-		object_type = -1,
-	};
-
 	struct anim_track_s
 	{
 		ObjectIndex animation_track;
@@ -95,7 +149,7 @@ struct object3d_section
 };
 
 // AnimationController
-struct animation_controller_section : object3d_section
+struct animation_controller_object : object3d_object
 {
 	enum
 	{
@@ -111,7 +165,7 @@ struct animation_controller_section : object3d_section
 };
 
 //AnimationTrack
-struct animation_track_section : object3d_section
+struct animation_track_object : object3d_object
 {
 	enum
 	{
@@ -130,7 +184,7 @@ struct animation_track_section : object3d_section
 };
 
 // AppearanceBase
-struct appearance_base_section : object3d_section
+struct appearance_base_object : object3d_object
 {
 	union
 	{
@@ -144,7 +198,7 @@ struct appearance_base_section : object3d_section
 };
 
 // Appearance
-struct appearance_section : appearance_base_section
+struct appearance_object : appearance_base_object
 {
 	enum
 	{
@@ -158,7 +212,7 @@ struct appearance_section : appearance_base_section
 };
 
 // Backgroud
-struct background_section : object3d_section
+struct background_object : object3d_object
 {
 	ColorRGBA background_color;
 	ObjectIndex background_image;
@@ -177,7 +231,7 @@ struct background_section : object3d_section
 };
 
 // Transformable
-struct transformable_section : object3d_section
+struct transformable_object : object3d_object
 {
 	Boolean has_component_transform;
 	Vector3D translation;
@@ -189,7 +243,7 @@ struct transformable_section : object3d_section
 };
 
 // Node
-struct node_section : transformable_section
+struct node_object : transformable_object
 {
 	Boolean enable_rendering;
 	Boolean enable_picking;
@@ -221,7 +275,7 @@ struct node_section : transformable_section
 };
 
 // Camera
-struct camera_section : node_section
+struct camera_object : node_object
 {
 	enum
 	{
@@ -241,7 +295,7 @@ struct camera_section : node_section
 };
 
 // CompositionMode
-struct composition_mode_section : object3d_section
+struct composition_mode_object : object3d_object
 {
 	enum
 	{
@@ -264,7 +318,7 @@ struct composition_mode_section : object3d_section
 };
 
 // Fog
-struct fog_section : object3d_section
+struct fog_object : object3d_object
 {
 	enum
 	{
@@ -279,7 +333,7 @@ struct fog_section : object3d_section
 };
 
 // Group
-struct group_section : node_section
+struct group_object : node_object
 {
 	enum
 	{
@@ -293,7 +347,7 @@ struct group_section : node_section
 };
 
 // ImageBase
-struct image_base_section : object3d_section
+struct image_base_object : object3d_object
 {
 	union
 	{
@@ -306,7 +360,7 @@ struct image_base_section : object3d_section
 };
 
 // Image2D
-struct image2d_section : image_base_section
+struct image2d_object : image_base_object
 {
 	enum
 	{
@@ -324,7 +378,7 @@ struct image2d_section : image_base_section
 };
 
 // IndexBuffer
-struct index_buffer_section : object3d_section
+struct index_buffer_object : object3d_object
 {
 	union union_var
 	{
@@ -358,7 +412,7 @@ struct index_buffer_section : object3d_section
 };
 
 // Keyframe sequence
-struct keyframe_sequence_section : object3d_section
+struct keyframe_sequence_object : object3d_object
 {
 	enum
 	{
@@ -404,7 +458,7 @@ struct keyframe_sequence_section : object3d_section
 
 
 // Light
-struct light_section : node_section
+struct light_object : node_object
 {
 	enum
 	{
@@ -422,7 +476,7 @@ struct light_section : node_section
 };
 
 // Material
-struct material_section : object3d_section
+struct material_object : object3d_object
 {
 	enum
 	{
@@ -437,7 +491,7 @@ struct material_section : object3d_section
 };
 
 // Mesh
-struct mesh_section : node_section
+struct mesh_object : node_object
 {
 	enum
 	{
@@ -465,7 +519,7 @@ struct mesh_section : node_section
 };
 
 // MorphingMesh
-struct morphing_mesh_section : mesh_section
+struct morphing_mesh_object : mesh_object
 {
 	enum
 	{
@@ -474,7 +528,7 @@ struct morphing_mesh_section : mesh_section
 };
 
 // PolygonMode
-struct polygon_mode_section : object3d_section
+struct polygon_mode_object : object3d_object
 {
 	enum
 	{
@@ -490,7 +544,7 @@ struct polygon_mode_section : object3d_section
 };
 
 // SkinnedMesh
-struct skinned_mesh_section : mesh_section
+struct skinned_mesh_object : mesh_object
 {
 	enum
 	{
@@ -511,7 +565,7 @@ struct skinned_mesh_section : mesh_section
 };
 
 // Sprite3D
-struct sprite3d_section : node_section
+struct sprite3d_object : node_object
 {
 	enum
 	{
@@ -530,7 +584,7 @@ struct sprite3d_section : node_section
 };
 
 // Texture
-struct texture_section : transformable_section
+struct texture_object : transformable_object
 {
 	ObjectIndex image;
 	Byte level_filter;
@@ -538,7 +592,7 @@ struct texture_section : transformable_section
 };
 
 // Texture2D
-struct texture2d_section : texture_section
+struct texture2d_object : texture_object
 {
 	enum
 	{
@@ -559,7 +613,7 @@ struct texture2d_section : texture_section
 };
 
 // TriangleStripArray
-struct triangle_strip_array_section
+struct triangle_strip_array_object : index_buffer_object
 {
 	enum
 	{
@@ -568,7 +622,7 @@ struct triangle_strip_array_section
 };
 
 // VertexArray
-struct vertex_array_section : object3d_section
+struct vertex_array_object : object3d_object
 {
 	enum
 	{
@@ -593,7 +647,7 @@ struct vertex_array_section : object3d_section
 };
 
 // VertexBuffer
-struct vertex_buffer_section : object3d_section
+struct vertex_buffer_object : object3d_object
 {
 	enum
 	{
@@ -636,7 +690,7 @@ struct vertex_buffer_section : object3d_section
 };
 
 // World
-struct world_section : group_section
+struct world_object : group_object
 {
 	enum
 	{
@@ -648,7 +702,7 @@ struct world_section : group_section
 };
 
 // Blender
-struct blender_section : object3d_section
+struct blender_object : object3d_object
 {
 	enum
 	{
@@ -667,7 +721,7 @@ struct blender_section : object3d_section
 };
 
 // DynamicImage2D
-struct dynamic2d_section : object3d_section
+struct dynamic2d_object : object3d_object
 {
 	enum
 	{
@@ -676,13 +730,13 @@ struct dynamic2d_section : object3d_section
 };
 
 // Shader
-struct shader_section : object3d_section
+struct shader_object : object3d_object
 {
 	StringUTF8 source;
 };
 
 // FragmentShader
-struct fragment_shader_section : shader_section
+struct fragment_shader_object : shader_object
 {
 	enum
 	{
@@ -691,7 +745,7 @@ struct fragment_shader_section : shader_section
 };
 
 // ImageCube
-struct image_cube_section : image_base_section
+struct image_cube_object : image_base_object
 {
 	enum
 	{
@@ -712,7 +766,7 @@ struct image_cube_section : image_base_section
 };
 
 // PointSpriteMode
-struct point_sprite_mode_section : object3d_section
+struct point_sprite_mode_object : object3d_object
 {
 	enum
 	{
@@ -728,7 +782,7 @@ struct point_sprite_mode_section : object3d_section
 };
 
 // RenderPass
-struct render_pass_section : object3d_section
+struct render_pass_object : object3d_object
 {
 	enum
 	{
@@ -751,7 +805,7 @@ struct render_pass_section : object3d_section
 };
 
 // RenderTarget
-struct render_target_section : object3d_section
+struct render_target_object : object3d_object
 {
 	enum
 	{
@@ -764,7 +818,7 @@ struct render_target_section : object3d_section
 };
 
 // ShaderAppearance
-struct shader_appearance_section : appearance_base_section
+struct shader_appearance_object : appearance_base_object
 {
 	enum
 	{
@@ -777,7 +831,7 @@ struct shader_appearance_section : appearance_base_section
 };
 
 // ShaderProgram
-struct shader_program_section : object3d_section
+struct shader_program_object : object3d_object
 {
 	enum
 	{
@@ -789,7 +843,7 @@ struct shader_program_section : object3d_section
 };
 
 // ShaderUniforms
-struct shader_uniforms_section : object3d_section
+struct shader_uniforms_object : object3d_object
 {
 	enum
 	{
@@ -832,7 +886,7 @@ struct shader_uniforms_section : object3d_section
 };
 
 // Stencil
-struct stencil_section : object3d_section
+struct stencil_object : object3d_object
 {
 	enum
 	{
@@ -862,7 +916,7 @@ struct stencil_section : object3d_section
 };
 
 // TextureCombiner
-struct texture_combiner_section : object3d_section
+struct texture_combiner_object : object3d_object
 {
 	enum
 	{
@@ -882,7 +936,7 @@ struct texture_combiner_section : object3d_section
 };
 
 // TextureCube
-struct texture_cube_section : texture_section
+struct texture_cube_object : texture_object
 {
 	enum
 	{
@@ -891,12 +945,25 @@ struct texture_cube_section : texture_section
 };
 
 // VertexShader
-struct vertex_shader_section : shader_section
+struct vertex_shader_object : shader_object
 {
 	enum
 	{
 		object_type = 37,
 	};
 };
+
+struct object_registrator
+{
+	object_registrator()
+	{
+		for (int i = 0; i < SECTION_COUNT; ++i)
+			create_object[i] = NULL;
+
+		//
+		register_object<header_object>();
+		register_object<external_ref_object>();
+	}
+} do_object_registrator;
 
 #endif//__M3G_FORMAT_H__

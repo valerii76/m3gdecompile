@@ -7,4 +7,5 @@ set (APPLICATION_VERSION_MINOR "0")
 set (APPLICATION_VERSION_PATCH "pre1")
 
 add_subdirectory (src)
+add_subdirectory (thirdparty/zlib)
 

@@ -20,7 +20,9 @@
 #define __STREAM_H__
 
 #include <stdio.h>
+#include <malloc.h>
 #include <memory.h>
+#include "zlib.h"
 
 enum
 {
@@ -28,6 +30,13 @@ enum
 	STREAM_FILE_NOT_OPEN,
 	STREAM_FILE_READ_ERROR,
 	STREAM_MEMORY_READ_OUT_OF_BOUND,
+	STREAM_MEMORY_NO_DATA,
+};
+
+enum
+{
+	STREAM_COMPRESSED = 0,
+	STREAM_UNCOMPRESSED,
 };
 
 class StreamReader
@@ -69,8 +78,8 @@ public:
 		int ret = 0;
 		if (error_code != STREAM_SUCCESS || size == 0)
 			return 0;
-		ret = fread(data, size, 1, file);
-		if (ret != 1)
+		ret = fread(data, 1, size, file);
+		if (ret != size)
 			error_code = STREAM_FILE_READ_ERROR;
 		return ret;
 	}
@@ -83,11 +92,72 @@ class MemoryStreamReader
 	: public StreamReader
 {
 public:
-	MemoryStreamReader(char* _data, int _size)
-		:data(_data)
-		,total_size(_size)
-		,curr(0)
-	{}
+	MemoryStreamReader(char* _data, int _size, int mode)
+		:curr(0)
+		,data(0)
+		,total_size(0)
+	{
+		if (mode == STREAM_UNCOMPRESSED)
+		{
+			data = _data;
+			total_size = _size;
+		}
+		else if (mode == STREAM_COMPRESSED)
+		{
+			int CHUNK = 8192;
+			z_stream strm;
+			unsigned char out[CHUNK];
+			int ret;
+			unsigned have;
+
+			strm.zalloc = Z_NULL;
+			strm.zfree = Z_NULL;
+			strm.opaque = Z_NULL;
+			strm.avail_in = 0;
+			strm.next_in = Z_NULL;
+			ret = inflateInit(&strm);
+			if (ret != Z_OK)
+			{
+				error_code = STREAM_MEMORY_NO_DATA;
+				return;
+			}
+
+			strm.avail_in = _size;
+			strm.next_in = (unsigned char*)_data;
+
+			do
+			{
+				strm.avail_out = CHUNK;
+				strm.next_out = out;
+
+				ret = inflate(&strm, Z_NO_FLUSH);
+				if (ret == Z_NEED_DICT
+					|| ret == Z_DATA_ERROR
+					|| ret == Z_MEM_ERROR)
+				{
+					inflateEnd(&strm);
+					error_code = STREAM_MEMORY_NO_DATA;
+					return;
+				}
+				have = CHUNK - strm.avail_out;
+
+				if (have)
+				{
+					char* tmp = data;
+					int tmp_size = total_size;
+					total_size += have;
+					data = (char*)malloc(total_size);
+					if (tmp)
+						memcpy(data, tmp, tmp_size);
+					memcpy(data + tmp_size, out, have);
+					if (tmp)
+						free(tmp);
+				}
+
+			} while (strm.avail_out == 0);
+			inflateEnd(&strm);
+		}
+	}
 
 	virtual int read(char* _data, int _size)
 	{
@@ -98,6 +168,7 @@ public:
 		{
 			readed = total_size - curr;
 			error_code = STREAM_MEMORY_READ_OUT_OF_BOUND;
+			return 0;
 		}
 		memcpy(_data, data + curr, readed);
 		curr += readed;
@@ -118,9 +189,9 @@ public:
 		impl = new FileStreamReader(file_name);
 	}
 
-	Stream(char* data, int size)
+	Stream(char* data, int size, int mode)
 	{
-		impl = new MemoryStreamReader(data, size);
+		impl = new MemoryStreamReader(data, size, mode);
 	}
 
 	int error_code()

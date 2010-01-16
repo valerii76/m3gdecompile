@@ -68,6 +68,8 @@ void read(Stream& strm, section_head* data)
 	strm.read(&data->total_section_length);
 	strm.read(&data->uncompression_length);
 
+	if (strm.error_code() != STREAM_SUCCESS)
+		return;
 	printf("compression scheme: %d\n", data->compression_scheme);
 	printf("total section length: %d\n", data->total_section_length);
 	printf("uncompression length: %d\n", data->uncompression_length);
@@ -85,26 +87,10 @@ void read(Stream& strm, object_head* data)
 	strm.read(&data->object_type);
 	strm.read(&data->length);
 
+	if (strm.error_code() != STREAM_SUCCESS)
+		return;
 	printf("object type: %d\n", data->object_type);
 	printf("length: %d\n", data->length);
-}
-
-template<>
-void read(Stream& strm, header_section* data)
-{
-	strm.read(&data->version_number);
-	strm.read(&data->has_external_references);
-	strm.read(&data->total_file_size);
-	strm.read(&data->approximate_content_size);
-	strm.read(&data->authoring_field);
-
-	printf("version: %d.%d\n", data->version_number[0],
-		data->version_number[1]);
-	printf("external refs: %d\n", data->has_external_references);
-	printf("total file size: %d\n", data->total_file_size);
-	printf("approximate context size: %d\n",
-		data->approximate_content_size);
-	printf("authoring field: %s\n", data->authoring_field.c_str());
 }
 
 //==============================================================================
@@ -121,30 +107,79 @@ char* m3g_error_string(int error)
 
 //==============================================================================
 //==============================================================================
+int check_m3g_file_identifier(Stream& strm)
+{
+	std::vector<Byte> id;
+	strm.read_array(&id, 12);
+	if (strm.error_code() != STREAM_SUCCESS ||
+		memcmp(&id.front(), m3g_file_identifier, 12))
+	{
+		m3g_error = M3G_INVALID_FILE_IDENTIFIER;
+		return M3G_FALSE;
+	}
+	return M3G_TRUE;
+}
+
+int load_section(Stream& strm)
+{
+	section_head sh;
+	section_tail st;
+	object_head oh;
+
+	read(strm, &sh);
+	if (strm.error_code() != STREAM_SUCCESS)
+		return M3G_FALSE;
+
+	std::vector<Byte> objects;
+	strm.read_array(&objects, sh.total_section_length - 13);
+	if (strm.error_code() != STREAM_SUCCESS)
+		return M3G_FALSE;
+
+	/* read objects */
+	{
+		Stream obj_strm((char*)&objects.front(), objects.size(),
+			sh.compression_scheme == M3G_COMPRESSION_SCHEME_ZLIB ?
+				STREAM_COMPRESSED : STREAM_UNCOMPRESSED);
+		while (obj_strm.error_code() == STREAM_SUCCESS)
+		{
+			read(obj_strm, &oh);
+
+			if (obj_strm.error_code() != STREAM_SUCCESS)
+				break;
+
+			make_t obj_make = create_object[oh.object_type];
+			if (obj_make)
+			{
+				base_object* obj = obj_make();
+				obj->load(obj_strm);
+				obj->print(stdout);
+			}
+			else
+			{
+				std::vector<Byte> skip;
+				obj_strm.read_array(&skip, oh.length);
+			}
+		}
+	}
+
+	read(strm, &st);
+	if (strm.error_code() != STREAM_SUCCESS)
+		return M3G_FALSE;
+
+	return M3G_TRUE;
+}
+
+
 int m3g_check_file(char const* file_name)
 {
 	Stream strm(file_name);
 	/* check m3g file identifier */
-	{
-		std::vector<Byte> id;
-		strm.read_array(&id, 12);
-		if (strm.error_code() != STREAM_SUCCESS ||
-			memcmp(&id.front(), m3g_file_identifier, 12))
-		{
-			m3g_error = M3G_INVALID_FILE_IDENTIFIER;
-			return M3G_FALSE;
-		}
-	}
+	if (!check_m3g_file_identifier(strm))
+		return M3G_FALSE;
 	/* read head section */
+	while(strm.error_code() == STREAM_SUCCESS)
 	{
-		section_head sh;
-		section_tail st;
-		object_head oh;
-		header_section hs;
-		read(strm, &sh);
-		read(strm, &oh);
-		read(strm, &hs);
-		read(strm, &st);
+		load_section(strm);
 	}
 
 	return M3G_TRUE;
