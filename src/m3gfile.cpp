@@ -151,7 +151,7 @@ int load_section(Stream& strm)
 			if (obj_make)
 			{
 				base_object* obj = obj_make();
-				obj->load(obj_strm);
+				obj->load(obj_strm, M3G_FILE_FORMAT_10);
 				obj->print(stdout);
 			}
 			else

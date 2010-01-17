@@ -65,6 +65,11 @@ typedef UInt32		ForwardIndex;
 #define M3G_TRUE	1
 #define M3G_FALSE	0
 
+enum
+{
+	M3G_FILE_FORMAT_10 = 0,
+	M3G_FILE_FORMAT_20,
+};
 
 enum
 {

@@ -31,6 +31,7 @@ enum
 	STREAM_FILE_READ_ERROR,
 	STREAM_MEMORY_READ_OUT_OF_BOUND,
 	STREAM_MEMORY_NO_DATA,
+	STREAM_END,
 };
 
 enum
@@ -81,6 +82,8 @@ public:
 		ret = fread(data, 1, size, file);
 		if (ret != size)
 			error_code = STREAM_FILE_READ_ERROR;
+		if (feof(file))
+			error_code = STREAM_END;
 		return ret;
 	}
 
@@ -172,6 +175,8 @@ public:
 		}
 		memcpy(_data, data + curr, readed);
 		curr += readed;
+		if (curr >= total_size)
+			error_code = STREAM_END;
 		return readed;
 	}
 
