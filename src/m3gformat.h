@@ -24,224 +24,19 @@
 #include "stream.h"
 #include <vector>
 
-const int ANIMATIONTRACK_ALPHA = 256;
-const int ANIMATIONTRACK_AMBIENT_COLOR = 257;
-const int ANIMATIONTRACK_ANIMATION_POSITION = 277;
-const int ANIMATIONTRACK_ANIMATION_SPEED = 278;
-const int ANIMATIONTRACK_ANIMATION_WEIGHT = 279;
-const int ANIMATIONTRACK_BOUNDING_BOX = 280;
-const int ANIMATIONTRACK_BOUNDING_SPHERE = 281;
-const int ANIMATIONTRACK_COLLISION_SHAPE = 282;
-const int ANIMATIONTRACK_COLOR = 258;
-const int ANIMATIONTRACK_CROP = 259;
-const int ANIMATIONTRACK_DENSITY = 260;
-const int ANIMATIONTRACK_DEPTH = 283;
-const int ANIMATIONTRACK_DIFFUSE_COLOR = 261;
-const int ANIMATIONTRACK_EMISSIVE_COLOR = 262;
-const int ANIMATIONTRACK_FAR_DISTANCE = 263;
-const int ANIMATIONTRACK_FIELD_OF_VIEW = 264;
-const int ANIMATIONTRACK_INTENSITY = 265;
-const int ANIMATIONTRACK_MORPH_WEIGHTS = 266;
-const int ANIMATIONTRACK_NEAR_DISTANCE = 267;
-const int ANIMATIONTRACK_ORIENTATION = 268;
-const int ANIMATIONTRACK_PICKABILITY = 269;
-const int ANIMATIONTRACK_POINT_SIZE = 284;
-const int ANIMATIONTRACK_SCALE = 270;
-const int ANIMATIONTRACK_SHININESS = 271;
-const int ANIMATIONTRACK_SPECULAR_COLOR = 272;
-const int ANIMATIONTRACK_SPOT_ANGLE = 273;
-const int ANIMATIONTRACK_SPOT_EXPONENT = 274;
-const int ANIMATIONTRACK_STENCIL = 285;
-const int ANIMATIONTRACK_TRANSLATION = 275;
-const int ANIMATIONTRACK_VISIBILITY = 276;
-const int BACKGROUND_BORDER = 32;
-const int BACKGROUND_REPEAT = 33;
-const int BLENDER_ADD = 88;
-const int BLENDER_CONSTANT_ALPHA = 125;
-const int BLENDER_CONSTANT_COLOR = 123;
-const int BLENDER_DST_ALPHA = 118;
-const int BLENDER_DST_COLOR = 120;
-const int BLENDER_ONE = 113;
-const int BLENDER_ONE_MINUS_CONSTANT_ALPHA = 126;
-const int BLENDER_ONE_MINUS_CONSTANT_COLOR = 124;
-const int BLENDER_ONE_MINUS_DST_ALPHA = 119;
-const int BLENDER_ONE_MINUS_DST_COLOR = 121;
-const int BLENDER_ONE_MINUS_SRC_ALPHA = 117;
-const int BLENDER_ONE_MINUS_SRC_COLOR = 115;
-const int BLENDER_REVERSE_SUBTRACT = 90;
-const int BLENDER_SRC_ALPHA = 116;
-const int BLENDER_SRC_ALPHA_SATURATE = 122;
-const int BLENDER_SRC_COLOR = 114;
-const int BLENDER_SUBTRACT = 89;
-const int BLENDER_ZERO = 112;
-const int CAMERA_GENERIC = 48;
-const int CAMERA_PARALLEL = 49;
-const int CAMERA_PERSPECTIVE = 50;
-const int CAMERA_SCREEN = 51;
-const int COMPOSITINGMODE_ADD = 69;
-const int COMPOSITINGMODE_ALPHA = 64;
-const int COMPOSITINGMODE_ALPHA_ADD = 65;
-const int COMPOSITINGMODE_ALPHA_DARKEN = 70;
-const int COMPOSITINGMODE_ALPHA_PREMULTIPLIED = 71;
-const int COMPOSITINGMODE_ALWAYS = 519;
-const int COMPOSITINGMODE_EQUAL = 514;
-const int COMPOSITINGMODE_GEQUAL = 518;
-const int COMPOSITINGMODE_GREATER = 516;
-const int COMPOSITINGMODE_LEQUAL = 515;
-const int COMPOSITINGMODE_LESS = 513;
-const int COMPOSITINGMODE_MODULATE = 66;
-const int COMPOSITINGMODE_MODULATE_INV = 72;
-const int COMPOSITINGMODE_MODULATE_X2 = 67;
-const int COMPOSITINGMODE_NEVER = 512;
-const int COMPOSITINGMODE_NOTEQUAL = 517;
-const int COMPOSITINGMODE_REPLACE = 68;
-const int FOG_EXPONENTIAL = 80;
-const int FOG_EXPONENTIAL_SQUARED = 82;
-const int FOG_LINEAR = 81;
-const int GRAPHICS3D_ANTIALIAS = 2;
-const int GRAPHICS3D_DEPTH = 64;
-const int GRAPHICS3D_DITHER = 4;
-const int GRAPHICS3D_NO_OVERLAYS = 32;
-const int GRAPHICS3D_OVERWRITE = 16;
-const int GRAPHICS3D_PURE3D = 48;
-const int GRAPHICS3D_STENCIL = 128;
-const int GRAPHICS3D_TRUE_COLOR = 8;
-const int GRAPHICS3D_VALIDATE = 256;
-const int IMAGEBASE_ALPHA = 96;
-const int IMAGEBASE_LOSSLESS = 16384;
-const int IMAGEBASE_LUMINANCE = 97;
-const int IMAGEBASE_LUMINANCE_ALPHA = 98;
-const int IMAGEBASE_NO_MIPMAPS = 32768;
-const int IMAGEBASE_R_COMPRESSED = 105;
-const int IMAGEBASE_RG_COMPRESSED = 106;
-const int IMAGEBASE_RGB = 99;
-const int IMAGEBASE_RGB_COMPRESSED = 107;
-const int IMAGEBASE_RGB_ETC = 104;
-const int IMAGEBASE_RGB565 = 101;
-const int IMAGEBASE_RGBA = 100;
-const int IMAGEBASE_RGBA_COMPRESSED = 108;
-const int IMAGEBASE_RGBA4444 = 103;
-const int IMAGEBASE_RGBA5551 = 102;
-const int IMAGEBASE_Y_UP = 65536;
-const int IMAGECUBE_NEG_X = 57;
-const int IMAGECUBE_NEG_Y = 59;
-const int IMAGECUBE_NEG_Z = 61;
-const int IMAGECUBE_POS_X = 56;
-const int IMAGECUBE_POS_Y = 58;
-const int IMAGECUBE_POS_Z = 60;
-const int INDEXBUFFER_LINES = 9;
-const int INDEXBUFFER_POINT_SPRITES = 10;
-const int INDEXBUFFER_TRIANGLES = 8;
-const int KEYFRAMESEQUENCE_ADDITIVE_LOOP = 194;
-const int KEYFRAMESEQUENCE_CONSTANT = 192;
-const int KEYFRAMESEQUENCE_LINEAR = 176;
-const int KEYFRAMESEQUENCE_LOOP = 193;
-const int KEYFRAMESEQUENCE_SLERP = 177;
-const int KEYFRAMESEQUENCE_SPLINE = 178;
-const int KEYFRAMESEQUENCE_SQUAD = 179;
-const int KEYFRAMESEQUENCE_STEP = 180;
-const int LIGHT_AMBIENT = 128;
-const int LIGHT_DIRECTIONAL = 129;
-const int LIGHT_OMNI = 130;
-const int LIGHT_SPOT = 131;
-const int MATERIAL_AMBIENT = 1024;
-const int MATERIAL_DIFFUSE = 2048;
-const int MATERIAL_EMISSIVE = 4096;
-const int MATERIAL_SPECULAR = 8192;
-const int NODE_NONE = 144;
-const int NODE_ORIGIN = 145;
-const int NODE_X_AXIS = 146;
-const int NODE_Y_AXIS = 147;
-const int NODE_Z_AXIS = 148;
-const int POLYGONMODE_CULL_BACK = 160;
-const int POLYGONMODE_CULL_FRONT = 161;
-const int POLYGONMODE_CULL_NONE = 162;
-const int POLYGONMODE_SHADE_FLAT = 164;
-const int POLYGONMODE_SHADE_SMOOTH = 165;
-const int POLYGONMODE_WINDING_CCW = 168;
-const int POLYGONMODE_WINDING_CW = 169;
-const int SHADERUNIFORMS_ALPHA_FACTOR = 384;
-const int SHADERUNIFORMS_BONE_MATRICES = 385;
-const int SHADERUNIFORMS_CAMERA_FAR_DISTANCE = 386;
-const int SHADERUNIFORMS_CAMERA_FIELD_OF_VIEW = 387;
-const int SHADERUNIFORMS_CAMERA_NEAR_DISTANCE = 388;
-const int SHADERUNIFORMS_CAMERA_PROJECTION = 389;
-const int SHADERUNIFORMS_CAMERA_SPACE_DIRECTION = 390;
-const int SHADERUNIFORMS_CAMERA_SPACE_POSITION = 391;
-const int SHADERUNIFORMS_COMPOSITE_MATRIX = 392;
-const int SHADERUNIFORMS_LIGHT_COLOR = 393;
-const int SHADERUNIFORMS_MATRIX = 394;
-const int SHADERUNIFORMS_MODEL_SPACE_DIRECTION = 395;
-const int SHADERUNIFORMS_MODEL_SPACE_POSITION = 396;
-const int SHADERUNIFORMS_ORIENTATION = 397;
-const int SHADERUNIFORMS_SCALE = 398;
-const int SHADERUNIFORMS_TRANSLATION = 399;
-const int SHADERUNIFORMS_WORLD_SPACE_DIRECTION = 400;
-const int SHADERUNIFORMS_WORLD_SPACE_POSITION = 401;
-const int SHADERVARIABLE_BOOL = 321;
-const int SHADERVARIABLE_BVEC2 = 326;
-const int SHADERVARIABLE_BVEC3 = 327;
-const int SHADERVARIABLE_BVEC4 = 328;
-const int SHADERVARIABLE_FLOAT = 320;
-const int SHADERVARIABLE_INT = 322;
-const int SHADERVARIABLE_IVEC2 = 329;
-const int SHADERVARIABLE_IVEC3 = 330;
-const int SHADERVARIABLE_IVEC4 = 331;
-const int SHADERVARIABLE_MAT2 = 332;
-const int SHADERVARIABLE_MAT3 = 333;
-const int SHADERVARIABLE_MAT3X4 = 335;
-const int SHADERVARIABLE_MAT4 = 334;
-const int SHADERVARIABLE_SAMPLER_2D = 336;
-const int SHADERVARIABLE_SAMPLER_CUBE = 337;
-const int SHADERVARIABLE_VEC2 = 323;
-const int SHADERVARIABLE_VEC3 = 324;
-const int SHADERVARIABLE_VEC4 = 325;
-const int STENCIL_BACK = 262144;
-const int STENCIL_DECR = 68;
-const int STENCIL_DECR_WRAP = 71;
-const int STENCIL_FRONT = 131072;
-const int STENCIL_INCR = 67;
-const int STENCIL_INCR_WRAP = 70;
-const int STENCIL_INVERT = 69;
-const int STENCIL_KEEP = 65;
-const int STENCIL_REPLACE = 66;
-const int STENCIL_ZERO = 64;
-const int TEXTURE_FILTER_ANISOTROPIC = 211;
-const int TEXTURE_FILTER_BASE_LEVEL = 208;
-const int TEXTURE_FILTER_LINEAR = 209;
-const int TEXTURE_FILTER_NEAREST = 210;
-const int TEXTURE2D_FUNC_ADD = 224;
-const int TEXTURE2D_FUNC_BLEND = 225;
-const int TEXTURE2D_FUNC_DECAL = 226;
-const int TEXTURE2D_FUNC_MODULATE = 227;
-const int TEXTURE2D_FUNC_REPLACE = 228;
-const int TEXTURE2D_WRAP_CLAMP = 240;
-const int TEXTURE2D_WRAP_MIRROR = 242;
-const int TEXTURE2D_WRAP_REPEAT = 241;
-const int TEXTURECOMBINER_ADD = 16;
-const int TEXTURECOMBINER_ADD_SIGNED = 17;
-const int TEXTURECOMBINER_ALPHA = 512;
-const int TEXTURECOMBINER_CONSTANT = 28;
-const int TEXTURECOMBINER_DOT3_RGB = 18;
-const int TEXTURECOMBINER_DOT3_RGBA = 19;
-const int TEXTURECOMBINER_INTERPOLATE = 20;
-const int TEXTURECOMBINER_INVERT = 256;
-const int TEXTURECOMBINER_MODULATE = 21;
-const int TEXTURECOMBINER_PREVIOUS = 30;
-const int TEXTURECOMBINER_PRIMARY = 29;
-const int TEXTURECOMBINER_REPLACE = 22;
-const int TEXTURECOMBINER_SUBTRACT = 23;
-const int TEXTURECOMBINER_TEXTURE = 31;
-const int VERTEXARRAY_BYTE = 1;
-const int VERTEXARRAY_FIXED = 3;
-const int VERTEXARRAY_FLOAT = 4;
-const int VERTEXARRAY_HALF = 5;
-const int VERTEXARRAY_SHORT = 2;
-
+enum
+{
+	OBJ_CLASS_HEADER = 0,
+	OBJ_CLASS_EXT_REF,
+	OBJ_CLASS_EXT_IMG,
+	OBJ_CLASS_EXT_OBJ,
+	OBJ_CLASS_OBJECT3D,
+};
 
 struct base_object
 {
 	static base_object* make(int obj_type);
+	virtual int class_type() = 0;
 	virtual int load(Stream& strm, int version) = 0;
 	virtual void print(FILE* out) = 0;
 };
@@ -267,6 +62,10 @@ struct header_object : base_object
 
 	virtual int load(Stream& strm, int version);
 	virtual void print(FILE* out);
+	virtual int class_type()
+	{
+		return OBJ_CLASS_HEADER;
+	}
 };
 
 // External reference
@@ -285,6 +84,10 @@ struct external_ref_object : base_object
 
 	virtual int load(Stream& strm, int version);
 	virtual void print(FILE* out);
+	virtual int class_type()
+	{
+		return OBJ_CLASS_EXT_REF;
+	}
 };
 
 // External image reference
@@ -304,6 +107,10 @@ struct external_image_ref_object : external_ref_object
 
 	virtual int load(Stream& strm, int version);
 	virtual void print(FILE* out);
+	virtual int class_type()
+	{
+		return OBJ_CLASS_EXT_IMG;
+	}
 };
 
 // External object reference
@@ -323,6 +130,10 @@ struct external_object_ref_object : external_ref_object
 
 	virtual int load(Stream& strm, int version);
 	virtual void print(FILE* out);
+	virtual int class_type()
+	{
+		return OBJ_CLASS_EXT_OBJ;
+	}
 };
 
 // Object3D
@@ -346,6 +157,10 @@ struct object3d_object : base_object
 
 	virtual int load(Stream& strm, int version);
 	virtual void print(FILE* out);
+	virtual int class_type()
+	{
+		return OBJ_CLASS_OBJECT3D;
+	}
 };
 
 // AnimationController
@@ -1445,5 +1260,10 @@ struct vertex_shader_object : shader_object
 	virtual void print(FILE* out);
 };
 
+typedef std::vector<base_object*> lst_all_objects_t;
+typedef std::vector<object3d_object*> lst_objects_t;
+typedef std::vector<external_ref_object*> lst_ext_refs_t;
+typedef std::vector<external_object_ref_object*> lst_ext_obj_refs_t;
+typedef std::vector<external_image_ref_object*> lst_ext_img_refs_t;
 
 #endif//__M3G_FORMAT_H__

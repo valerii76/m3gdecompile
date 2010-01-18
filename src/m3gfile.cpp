@@ -56,6 +56,59 @@ struct object_head
 	UInt32 length;
 };
 
+struct m3g_file_objects
+{
+	int file_version;
+	header_object* header;
+	lst_objects_t objects;
+	lst_ext_refs_t ext_refs;
+	lst_ext_img_refs_t img_refs;
+	lst_ext_obj_refs_t obj_refs;
+	lst_all_objects_t all_objs;
+
+	m3g_file_objects()
+		:file_version(M3G_FILE_FORMAT_10)
+		,header(NULL)
+	{
+	}
+
+	~m3g_file_objects()
+	{
+		for (lst_all_objects_t::iterator i(all_objs.begin()),
+			end(all_objs.end()); i != end; ++i)
+			delete *i;
+	}
+
+	void print_all(FILE* out)
+	{
+		for (lst_all_objects_t::iterator i(all_objs.begin()),
+			end(all_objs.end()); i != end; ++i)
+			(*i)->print(out);
+	}
+
+	void push_back(base_object* obj)
+	{
+		all_objs.push_back(obj);
+		if (obj->class_type() == OBJ_CLASS_HEADER)
+		{
+			header = dynamic_cast<header_object*>(obj);
+			if (header->version_number[0] == 2)
+				file_version = M3G_FILE_FORMAT_20;
+		}
+		else if (obj->class_type() == OBJ_CLASS_OBJECT3D)
+			objects.push_back(dynamic_cast<object3d_object*>(obj));
+		else if (obj->class_type() == OBJ_CLASS_EXT_REF)
+			ext_refs.push_back(
+				dynamic_cast<external_ref_object*>(obj));
+		else if (obj->class_type() == OBJ_CLASS_EXT_IMG)
+			img_refs.push_back(
+				dynamic_cast<external_image_ref_object*>(obj));
+		else if (obj->class_type() == OBJ_CLASS_EXT_OBJ)
+			obj_refs.push_back(
+				dynamic_cast<external_object_ref_object*>(obj));
+	}
+};
+
 //==============================================================================
 //==============================================================================
 template<class T>
@@ -120,7 +173,7 @@ int check_m3g_file_identifier(Stream& strm)
 	return M3G_TRUE;
 }
 
-int load_section(Stream& strm)
+int load_section(Stream& strm, m3g_file_objects& objs)
 {
 	section_head sh;
 	section_tail st;
@@ -136,28 +189,26 @@ int load_section(Stream& strm)
 		return M3G_FALSE;
 
 	/* read objects */
+	Stream obj_strm((char*)&objects.front(), objects.size(),
+		sh.compression_scheme == M3G_COMPRESSION_SCHEME_ZLIB ?
+			STREAM_COMPRESSED : STREAM_UNCOMPRESSED);
+	while (obj_strm.error_code() == STREAM_SUCCESS)
 	{
-		Stream obj_strm((char*)&objects.front(), objects.size(),
-			sh.compression_scheme == M3G_COMPRESSION_SCHEME_ZLIB ?
-				STREAM_COMPRESSED : STREAM_UNCOMPRESSED);
-		while (obj_strm.error_code() == STREAM_SUCCESS)
+		read(obj_strm, &oh);
+
+		if (obj_strm.error_code() != STREAM_SUCCESS)
+			break;
+
+		base_object* obj = base_object::make(oh.object_type);
+		if (obj)
 		{
-			read(obj_strm, &oh);
-
-			if (obj_strm.error_code() != STREAM_SUCCESS)
-				break;
-
-			base_object* obj = base_object::make(oh.object_type);
-			if (obj)
-			{
-				obj->load(obj_strm, M3G_FILE_FORMAT_10);
-				obj->print(stdout);
-			}
-			else
-			{
-				std::vector<Byte> skip;
-				obj_strm.read_array(&skip, oh.length);
-			}
+			obj->load(obj_strm, objs.file_version);
+			objs.push_back(obj);
+		}
+		else
+		{
+			std::vector<Byte> skip;
+			obj_strm.read_array(&skip, oh.length);
 		}
 	}
 
@@ -171,6 +222,7 @@ int load_section(Stream& strm)
 
 int m3g_check_file(char const* file_name)
 {
+	m3g_file_objects objs;
 	Stream strm(file_name);
 	/* check m3g file identifier */
 	if (!check_m3g_file_identifier(strm))
@@ -178,8 +230,10 @@ int m3g_check_file(char const* file_name)
 	/* read head section */
 	while(strm.error_code() == STREAM_SUCCESS)
 	{
-		load_section(strm);
+		load_section(strm, objs);
 	}
+
+	objs.print_all(stdout);
 
 	return M3G_TRUE;
 }
