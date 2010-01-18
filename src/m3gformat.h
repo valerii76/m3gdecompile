@@ -1406,7 +1406,10 @@ struct index_buffer_object : object3d_object
 // Keyframe sequence
 struct keyframe_sequence_object : object3d_object
 {
-
+	static base_object* make()
+	{
+		return new keyframe_sequence_object();
+	}
 	enum
 	{
 		object_type = 19,
@@ -1422,8 +1425,6 @@ struct keyframe_sequence_object : object3d_object
 	struct keyframe_s
 	{
 		UInt32 time;
-		std::vector<Float32> vector_bias;
-		std::vector<Float32> vector_scale;
 		union_array vector_value;
 	};
 
@@ -1444,8 +1445,85 @@ struct keyframe_sequence_object : object3d_object
 	UInt32 keyframe_count;
 	UInt32 channel_count;
 	std::vector<keyframe_s> keyframes;
+	std::vector<Float32> vector_bias;
+	std::vector<Float32> vector_scale;
 
 	std::vector<event_s> events;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&interpolation);
+		size += strm.read(&repeat_mode);
+		size += strm.read(&encoding);
+		size += strm.read(&duration);
+		size += strm.read(&valid_range_first);
+		size += strm.read(&valid_range_last);
+		size += strm.read(&component_count);
+		size += strm.read(&keyframe_count);
+
+		if (version == M3G_FILE_FORMAT_20)
+			size += strm.read(&channel_count);
+
+		if (encoding == 0)
+		{
+			for (int i = 0; i < keyframe_count; ++i)
+			{
+				keyframe_s kf;
+				size += strm.read(&kf.time);
+				size += strm.read_array(
+					&kf.vector_value._float32,
+					keyframe_count * channel_count);
+				keyframes.push(kf);
+			}
+		}
+		else if (encoding == 1)
+		{
+			size += strm.read_array(&vector_bias, component_count);
+			size += strm.read_array(&vector_scale, component_count);
+			for (int i = 0; i < keyframe_count; ++i)
+			{
+				keyframe_s kf;
+				size += strm.read(&kf.time);
+				size += strm.read_array(&kf.vector_value._byte,
+					keyframe_count * channel_count);
+				keyframes.push_back(kf);
+			}
+		}
+		else if (encoding == 2)
+		{
+			size += strm.read_array(&vector_bias, component_count);
+			size += strm.read_array(&vector_scale, component_count);
+			for (int i = 0; i < keyframe_count; ++i)
+			{
+				keyframe_s kf;
+				size += strm.read(&kf.time);
+				size += strm.read_array(
+					&kf.vector_value._uint16,
+					keyframe_count * channel_count);
+				keyframes.push_back(kf);
+			}
+		}
+
+		if (version == M3G_FILE_FORMAT_20)
+		{
+			UInt32 event_count;
+			size += strm.read(&event_count);
+			for (int i = 0 : i < event_count; ++i)
+			{
+				event_s e;
+				size += strm.read(&e.event_time);
+				size += strm.read(&e.event_id);
+				events.push_back(e);
+			}
+		}
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 
 };
 
@@ -1453,6 +1531,10 @@ struct keyframe_sequence_object : object3d_object
 // Light
 struct light_object : node_object
 {
+	static base_object* make()
+	{
+		return new light_object();
+	}
 	enum
 	{
 		object_type = 12,
@@ -1466,26 +1548,70 @@ struct light_object : node_object
 	Float32 intensity;
 	Float32 spot_angle;
 	Float32 spot_exponent;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += node_object::load(strm, version);
+		size += strm.read(&attenuation_constant);
+		size += strm.read(&attenuation_linear);
+		size += strm.read(&attenuation_quadratic);
+		size += strm.read(&color);
+		size += strm.read(&mode);
+		size += strm.read(&intensity);
+		size += strm.read(&spot_angle);
+		size += strm.read(&spot_exponent);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		node_object::print(out);
+	}
 };
 
 // Material
 struct material_object : object3d_object
 {
+	static base_object* make()
+	{
+		return new material_object();
+	}
 	enum
 	{
 		object_type = 13,
 	};
-	ColorRGB ambientColor;
-	ColorRGBA diffuseColor;
-	ColorRGB emissiveColor;
-	ColorRGB specularColor;
+	ColorRGB ambient_color;
+	ColorRGBA diffuse_color;
+	ColorRGB emissive_color;
+	ColorRGB specular_color;
 	Float32 shininess;
 	Boolean vertex_color_tracking_enabled;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&ambient_color);
+		size += strm.read(&diffuse_color);
+		size += strm.read(&emissive_color);
+		size += strm.read(&specular_color);
+		size += strm.read(&shininess);
+		size += strm.read(&vertex_color_tracking_enabled);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // Mesh
 struct mesh_object : node_object
 {
+	static base_object* make()
+	{
+		return new mesh_object();
+	}
 	enum
 	{
 		object_type = 14,
@@ -1499,7 +1625,7 @@ struct mesh_object : node_object
 
 	struct target_buf_s
 	{
-		ObjectIndex morphTarget;
+		ObjectIndex morph_target;
 		Float32 initial_weight;
 	};
 
@@ -1509,20 +1635,85 @@ struct mesh_object : node_object
 
 	std::vector<target_buf_s> target_buffers;
 	std::vector<UInt32> morph_subset;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += node_object::load(strm, version);
+		size += strm.read(&vertex_buffer);
+		size += strm.read(&submesh_count);
+		for (int i = 0; i < submesh_count; ++i)
+		{
+			submesh_s m;
+			size += strm.read(&m.index_buffer);
+			size += strm.read(&m.appearance);
+			submeshes.push_back(m);
+		}
+
+		if (version == M3G_FILE_FORMAT_20)
+		{
+			UInt32 morph_target;
+			size += strm.read(&morph_target);
+			for (int i = 0; i < morph_targer; ++i)
+			{
+				target_buf_s tb;
+				size += strm.read(&tb.morph_target);
+				size += strm.read(&tb.inital_weight);
+				target_buffers.push_back(tb);
+			}
+			size += strm.read_varray(&morph_subset);
+		}
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		node_object::print(out);
+	}
 };
 
 // MorphingMesh
 struct morphing_mesh_object : mesh_object
 {
+	static base_object* make()
+	{
+		return new morphing_mesh_object();
+	}
 	enum
 	{
 		object_type = 15,
 	};
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += mesh_object::load(strm, version);
+		if (version == M3G_FILE_FORMAT_10)
+		{
+			UInt32 morph_target;
+			size += strm.read(&morph_target);
+			for (int i = 0; i < morph_targer; ++i)
+			{
+				target_buf_s tb;
+				size += strm.read(&tb.morph_target);
+				size += strm.read(&tb.inital_weight);
+				target_buffers.push_back(tb);
+			}
+		}
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		mesh_object::print(out);
+	}
 };
 
 // PolygonMode
 struct polygon_mode_object : object3d_object
 {
+	static base_object* make()
+	{
+		return new polygon_mode_object();
+	}
 	enum
 	{
 		object_type = 8,
@@ -1534,11 +1725,34 @@ struct polygon_mode_object : object3d_object
 	Boolean local_camera_lighting_enabled;
 	Boolean perspective_correction_enabled;
 	Float32 line_width;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&culling);
+		size += strm.read(&shading);
+		size += strm.read(&winding);
+		size += strm.read(&two_sided_lighting_enabled);
+		size += strm.read(&local_camera_lighting_enabled);
+		size += strm.read(&perspective_correction_enabled);
+		if (version == M3G_FILE_FORMAT_20)
+			size += strm.read(&line_width);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // SkinnedMesh
 struct skinned_mesh_object : mesh_object
 {
+	static base_object* make()
+	{
+		return new skinned_mesh_object();
+	}
 	enum
 	{
 		object_type = 16,
@@ -1555,11 +1769,43 @@ struct skinned_mesh_object : mesh_object
 	ObjectIndex skeleton;
 	Boolean is_using_add_transform;
 	std::vector<bone_s> bones;
+
+	virtual int load(Stream& strm, int version)
+	{
+		UInt32 ref_count;
+		int size = 0;
+		size += mesh_object::load(strm);
+		size += strm.read(&skeleton);
+		if (version == M3G_FILE_FORMAT_20)
+			size += strm.read(&is_using_add_transform);
+		size += strm.read(&ref_count);
+		for (int i = 0; i < ref_count; ++i)
+		{
+			bone_s b;
+			size += strm.read(&b.transform_node);
+			if (is_using_add_transform)
+			{
+				size += strm.read(&b.first_vertex);
+				size += strm.read(&b.vertex_count);
+				size += strm.read(&b.weight);
+			}
+			bones.push_back(b);
+		}
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		mesh_object::print(out);
+	}
 };
 
 // Sprite3D
 struct sprite3d_object : node_object
 {
+	static base_object* make()
+	{
+		return new sprite3d_object();
+	}
 	enum
 	{
 		object_type = 18,
@@ -1574,6 +1820,24 @@ struct sprite3d_object : node_object
 	Int32 crop_y;
 	Int32 crop_width;
 	Int32 crop_height;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += node_object::load(strm, version);
+		size += strm.read(&image);
+		size += strm.read(&appearance);
+		size += strm.read(&is_scaled);
+		size += strm.read(&crop_x);
+		size += strm.read(&crop_y);
+		size += strm.read(&crop_width);
+		size += strm.read(&crop_height);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		node_object::print(out);
+	}
 };
 
 // Texture
@@ -1582,11 +1846,31 @@ struct texture_object : transformable_object
 	ObjectIndex image;
 	Byte level_filter;
 	Byte image_filter;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += transformable_object::load(strm, version);
+		if (version == M3G_FILE_FORMAT_20)
+		{
+			size += strm.read(&level_filter);
+			size += strm.read(&image_filter);
+		}
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		transformable_object::print(out);
+	}
 };
 
 // Texture2D
 struct texture2d_object : texture_object
 {
+	static base_object* make()
+	{
+		return new texture2d_object();
+	}
 	enum
 	{
 		object_type = 17,
@@ -1603,20 +1887,69 @@ struct texture2d_object : texture_object
 	Byte wrapping_t;
 
 	ObjectIndex combiner;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += texture_object::load(strm, version);
+		if (version == M3G_FILE_FORMAT_20)
+			size += strm.read(&blend_color.rgba);
+		else
+			size += strm.read(&blend_color.rgb);
+		size += strm.read(&blending);
+		size += strm.read(&wrapping_s);
+		size += strm.read(&wrapping_t);
+		if (version == M3G_FILE_FORMAT_20)
+			size += strm.read(&combiner);
+		else
+		{
+			size += strm.read(&level_filter);
+			size += strm.read(&image_filter);
+		}
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		texture_object::print(out);
+	}
 };
 
 // TriangleStripArray
 struct triangle_strip_array_object : index_buffer_object
 {
+	static base_object* make()
+	{
+		return new triangle_strip_array();
+	}
 	enum
 	{
 		object_type = 11,
 	};
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += index_buffer_object::load(strm, version);
+
+		if (version == M3G_FILE_FORMAT_10)
+		{
+			size += strm.read_varray(&strip_lengths);
+		}
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		index_buffer_object::print(out);
+	}
 };
 
 // VertexArray
 struct vertex_array_object : object3d_object
 {
+	static base_object* make()
+	{
+		return new vertex_array_object();
+	}
 	enum
 	{
 		object_type = 20,
@@ -1637,11 +1970,49 @@ struct vertex_array_object : object3d_object
 
 	UInt16 vertex_count;
 	std::vector<data_s> components;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&component_type);
+		size += strm.read(&component_count);
+		size += strm.read(&encoding);
+		size += strm.read(&vertex_count);
+
+		for (int i = 0; i < vertex_count; ++i)
+		{
+			data_s v;
+			if (component_type == VERTEXARRAY_BYTE)
+				size += strm.read_array(&v._byte,
+					component_count);
+			else if (component_type == VERTEXARRAY_SHORT)
+				size += strm.read_array(&v._i16,
+					component_count);
+			else if (version == M3G_FILE_FORMAT_20)
+			{
+				if (component_type == VERTEXARRAY_FIXED)
+					size += strm.read_array(&v._i32,
+						component_count);
+				else if (component_type == VERTEXARRAY_HALF)
+					size += strm.read_array(&v._float16,
+						component_count);
+				else if (component_type == VERTEXARRAY_FLOAT)
+					size += strm.read_array(&v._float32,
+							component_type);
+			}
+		}
+		return size;
+	}
 };
 
 // VertexBuffer
 struct vertex_buffer_object : object3d_object
 {
+	static base_object* make()
+	{
+		return new vertex_buffer_object();
+	}
 	enum
 	{
 		object_type = 21,
@@ -1674,17 +2045,72 @@ struct vertex_buffer_object : object3d_object
 	std::vector<coords_s> textures;
 
 	Boolean is_immutable;
-	ObjectIndex pointSizes;
+	ObjectIndex point_sizes;
 	Float32 default_point_size;
 
 	ObjectIndex bone_indices;
 	ObjectIndex bone_weights;
 	std::vector<attribute_s> attributes;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&default_color);
+		size += strm.read(&position);
+		size += strm.read_array(&position_bias, 3);
+		size += strm.read(&position_scale);
+		size += strm.read(&normals);
+		size += strm.read(&colors);
+
+		UInt32 tex_count;
+		size += strm.read(&tex_count);
+		for (int i = 0; i < tex_count; ++i)
+		{
+			coords_s crd;
+			size += strm.read(&crd.coord);
+			size += strm.read_array(&crd.bias, 3);
+			size += strm,read(&crd.scale);
+			textures.push_back(crd);
+		}
+
+		if (version == M3G_FILE_FORMAT_20)
+		{
+			size += strm.read(&is_immutable);
+			size += strm.read(&point_sizes);
+			size += strm.read(&default_point_size);
+			size += strm.read(&bone_indices);
+			size += strm.read(&bone_weights);
+
+			UInt32 attr_count;
+			size += strm.read(&attr_count);
+			for (int i = 0; i < attr_count; ++i)
+			{
+				attribute_s a;
+				size += strm.read(&a.name);
+				size += strm.read(&a.attribute);
+				size += strm.read(&a._signed);
+				size += strm.read(&a._normalized);
+				size += strm.read_array(
+					&a.default_attribute_value, 4);
+				attributes.push_back(a);
+			}
+		}
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // World
 struct world_object : group_object
 {
+	static base_object* make()
+	{
+		return new world_object();
+	}
 	enum
 	{
 		object_type = 22,
@@ -1692,11 +2118,27 @@ struct world_object : group_object
 
 	ObjectIndex active_camera;
 	ObjectIndex background;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += group_object::load(strm, version);
+		size += strm.read(&active_camera);
+		size += strm.read(&background);
+	}
+	virtual void print(FILE* out)
+	{
+		group_node::print(out);
+	}
 };
 
 // Blender
 struct blender_object : object3d_object
 {
+	static base_object* make()
+	{
+		return new blender_object();
+	}
 	enum
 	{
 		object_type = 23,
@@ -1711,35 +2153,99 @@ struct blender_object : object3d_object
 	Byte dst_color;
 
 	ColorRGBA blend_color;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&func_alpha);
+		size += strm.read(&src_alpha);
+		size += strm.read(&dst_alpha);
+		size += strm.read(&func_color);
+		size += strm.read(&src_color);
+		size += strm.read(&dst_color);
+		size += strm.read(&blend_color);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // DynamicImage2D
 struct dynamic2d_object : object3d_object
 {
+	static base_object* make()
+	{
+		new return dynamic2d_object();
+	}
 	enum
 	{
 		object_type = 24,
 	};
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += dynamic2d_object::load(strm, version);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // Shader
 struct shader_object : object3d_object
 {
 	StringUTF8 source;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&source);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // FragmentShader
 struct fragment_shader_object : shader_object
 {
+	static base_object* make()
+	{
+		return fragment_shader_object();
+	}
 	enum
 	{
 		object_type = 25,
 	};
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += shader_object::load(strm, version);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		shader_object::print(out);
+	}
 };
 
 // ImageCube
 struct image_cube_object : image_base_object
 {
+	static base_object* make()
+	{
+		return image_cube_object();
+	}
 	enum
 	{
 		object_type = 26,
@@ -1755,12 +2261,42 @@ struct image_cube_object : image_base_object
 		};
 		std::vector<mipmap_s> mipmap_pixels;
 	};
-	face_s mapmaps[6];
+	face_s mipmaps[6];
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += image_base_object::load(strm, version);
+
+		if (!is_mutable)
+		{
+			for (int i = 0; i < 6; ++i)
+			{
+				size += strm.read_varray(&mipmaps[i].pixels);
+				size += strm.read(&mipmaps[i].mipmap_count);
+				for (int j = 0; j < mipmap_count; ++j)
+				{
+					face_s::mipmap_s mm;
+					size += strm.read_varray(&mm.values);
+					mipmaps[i].mipmaps_pixels.push_back(mm);
+				}
+			}
+		}
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		image_base_object::print(out);
+	}
 };
 
 // PointSpriteMode
 struct point_sprite_mode_object : object3d_object
 {
+	static base_object* make()
+	{
+		return new point_sprite_mode_object();
+	}
 	enum
 	{
 		object_type = 28,
@@ -1772,11 +2308,32 @@ struct point_sprite_mode_object : object3d_object
 	Float32  point_attenuation_c;
 	Float32  point_size_clamp_min;
 	Float32  point_size_clamp_max;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&point_fade_threshold);
+		size += strm.read(&point_attenuation_a);
+		size += strm.read(&point_attenuation_b);
+		size += strm.read(&point_attenuation_c);
+		size += strm.read(&point_size_clamp_min);
+		size += strm.read(&point_size_clamp_max);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // RenderPass
 struct render_pass_object : object3d_object
 {
+	static base_object* make()
+	{
+		return new render_pass_object();
+	}
 	enum
 	{
 		object_type = 29,
@@ -1788,18 +2345,48 @@ struct render_pass_object : object3d_object
 	ObjectIndex  target;
 	UInt32 flags;
 	Float32 depth_range_near;
-	Float32 depth_range_Far;
+	Float32 depth_range_far;
 	Boolean is_viewport_set;
 
 	Int32 viewport_x;
 	Int32 viewport_y;
 	Int32 viewport_width;
 	Int32 viewport_height;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&scene);
+		size += strm.read(&camera);
+		size += strm.read(&background);
+		size += strm.read(&targer);
+		size += strm.read(&flags);
+		size += strm.read(&depth_range_near);
+		size += strm.read(&depth_range_far);
+		size += strm.read(&is_viewport_set);
+		if (is_viewport_set)
+		{
+			size += strm.read(viewport_x);
+			size += strm.read(viewport_y);
+			size += strm.read(viewport_width);
+			size += strm.read(viewport_height);
+		}
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // RenderTarget
 struct render_target_object : object3d_object
 {
+	static base_object* make()
+	{
+		retun new render_target_object();
+	}
 	enum
 	{
 		object_type = 30,
@@ -1808,11 +2395,29 @@ struct render_target_object : object3d_object
 	ObjectIndex target;
 	Byte target_level;
 	Byte target_face;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&target);
+		size += strm.read(&target_level);
+		size += strm.read(&target_face);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // ShaderAppearance
 struct shader_appearance_object : appearance_base_object
 {
+	static base_object* make()
+	{
+		return shader_appearance_object();
+	}
 	enum
 	{
 		object_type = 31,
@@ -1821,11 +2426,29 @@ struct shader_appearance_object : appearance_base_object
 	ObjectIndex shader_program;
 	std::vector<ObjectIndex> shader_uniforms;
 	Boolean is_validate_enabled;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += appearance_base_object::load(strm, version);
+		size += strm.read(&shader_program);
+		size += strm.read_varray(&shader_uniforms);
+		size += strm.read(&is_validate_enabled);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		appearance_base_object::print(out);
+	}
 };
 
 // ShaderProgram
 struct shader_program_object : object3d_object
 {
+	static base_object* make()
+	{
+		return new shader_program_object();
+	}
 	enum
 	{
 		object_type = 32,
@@ -1833,11 +2456,28 @@ struct shader_program_object : object3d_object
 
 	ObjectIndex fragment_shader;
 	ObjectIndex vertex_shader;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&fragment_shader);
+		size += strm.read(&vertex_shader);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // ShaderUniforms
 struct shader_uniforms_object : object3d_object
 {
+	static base_object* make()
+	{
+		return shader_uniforms_object();
+	}
 	enum
 	{
 		object_type = 33,
@@ -1876,11 +2516,134 @@ struct shader_uniforms_object : object3d_object
 	};
 
 	std::vector<uniform_s> uniforms;
+
+	virtual int load(Stream& strm, int version)
+	{
+		UInt32 count;
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&count);
+		for (int i = 0; i < count; ++i)
+		{
+			uniform_s u;
+			size += strm.read(&u.name);
+			size += strm.read(&u.type);
+			size += strm.read(&u.binding_type);
+			size += strm.read(&u.length);
+
+			if (u.binding_type == 0)
+			{
+				if (type == SHADERVARIABLE_BOOL)
+					size += strm.read_array(&u.value._bool,
+						length);
+				else if (type == SHADERVARIABLE_BVEC2)
+					size += strm.read_array(&u.value._bool,
+						2 * length);
+				else if (type == SHADERVARIABLE_BVEC3)
+					size += strm.read_array(&u.value._bool,
+						3 * length);
+				else if (type == SHADERVARIABLE_BVEC4)
+					size += strm.read_array(&u.value._bool,
+						4 * length);
+				else if (type == SHADERVARIABLE_INT)
+					size += strm.read_array(&u.value._int32,
+						length);
+				else if (type == SHADERVARIABLE_INT2)
+					size += strm.read_array(&u.value._int32,
+						2 * length);
+				else if (type == SHADERVARIABLE_INT3)
+					size += strm.read_array(&u.value._int32,
+						3 * length);
+				else if (type == SHADERVARIABLE_INT4)
+					size += strm.read_array(&u.value._int32,
+						4 * length);
+				else if (type == SHADERVARIABLE_FLOAT)
+					size += strm.read_array(
+						&u.value._float32,
+						length);
+				else if (type == SHADERVARIABLE_VEC2)
+					size += strm.read_array(
+						&u.value._float32,
+						2 * length);
+				else if (type == SHADERVARIABLE_VEC3)
+					size += strm.read_array(
+						&u.value._float32,
+						3 * length);
+				else if (type == SHADERVARIABLE_VEC4)
+					size += strm.read_array(
+						&u.value._float32,
+						4 * length);
+				else if (type == SHADERVARIABLE_MAT2)
+					size += strm.read_array(
+						&u.value._float32,
+						4 * length);
+				else if (type == SHADERVARIABLE_MAT3)
+					size += strm.read_array(
+						&u.value._float32,
+						9 * length);
+				else if (type == SHADERVARIABLE_MAT3X4)
+					size += strm.read_array(
+						&u.value._float32,
+						12 * length);
+				else if (type == SHADERVARIABLE_MAT4)
+					size += strm.read_array(
+						&u.value._float32,
+						16 * length);
+				else if (type == SHADERVARIABLE_SAMPLER_2D)
+					size += strm.read_array(
+						&u.value._index,
+						length);
+				else if (type == SHADERVARIABLE_SAMPLER_CUBE)
+					size += strm.read_array(
+						&u.value._index,
+						length);
+
+				UInt32 track_count;
+				size += strm.read(&track_count);
+				for (int j = 0; j < size; ++j)
+				{
+					track_s t;
+					size += strm.read(&t.animation_track);
+					size += strm.read(&t.channel_index);
+					u.tracks.push_back(t);
+				}
+			}
+			else if (binding_type == 1)
+			{
+				ForwardIndex i;
+				size += strm.read_varray(&u.node_from);
+				size += strm.read(&i);
+				u.node_to.push_back(i);
+			}
+			else if (binding_type == 2)
+			{
+				ForwardIndex i;
+				size += strm.read(&i);
+				size += strm.read_varray(&u.node_to);
+				u.node_from.push_back(i);
+			}
+			else if (binding_type == 3)
+			{
+				size += strm.read_varray(&u.source);
+				size += strm.read(u.property);
+			}
+			uniforms.push_back(u);
+		}
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // Stencil
 struct stencil_object : object3d_object
 {
+	static base_object* make()
+	{
+		return new stencil_object();
+	}
 	enum
 	{
 		object_type = 34,
@@ -1906,11 +2669,40 @@ struct stencil_object : object3d_object
 	Byte stencil_fail_op_back;
 	Byte stencil_pass_depth_fail_op_back;
 	Byte stencil_pass_depth_pass_op_back;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += object3d_object::load(strm, version);
+		size += strm.read(&stencil_func_front);
+		size += strm.read(&stencil_ref_front);
+		size += strm.read(&stencil_mask_front);
+		size += strm.read(&stencil_write_mask_front);
+		size += strm.read(&stencil_fail_op_front);
+		size += strm.read(&stencil_pass_depth_fail_op_front);
+		size += strm.read(&stencil_pass_depth_pass_op_front);
+		size += strm.read(&stencil_func_back);
+		size += strm.read(&stencil_ref_back);
+		size += strm.read(&stencil_mask_back);
+		size += strm.read(&stencil_write_mask_back);
+		size += strm.read(&stencil_fail_op_back);
+		size += strm.read(&stencil_pass_depth_fail_op_back);
+		size += strm.read(&stencil_pass_depth_pass_op_back);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // TextureCombiner
 struct texture_combiner_object : object3d_object
 {
+	static base_object* make()
+	{
+		return new texture_combiner_object();
+	}
 	enum
 	{
 		object_type = 35,
@@ -1926,24 +2718,85 @@ struct texture_combiner_object : object3d_object
 	UInt16 alpha_source0;
 	UInt16 alpha_source1;
 	UInt16 alpha_source2;
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size = object3d_object::load(strm, version);
+		size += strm.read(&color_function);
+		size += strm.read(&color_scale);
+		size += strm.read(&color_source0);
+
+		if (color_function != TEXTURECOMBINER_REPLACE)
+		{
+			size = strm.read(&color_source1);
+			if (color_function != TEXTURECOMBINER_INTERPOLATE)
+				size += strm.read(&color_source2);
+		}
+
+		size += strm.read(&alpha_function);
+		size += strm.read(&alpha_scale);
+		size += strm.read(&alpha_source0);
+
+		if (alpha_function != TEXTURECOMBINER_REPLACE)
+		{
+			size = strm.read(&alpha_source1);
+			if (alpha_function != TEXTURECOMBINER_INTERPOLATE)
+				size += strm.read(&alpha_source2);
+		}
+	}
+	virtual void print(FILE* out)
+	{
+		object3d_object::print(out);
+	}
 };
 
 // TextureCube
 struct texture_cube_object : texture_object
 {
+	static base_object* make()
+	{
+		return new texture_cube_object();
+	}
 	enum
 	{
 		object_type = 36,
 	};
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += texture_object::load(strm, version);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		texture_object::print(out);
+	}
 };
 
 // VertexShader
 struct vertex_shader_object : shader_object
 {
+	static base_object* make()
+	{
+		return new vertex_shader_object();
+	}
 	enum
 	{
 		object_type = 37,
 	};
+
+	virtual int load(Stream& strm, int version)
+	{
+		int size = 0;
+		size += shader_object::load(strm, version);
+		return size;
+	}
+	virtual void print(FILE* out)
+	{
+		shader_object::print(out);
+	}
 };
 
 struct object_registrator
@@ -1956,6 +2809,45 @@ struct object_registrator
 		//
 		register_object<header_object>();
 		register_object<external_ref_object>();
+		register_object<external_image_ref_object>();
+		register_object<external_object_ref_object>();
+		register_object<animation_controller_object>();
+		register_object<animation_track_object>();
+		register_object<appearance_object>();
+		register_object<background_object>();
+		register_object<camera_object>();
+		register_object<composition_mode_object>();
+		register_object<fog_object>();
+		register_object<polygon_mode_object>();
+		register_object<group_object>();
+		register_object<image2d_object>();
+		register_object<triangle_strip_array_object>();
+		register_object<light_object>();
+		register_object<material_object>();
+		register_object<mesh_object>();
+		register_object<morphing_mesh_object>();
+		register_object<skinned_mesh_object>();
+		register_object<texture2d_object>();
+		register_object<sprite3d_object>();
+		register_object<keyframe_sequence_object>();
+		register_object<vertex_array_object>();
+		register_object<vertex_buffer_object>();
+		register_object<world_object>();
+		register_object<blender_object>();
+		register_object<dynamic2d_object>();
+		register_object<fragment_shader_object>();
+		register_object<image_cube_object>();
+		register_object<index_buffer_object>();
+		register_object<point_sprite_mode_object>();
+		register_object<render_pass_object>();
+		register_object<render_target_object>();
+		register_object<shader_appearance_object>();
+		register_object<shader_program_object>();
+		register_object<shader_uniforms_object>();
+		register_object<stencil_object>();
+		register_object<texture_combiner_object>();
+		register_object<texture_cube_object>();
+		register_object<vertex_shader_object>();
 	}
 } do_object_registrator;
 
