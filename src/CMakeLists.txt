@@ -24,6 +24,7 @@ link_directories(${ZLIB_BINARY_DIR})
 set(m3gdecompile_SRCS
 	main.cpp
 	m3gfile.cpp
+	m3gformat.cpp
 )
 
 add_executable (

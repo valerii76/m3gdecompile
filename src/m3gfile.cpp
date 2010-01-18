@@ -147,10 +147,9 @@ int load_section(Stream& strm)
 			if (obj_strm.error_code() != STREAM_SUCCESS)
 				break;
 
-			make_t obj_make = create_object[oh.object_type];
-			if (obj_make)
+			base_object* obj = base_object::make(oh.object_type);
+			if (obj)
 			{
-				base_object* obj = obj_make();
 				obj->load(obj_strm, M3G_FILE_FORMAT_10);
 				obj->print(stdout);
 			}

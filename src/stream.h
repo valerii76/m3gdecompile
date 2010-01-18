@@ -22,6 +22,8 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <memory.h>
+#include <vector>
+#include <string>
 #include "zlib.h"
 
 enum
@@ -252,7 +254,7 @@ private:
 };
 
 template<>
-int Stream::read(StringUTF8* value)
+inline int Stream::read(StringUTF8* value)
 {
 	Byte v;
 	int size = 0;
