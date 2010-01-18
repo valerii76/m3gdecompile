@@ -1475,7 +1475,7 @@ struct keyframe_sequence_object : object3d_object
 				size += strm.read_array(
 					&kf.vector_value._float32,
 					keyframe_count * channel_count);
-				keyframes.push(kf);
+				keyframes.push_back(kf);
 			}
 		}
 		else if (encoding == 1)
@@ -1510,7 +1510,7 @@ struct keyframe_sequence_object : object3d_object
 		{
 			UInt32 event_count;
 			size += strm.read(&event_count);
-			for (int i = 0 : i < event_count; ++i)
+			for (int i = 0; i < event_count; ++i)
 			{
 				event_s e;
 				size += strm.read(&e.event_time);
@@ -1654,11 +1654,11 @@ struct mesh_object : node_object
 		{
 			UInt32 morph_target;
 			size += strm.read(&morph_target);
-			for (int i = 0; i < morph_targer; ++i)
+			for (int i = 0; i < morph_target; ++i)
 			{
 				target_buf_s tb;
 				size += strm.read(&tb.morph_target);
-				size += strm.read(&tb.inital_weight);
+				size += strm.read(&tb.initial_weight);
 				target_buffers.push_back(tb);
 			}
 			size += strm.read_varray(&morph_subset);
@@ -1691,11 +1691,11 @@ struct morphing_mesh_object : mesh_object
 		{
 			UInt32 morph_target;
 			size += strm.read(&morph_target);
-			for (int i = 0; i < morph_targer; ++i)
+			for (int i = 0; i < morph_target; ++i)
 			{
 				target_buf_s tb;
 				size += strm.read(&tb.morph_target);
-				size += strm.read(&tb.inital_weight);
+				size += strm.read(&tb.initial_weight);
 				target_buffers.push_back(tb);
 			}
 		}
@@ -1763,7 +1763,7 @@ struct skinned_mesh_object : mesh_object
 		ObjectIndex transform_node;
 		UInt32 first_vertex;
 		UInt32 vertex_count;
-		Int32 weght;
+		Int32 weight;
 	};
 
 	ObjectIndex skeleton;
@@ -1774,7 +1774,7 @@ struct skinned_mesh_object : mesh_object
 	{
 		UInt32 ref_count;
 		int size = 0;
-		size += mesh_object::load(strm);
+		size += mesh_object::load(strm, version);
 		size += strm.read(&skeleton);
 		if (version == M3G_FILE_FORMAT_20)
 			size += strm.read(&is_using_add_transform);
@@ -1919,7 +1919,7 @@ struct triangle_strip_array_object : index_buffer_object
 {
 	static base_object* make()
 	{
-		return new triangle_strip_array();
+		return new triangle_strip_array_object();
 	}
 	enum
 	{
@@ -1933,7 +1933,7 @@ struct triangle_strip_array_object : index_buffer_object
 
 		if (version == M3G_FILE_FORMAT_10)
 		{
-			size += strm.read_varray(&strip_lengths);
+			size += strm.read_varray(&strip_lengths._uint32);
 		}
 		return size;
 	}
@@ -2070,7 +2070,7 @@ struct vertex_buffer_object : object3d_object
 			coords_s crd;
 			size += strm.read(&crd.coord);
 			size += strm.read_array(&crd.bias, 3);
-			size += strm,read(&crd.scale);
+			size += strm.read(&crd.scale);
 			textures.push_back(crd);
 		}
 
@@ -2128,7 +2128,7 @@ struct world_object : group_object
 	}
 	virtual void print(FILE* out)
 	{
-		group_node::print(out);
+		group_object::print(out);
 	}
 };
 
@@ -2178,7 +2178,7 @@ struct dynamic2d_object : object3d_object
 {
 	static base_object* make()
 	{
-		new return dynamic2d_object();
+		return new dynamic2d_object();
 	}
 	enum
 	{
@@ -2220,7 +2220,7 @@ struct fragment_shader_object : shader_object
 {
 	static base_object* make()
 	{
-		return fragment_shader_object();
+		return new fragment_shader_object();
 	}
 	enum
 	{
@@ -2244,7 +2244,7 @@ struct image_cube_object : image_base_object
 {
 	static base_object* make()
 	{
-		return image_cube_object();
+		return new image_cube_object();
 	}
 	enum
 	{
@@ -2274,11 +2274,12 @@ struct image_cube_object : image_base_object
 			{
 				size += strm.read_varray(&mipmaps[i].pixels);
 				size += strm.read(&mipmaps[i].mipmap_count);
-				for (int j = 0; j < mipmap_count; ++j)
+				for (int j = 0;
+					j < mipmaps[i].mipmap_count; ++j)
 				{
 					face_s::mipmap_s mm;
 					size += strm.read_varray(&mm.values);
-					mipmaps[i].mipmaps_pixels.push_back(mm);
+					mipmaps[i].mipmap_pixels.push_back(mm);
 				}
 			}
 		}
@@ -2360,17 +2361,17 @@ struct render_pass_object : object3d_object
 		size += strm.read(&scene);
 		size += strm.read(&camera);
 		size += strm.read(&background);
-		size += strm.read(&targer);
+		size += strm.read(&target);
 		size += strm.read(&flags);
 		size += strm.read(&depth_range_near);
 		size += strm.read(&depth_range_far);
 		size += strm.read(&is_viewport_set);
 		if (is_viewport_set)
 		{
-			size += strm.read(viewport_x);
-			size += strm.read(viewport_y);
-			size += strm.read(viewport_width);
-			size += strm.read(viewport_height);
+			size += strm.read(&viewport_x);
+			size += strm.read(&viewport_y);
+			size += strm.read(&viewport_width);
+			size += strm.read(&viewport_height);
 		}
 		return size;
 	}
@@ -2385,7 +2386,7 @@ struct render_target_object : object3d_object
 {
 	static base_object* make()
 	{
-		retun new render_target_object();
+		return new render_target_object();
 	}
 	enum
 	{
@@ -2416,7 +2417,7 @@ struct shader_appearance_object : appearance_base_object
 {
 	static base_object* make()
 	{
-		return shader_appearance_object();
+		return new shader_appearance_object();
 	}
 	enum
 	{
@@ -2476,7 +2477,7 @@ struct shader_uniforms_object : object3d_object
 {
 	static base_object* make()
 	{
-		return shader_uniforms_object();
+		return new shader_uniforms_object();
 	}
 	enum
 	{
@@ -2533,99 +2534,99 @@ struct shader_uniforms_object : object3d_object
 
 			if (u.binding_type == 0)
 			{
-				if (type == SHADERVARIABLE_BOOL)
+				if (u.type == SHADERVARIABLE_BOOL)
 					size += strm.read_array(&u.value._bool,
-						length);
-				else if (type == SHADERVARIABLE_BVEC2)
+						u.length);
+				else if (u.type == SHADERVARIABLE_BVEC2)
 					size += strm.read_array(&u.value._bool,
-						2 * length);
-				else if (type == SHADERVARIABLE_BVEC3)
+						2 * u.length);
+				else if (u.type == SHADERVARIABLE_BVEC3)
 					size += strm.read_array(&u.value._bool,
-						3 * length);
-				else if (type == SHADERVARIABLE_BVEC4)
+						3 * u.length);
+				else if (u.type == SHADERVARIABLE_BVEC4)
 					size += strm.read_array(&u.value._bool,
-						4 * length);
-				else if (type == SHADERVARIABLE_INT)
-					size += strm.read_array(&u.value._int32,
-						length);
-				else if (type == SHADERVARIABLE_INT2)
-					size += strm.read_array(&u.value._int32,
-						2 * length);
-				else if (type == SHADERVARIABLE_INT3)
-					size += strm.read_array(&u.value._int32,
-						3 * length);
-				else if (type == SHADERVARIABLE_INT4)
-					size += strm.read_array(&u.value._int32,
-						4 * length);
-				else if (type == SHADERVARIABLE_FLOAT)
+						4 * u.length);
+				else if (u.type == SHADERVARIABLE_INT)
+					size += strm.read_array(&u.value._i32,
+						u.length);
+				else if (u.type == SHADERVARIABLE_IVEC2)
+					size += strm.read_array(&u.value._i32,
+						2 * u.length);
+				else if (u.type == SHADERVARIABLE_IVEC3)
+					size += strm.read_array(&u.value._i32,
+						3 * u.length);
+				else if (u.type == SHADERVARIABLE_IVEC4)
+					size += strm.read_array(&u.value._i32,
+						4 * u.length);
+				else if (u.type == SHADERVARIABLE_FLOAT)
 					size += strm.read_array(
 						&u.value._float32,
-						length);
-				else if (type == SHADERVARIABLE_VEC2)
+						u.length);
+				else if (u.type == SHADERVARIABLE_VEC2)
 					size += strm.read_array(
 						&u.value._float32,
-						2 * length);
-				else if (type == SHADERVARIABLE_VEC3)
+						2 * u.length);
+				else if (u.type == SHADERVARIABLE_VEC3)
 					size += strm.read_array(
 						&u.value._float32,
-						3 * length);
-				else if (type == SHADERVARIABLE_VEC4)
+						3 * u.length);
+				else if (u.type == SHADERVARIABLE_VEC4)
 					size += strm.read_array(
 						&u.value._float32,
-						4 * length);
-				else if (type == SHADERVARIABLE_MAT2)
+						4 * u.length);
+				else if (u.type == SHADERVARIABLE_MAT2)
 					size += strm.read_array(
 						&u.value._float32,
-						4 * length);
-				else if (type == SHADERVARIABLE_MAT3)
+						4 * u.length);
+				else if (u.type == SHADERVARIABLE_MAT3)
 					size += strm.read_array(
 						&u.value._float32,
-						9 * length);
-				else if (type == SHADERVARIABLE_MAT3X4)
+						9 * u.length);
+				else if (u.type == SHADERVARIABLE_MAT3X4)
 					size += strm.read_array(
 						&u.value._float32,
-						12 * length);
-				else if (type == SHADERVARIABLE_MAT4)
+						12 * u.length);
+				else if (u.type == SHADERVARIABLE_MAT4)
 					size += strm.read_array(
 						&u.value._float32,
-						16 * length);
-				else if (type == SHADERVARIABLE_SAMPLER_2D)
+						16 * u.length);
+				else if (u.type == SHADERVARIABLE_SAMPLER_2D)
 					size += strm.read_array(
 						&u.value._index,
-						length);
-				else if (type == SHADERVARIABLE_SAMPLER_CUBE)
+						u.length);
+				else if (u.type == SHADERVARIABLE_SAMPLER_CUBE)
 					size += strm.read_array(
 						&u.value._index,
-						length);
+						u.length);
 
 				UInt32 track_count;
 				size += strm.read(&track_count);
 				for (int j = 0; j < size; ++j)
 				{
-					track_s t;
+					uniform_s::track_s t;
 					size += strm.read(&t.animation_track);
 					size += strm.read(&t.channel_index);
 					u.tracks.push_back(t);
 				}
 			}
-			else if (binding_type == 1)
+			else if (u.binding_type == 1)
 			{
 				ForwardIndex i;
 				size += strm.read_varray(&u.node_from);
 				size += strm.read(&i);
 				u.node_to.push_back(i);
 			}
-			else if (binding_type == 2)
+			else if (u.binding_type == 2)
 			{
 				ForwardIndex i;
 				size += strm.read(&i);
 				size += strm.read_varray(&u.node_to);
 				u.node_from.push_back(i);
 			}
-			else if (binding_type == 3)
+			else if (u.binding_type == 3)
 			{
 				size += strm.read_varray(&u.source);
-				size += strm.read(u.property);
+				size += strm.read(&u.property);
 			}
 			uniforms.push_back(u);
 		}
