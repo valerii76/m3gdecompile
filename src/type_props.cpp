@@ -129,7 +129,7 @@ char const *type_props<StringUTF8>::name = "String";
 char const* type_props<StringUTF8>::to_string(StringUTF8 const &v)
 {
 	static StringUTF8 str;
-	str = v;
+	str = '\"' + v + '\"';
 	return str.c_str();
 }
 

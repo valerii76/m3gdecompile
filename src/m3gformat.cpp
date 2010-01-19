@@ -552,7 +552,8 @@ void header_object::print(FILE* out, char const *indent)
 	char new_indent[255];
 	strcpy(new_indent, indent);
 	strcat(new_indent, "\t");
-	fprintf(out, "%sHeader\n{", indent);
+
+	fprintf(out, "%sHeader\n{\n", indent);
 	print_value(out, new_indent, "VersionNumber", version_number, 2);
 	print_value(out, new_indent, "hasExternalReferences",
 		has_external_references);
@@ -571,7 +572,12 @@ int external_ref_object::load(Stream& strm, int version)
 
 void external_ref_object::print(FILE* out, char const *indent)
 {
-	fprintf(out, "URI: %s\n", URI.c_str());
+	char new_indent[255];
+	strcpy(new_indent, indent);
+	strcat(new_indent, "\t");
+	fprintf(out, "%sExternalReferences\n{\n", indent);
+	print_value(out, new_indent, "URI", URI);
+	fprintf(out,"%s};\n", indent);
 }
 
 // External image reference
