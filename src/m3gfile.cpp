@@ -83,7 +83,7 @@ struct m3g_file_objects
 	{
 		for (lst_all_objects_t::iterator i(all_objs.begin()),
 			end(all_objs.end()); i != end; ++i)
-			(*i)->print(out);
+			(*i)->print(out, "");
 	}
 
 	void push_back(base_object* obj)
@@ -162,10 +162,10 @@ char* m3g_error_string(int error)
 //==============================================================================
 int check_m3g_file_identifier(Stream& strm)
 {
-	std::vector<Byte> id;
-	strm.read_array(&id, 12);
+	std::vector<Byte> file_id;
+	strm.read_array(&file_id, 12);
 	if (strm.error_code() != STREAM_SUCCESS ||
-		memcmp(&id.front(), m3g_file_identifier, 12))
+		memcmp(&file_id.front(), m3g_file_identifier, 12))
 	{
 		m3g_error = M3G_INVALID_FILE_IDENTIFIER;
 		return M3G_FALSE;

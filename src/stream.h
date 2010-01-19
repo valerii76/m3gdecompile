@@ -24,7 +24,7 @@
 #include <memory.h>
 #include <vector>
 #include <string>
-#include "zlib.h"
+#include <zlib.h>
 
 enum
 {
@@ -227,7 +227,7 @@ public:
 	}
 
 	template<class T>
-	int read_array(T* value, int count)
+	int read_fix_array(T* value, int count)
 	{
 		int size = 0;
 		for (int i = 0; i < count; ++i)

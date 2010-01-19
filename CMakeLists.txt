@@ -6,6 +6,8 @@ set (APPLICATION_VERSION_MAJOR "0")
 set (APPLICATION_VERSION_MINOR "0")
 set (APPLICATION_VERSION_PATCH "pre1")
 
+set (CMAKE_BUILD_TYPE "Debug")
+
 add_subdirectory (src)
-add_subdirectory (thirdparty/zlib)
+add_subdirectory (zlib)
 

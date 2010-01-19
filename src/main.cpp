@@ -22,7 +22,7 @@
 int main(int argc, char** argv)
 {
 	printf("m3gdecompile\n");
-	if (m3g_check_file("data/texturedcar2n.m3g"))
+	if (m3g_check_file("/home/valerii76/work/jsrs/jsr297/m3gdecompile/data/texturedcar2n.m3g"))
 		printf("file ok\n");
 	else
 		printf("file has error\n");

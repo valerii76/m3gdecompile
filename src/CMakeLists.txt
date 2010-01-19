@@ -1,9 +1,7 @@
 # vim:set ts=8 sts=8 sw=8 noet:
 project (m3gdecompile-bin)
 
-include_directories(${ZLIB_SOURCE_DIR})
-link_directories(${ZLIB_BINARY_DIR})
-
+include_directories(${CMAKE_SOURCE_DIR}/zlib)
 
 #add_custom_command (
 #	OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/java.yy.c
@@ -25,6 +23,7 @@ set(m3gdecompile_SRCS
 	main.cpp
 	m3gfile.cpp
 	m3gformat.cpp
+	type_props.cpp
 )
 
 add_executable (
