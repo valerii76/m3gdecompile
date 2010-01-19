@@ -29,7 +29,7 @@ typedef long		Int32;
 typedef unsigned long	UInt32;
 typedef float		Float32;
 typedef short		Float16;	//FIXME: NEED TO HALF-PERCISION FLOAT
-typedef unsigned char	Boolean;
+typedef bool		Boolean;
 typedef std::string	StringUTF8;
 
 struct Vector3D
