@@ -83,7 +83,7 @@ struct m3g_file_objects
 	{
 		for (lst_all_objects_t::iterator i(all_objs.begin()),
 			end(all_objs.end()); i != end; ++i)
-			(*i)->print(out, "");
+			(*i)->print(out, "", file_version);
 	}
 
 	void push_back(base_object* obj)

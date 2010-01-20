@@ -225,7 +225,7 @@ struct appearance_base_object : object3d_object
 
 	ObjectIndex compositing_mode;
 	ObjectIndex polygon_mode;
-	Boolean is_deph_sort_enabled;
+	Boolean is_depth_sort_enabled;
 
 	virtual int load(Stream& strm, int version);
 	virtual void print(FILE* out, char const *indent, int version);
@@ -353,7 +353,7 @@ struct camera_object : node_object
 	Float32 x;
 	Float32 y;
 	Float32 width;
-	Float32 heigth;
+	Float32 height;
 	Float32 fovy;
 	Float32 aspect_ratio;
 	Float32 near;
@@ -407,7 +407,7 @@ struct fog_object : object3d_object
 
 	ColorRGB color;
 	Byte mode;
-	Float32 dencity;
+	Float32 density;
 	Float32 near;
 	Float32 far;
 
@@ -446,7 +446,7 @@ struct image_base_object : object3d_object
 	} format;
 	Boolean is_mutable;
 	UInt32 width;
-	UInt32 heigth;
+	UInt32 height;
 
 	virtual int load(Stream& strm, int version);
 	virtual void print(FILE* out, char const *indent, int version);
@@ -867,7 +867,7 @@ struct vertex_buffer_object : object3d_object
 	};
 
 	ColorRGBA default_color;
-	ObjectIndex position;
+	ObjectIndex positions;
 	Float32 position_bias[3];
 	Float32 position_scale;
 

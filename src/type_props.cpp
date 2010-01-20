@@ -126,7 +126,7 @@ char const* type_props<Float16>::to_string(Float16 v)
 */
 
 char const *type_props<StringUTF8>::name = "String";
-char const* type_props<StringUTF8>::to_string(StringUTF8 const &v)
+char const* type_props<StringUTF8>::to_string(StringUTF8 &v)
 {
 	static StringUTF8 str;
 	str = '\"' + v + '\"';
@@ -144,7 +144,7 @@ char const* type_props<Boolean>::to_string(Boolean v)
 
 
 char const *type_props<Vector3D>::name = "Vector3D";
-char const* type_props<Vector3D>::to_string(Vector3D const &v)
+char const* type_props<Vector3D>::to_string(Vector3D &v)
 {
 	static char str[512];
 	sprintf(str, "{ %g, %g, %g }", v.x, v.y, v.z);
@@ -153,7 +153,7 @@ char const* type_props<Vector3D>::to_string(Vector3D const &v)
 
 
 char const *type_props<Matrix>::name = "Matrix";
-char const* type_props<Matrix>::to_string(Matrix const& v)
+char const* type_props<Matrix>::to_string(Matrix &v)
 {
 	static char str[2048];
 	sprintf(str, "{ %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g }",
@@ -166,7 +166,7 @@ char const* type_props<Matrix>::to_string(Matrix const& v)
 
 
 char const *type_props<ColorRGB>::name = "ColorRGB";
-char const* type_props<ColorRGB>::to_string(ColorRGB const& v)
+char const* type_props<ColorRGB>::to_string(ColorRGB &v)
 {
 	static char str[255];
 	sprintf(str, "{ %d, %d, %d }", v.red, v.green, v.blue);
@@ -175,7 +175,7 @@ char const* type_props<ColorRGB>::to_string(ColorRGB const& v)
 
 
 char const *type_props<ColorRGBA>::name = "ColorRGBA";
-char const* type_props<ColorRGBA>::to_string(ColorRGBA const& v)
+char const* type_props<ColorRGBA>::to_string(ColorRGBA &v)
 {
 	static char str[255];
 	sprintf(str, "{ %d, %d, %d, %d }",

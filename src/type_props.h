@@ -93,7 +93,7 @@ template<>
 struct type_props<StringUTF8>
 {
 	static char const *name;
-	static char const* to_string(StringUTF8 const &v);
+	static char const* to_string(StringUTF8 &v);
 };
 
 template<>
@@ -107,28 +107,28 @@ template<>
 struct type_props<Vector3D>
 {
 	static char const *name;
-	static char const* to_string(Vector3D const &v);
+	static char const* to_string(Vector3D &v);
 };
 
 template<>
 struct type_props<Matrix>
 {
 	static char const *name;
-	static char const* to_string(Matrix const& v);
+	static char const* to_string(Matrix &v);
 };
 
 template<>
 struct type_props<ColorRGB>
 {
 	static char const *name;
-	static char const* to_string(ColorRGB const& v);
+	static char const* to_string(ColorRGB &v);
 };
 
 template<>
 struct type_props<ColorRGBA>
 {
 	static char const *name;
-	static char const* to_string(ColorRGBA const& v);
+	static char const* to_string(ColorRGBA &v);
 };
 
 struct type_props_oi
@@ -171,11 +171,11 @@ inline void print_value_fi(
 }
 
 template<class T>
-inline void print_value(
+inline void print_array(
 	FILE *out,
 	char const *indent,
 	char const *name,
-	T const* v,
+	T* v,
 	int len)
 {
 	fprintf(out, "%s%s %s[%d] = {\n", indent, type_props<T>::name,
@@ -193,21 +193,22 @@ inline void print_value(
 }
 
 template<class T>
-inline void print_value(
+inline void print_varray(
 	FILE *out,
 	char const *indent,
 	char const *name,
-	std::vector<T> const& v)
+	std::vector<T> &v)
 {
 	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
-	print_value(out, indent, name, &v.front(), v.size());
+	print_array(out, indent, name, &v.front(), v.size());
 }
 
-inline void print_value_oi(
+inline void print_array_oi(
 	FILE *out,
 	char const *indent,
 	char const *name,
-	ObjectIndex* v)
+	ObjectIndex *v,
+	int len)
 {
 	fprintf(out, "%s%s %s[%d] = {\n", indent, type_props_oi::name,
 		name, len);
@@ -223,14 +224,14 @@ inline void print_value_oi(
 	fprintf(out, "%s};\n", indent);
 }
 
-inline void print_value_oi(
+inline void print_varray_oi(
 	FILE *out,
 	char const *indent,
 	char const *name,
-	std::vector<ObjectIndex> const& v)
+	std::vector<ObjectIndex> &v)
 {
 	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
-	print_value(out, indent, name, &v.front(), v.size());
+	print_array_oi(out, indent, name, &v.front(), v.size());
 }
 
 #endif//__TYPE_PROPS_H__
