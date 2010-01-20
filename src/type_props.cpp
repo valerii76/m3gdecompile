@@ -161,6 +161,7 @@ char const* type_props<Matrix>::to_string(Matrix const& v)
 		v.v[4], v.v[5], v.v[6], v.v[7],
 		v.v[8], v.v[9], v.v[10], v.v[11],
 		v.v[12], v.v[13], v.v[14], v.v[15]);
+	return str;
 }
 
 

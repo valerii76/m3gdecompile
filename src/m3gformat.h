@@ -499,9 +499,9 @@ struct index_buffer_object : object3d_object
 	};
 	struct union_array_deltas
 	{
-		std::vector<Int32> _int32;
+		std::vector<Int32> _i32;
 		std::vector<Byte> _byte;
-		std::vector<Int16> _int16;
+		std::vector<Int16> _i16;
 	};
 
 	enum

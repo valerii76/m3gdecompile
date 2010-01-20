@@ -617,7 +617,7 @@ int object3d_object::load(Stream& strm, int version)
 
 	/* read animation tracks */
 	size += strm.read(&count);
-	for (int i = 0; i < count; ++i)
+	for (unsigned int i = 0; i < count; ++i)
 	{
 		anim_track_s track;
 		size += strm.read(&track.animation_track);
@@ -628,7 +628,7 @@ int object3d_object::load(Stream& strm, int version)
 
 	/* read parameters */
 	size += strm.read(&count);
-	for (int i = 0; i < count; ++i)
+	for (unsigned int i = 0; i < count; ++i)
 	{
 		parameter_s param;
 		size += strm.read(&param.parameter_id);
@@ -674,17 +674,18 @@ int animation_track_object::load(Stream& strm, int version)
 	size += strm.read(&animation_controller);
 	if ( version == M3G_FILE_FORMAT_20)
 	{
-		strm.read(&property_id.v20);
+		size += strm.read(&property_id.v20);
 		if (property_id.v20 >= SHADERVARIABLE_FLOAT &&
 			property_id.v20 <= SHADERVARIABLE_SAMPLER_CUBE)
 		{
-			strm.read(&is_normalize_enabled);
+			size += strm.read(&is_normalize_enabled);
 		}
 	}
 	else
 	{
-		strm.read(&property_id.v10);
+		size += strm.read(&property_id.v10);
 	}
+	return size;
 }
 
 void animation_track_object::print(FILE* out, char const *indent)
@@ -1082,11 +1083,11 @@ int index_buffer_object::load(Stream& strm, int version)
 	else if (version == M3G_FILE_FORMAT_20)
 	{
 		if (encoding == 192)
-			size += strm.read_varray(&index_deltas._int32);
+			size += strm.read_varray(&index_deltas._i32);
 		else if (encoding == 193)
 			size += strm.read_varray(&index_deltas._byte);
 		else if (encoding == 194)
-			size += strm.read_varray(&index_deltas._int16);
+			size += strm.read_varray(&index_deltas._i16);
 	}
 	return size;
 }
@@ -1114,7 +1115,7 @@ int keyframe_sequence_object::load(Stream& strm, int version)
 
 	if (encoding == 0)
 	{
-		for (int i = 0; i < keyframe_count; ++i)
+		for (unsigned int i = 0; i < keyframe_count; ++i)
 		{
 			keyframe_s kf;
 			size += strm.read(&kf.time);
@@ -1128,7 +1129,7 @@ int keyframe_sequence_object::load(Stream& strm, int version)
 	{
 		size += strm.read_array(&vector_bias, component_count);
 		size += strm.read_array(&vector_scale, component_count);
-		for (int i = 0; i < keyframe_count; ++i)
+		for (unsigned int i = 0; i < keyframe_count; ++i)
 		{
 			keyframe_s kf;
 			size += strm.read(&kf.time);
@@ -1141,7 +1142,7 @@ int keyframe_sequence_object::load(Stream& strm, int version)
 	{
 		size += strm.read_array(&vector_bias, component_count);
 		size += strm.read_array(&vector_scale, component_count);
-		for (int i = 0; i < keyframe_count; ++i)
+		for (unsigned int i = 0; i < keyframe_count; ++i)
 		{
 			keyframe_s kf;
 			size += strm.read(&kf.time);
@@ -1156,7 +1157,7 @@ int keyframe_sequence_object::load(Stream& strm, int version)
 	{
 		UInt32 event_count;
 		size += strm.read(&event_count);
-		for (int i = 0; i < event_count; ++i)
+		for (unsigned int i = 0; i < event_count; ++i)
 		{
 			event_s e;
 			size += strm.read(&e.event_time);
@@ -1218,7 +1219,7 @@ int mesh_object::load(Stream& strm, int version)
 	size += node_object::load(strm, version);
 	size += strm.read(&vertex_buffer);
 	size += strm.read(&submesh_count);
-	for (int i = 0; i < submesh_count; ++i)
+	for (unsigned int i = 0; i < submesh_count; ++i)
 	{
 		submesh_s m;
 		size += strm.read(&m.index_buffer);
@@ -1255,7 +1256,7 @@ int morphing_mesh_object::load(Stream& strm, int version)
 	{
 		UInt32 morph_target;
 		size += strm.read(&morph_target);
-		for (int i = 0; i < morph_target; ++i)
+		for (unsigned int i = 0; i < morph_target; ++i)
 		{
 			target_buf_s tb;
 			size += strm.read(&tb.morph_target);
@@ -1300,7 +1301,7 @@ int skinned_mesh_object::load(Stream& strm, int version)
 	if (version == M3G_FILE_FORMAT_20)
 		size += strm.read(&is_using_add_transform);
 	size += strm.read(&ref_count);
-	for (int i = 0; i < ref_count; ++i)
+	for (unsigned int i = 0; i < ref_count; ++i)
 	{
 		bone_s b;
 		size += strm.read(&b.transform_node);
@@ -1453,7 +1454,7 @@ int vertex_buffer_object::load(Stream& strm, int version)
 
 	UInt32 tex_count;
 	size += strm.read(&tex_count);
-	for (int i = 0; i < tex_count; ++i)
+	for (unsigned int i = 0; i < tex_count; ++i)
 	{
 		coords_s crd;
 		size += strm.read(&crd.coord);
@@ -1472,7 +1473,7 @@ int vertex_buffer_object::load(Stream& strm, int version)
 
 		UInt32 attr_count;
 		size += strm.read(&attr_count);
-		for (int i = 0; i < attr_count; ++i)
+		for (unsigned int i = 0; i < attr_count; ++i)
 		{
 			attribute_s a;
 			size += strm.read(&a.name);
@@ -1498,6 +1499,7 @@ int world_object::load(Stream& strm, int version)
 	size += group_object::load(strm, version);
 	size += strm.read(&active_camera);
 	size += strm.read(&background);
+	return size;
 }
 void world_object::print(FILE* out, char const *indent)
 {
@@ -1527,7 +1529,7 @@ void blender_object::print(FILE* out, char const *indent)
 int dynamic2d_object::load(Stream& strm, int version)
 {
 	int size = 0;
-	size += dynamic2d_object::load(strm, version);
+	size += object3d_object::load(strm, version);
 	return size;
 }
 void dynamic2d_object::print(FILE* out, char const *indent)
@@ -1684,7 +1686,7 @@ int shader_uniforms_object::load(Stream& strm, int version)
 	int size = 0;
 	size += object3d_object::load(strm, version);
 	size += strm.read(&count);
-	for (int i = 0; i < count; ++i)
+	for (unsigned int i = 0; i < count; ++i)
 	{
 		uniform_s u;
 		size += strm.read(&u.name);
@@ -1849,6 +1851,7 @@ int texture_combiner_object::load(Stream& strm, int version)
 		if (alpha_function != TEXTURECOMBINER_INTERPOLATE)
 			size += strm.read(&alpha_source2);
 	}
+	return size;
 }
 void texture_combiner_object::print(FILE* out, char const *indent)
 {

@@ -109,7 +109,7 @@ public:
 		}
 		else if (mode == STREAM_COMPRESSED)
 		{
-			int CHUNK = 8192;
+			int const CHUNK = 8192;
 			z_stream strm;
 			unsigned char out[CHUNK];
 			int ret;
