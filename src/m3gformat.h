@@ -38,7 +38,7 @@ struct base_object
 	static base_object* make(int obj_type);
 	virtual int class_type() = 0;
 	virtual int load(Stream& strm, int version) = 0;
-	virtual void print(FILE* out, char const* indent) = 0;
+	virtual void print(FILE* out, char const* indent, int version) = 0;
 };
 
 // Header object
@@ -61,7 +61,7 @@ struct header_object : base_object
 	StringUTF8 authoring_field;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 	virtual int class_type()
 	{
 		return OBJ_CLASS_HEADER;
@@ -83,7 +83,7 @@ struct external_ref_object : base_object
 	StringUTF8 URI;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 	virtual int class_type()
 	{
 		return OBJ_CLASS_EXT_REF;
@@ -106,7 +106,7 @@ struct external_image_ref_object : external_ref_object
 	Int32 format;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 	virtual int class_type()
 	{
 		return OBJ_CLASS_EXT_IMG;
@@ -129,7 +129,7 @@ struct external_object_ref_object : external_ref_object
 	std::vector<Int32> user_id;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 	virtual int class_type()
 	{
 		return OBJ_CLASS_EXT_OBJ;
@@ -156,7 +156,7 @@ struct object3d_object : base_object
 	Boolean animation_enabled;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 	virtual int class_type()
 	{
 		return OBJ_CLASS_OBJECT3D;
@@ -184,7 +184,7 @@ struct animation_controller_object : object3d_object
 	Int32 reference_world_time;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 //AnimationTrack
@@ -211,7 +211,7 @@ struct animation_track_object : object3d_object
 	Boolean is_normalize_enabled;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // AppearanceBase
@@ -228,7 +228,7 @@ struct appearance_base_object : object3d_object
 	Boolean is_deph_sort_enabled;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Appearance
@@ -250,7 +250,7 @@ struct appearance_object : appearance_base_object
 	std::vector<ObjectIndex> textures;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Backgroud
@@ -282,7 +282,7 @@ struct background_object : object3d_object
 	Boolean color_clear_enabled;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Transformable
@@ -297,7 +297,7 @@ struct transformable_object : object3d_object
 	Matrix transform;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Node
@@ -332,7 +332,7 @@ struct node_object : transformable_object
 	Float32 lod_resolution;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Camera
@@ -360,7 +360,7 @@ struct camera_object : node_object
 	Float32 far;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // CompositionMode
@@ -390,7 +390,7 @@ struct composition_mode_object : object3d_object
 	ColorRGBA color_write_mask;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Fog
@@ -412,7 +412,7 @@ struct fog_object : object3d_object
 	Float32 far;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Group
@@ -433,7 +433,7 @@ struct group_object : node_object
 	Float16 offset;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // ImageBase
@@ -449,7 +449,7 @@ struct image_base_object : object3d_object
 	UInt32 heigth;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Image2D
@@ -474,7 +474,7 @@ struct image2d_object : image_base_object
 	std::vector<mipmap_s> mipmaps;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // IndexBuffer
@@ -521,7 +521,7 @@ struct index_buffer_object : object3d_object
 	union_array_deltas index_deltas;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Keyframe sequence
@@ -572,7 +572,7 @@ struct keyframe_sequence_object : object3d_object
 	std::vector<event_s> events;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 
@@ -598,7 +598,7 @@ struct light_object : node_object
 	Float32 spot_exponent;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Material
@@ -620,7 +620,7 @@ struct material_object : object3d_object
 	Boolean vertex_color_tracking_enabled;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Mesh
@@ -655,7 +655,7 @@ struct mesh_object : node_object
 	std::vector<UInt32> morph_subset;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // MorphingMesh
@@ -671,7 +671,7 @@ struct morphing_mesh_object : mesh_object
 	};
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // PolygonMode
@@ -694,7 +694,7 @@ struct polygon_mode_object : object3d_object
 	Float32 line_width;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // SkinnedMesh
@@ -722,7 +722,7 @@ struct skinned_mesh_object : mesh_object
 	std::vector<bone_s> bones;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Sprite3D
@@ -748,7 +748,7 @@ struct sprite3d_object : node_object
 	Int32 crop_height;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Texture
@@ -759,7 +759,7 @@ struct texture_object : transformable_object
 	Byte image_filter;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Texture2D
@@ -787,7 +787,7 @@ struct texture2d_object : texture_object
 	ObjectIndex combiner;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // TriangleStripArray
@@ -803,7 +803,7 @@ struct triangle_strip_array_object : index_buffer_object
 	};
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // VertexArray
@@ -835,7 +835,7 @@ struct vertex_array_object : object3d_object
 	std::vector<data_s> components;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // VertexBuffer
@@ -885,7 +885,7 @@ struct vertex_buffer_object : object3d_object
 	std::vector<attribute_s> attributes;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // World
@@ -904,7 +904,7 @@ struct world_object : group_object
 	ObjectIndex background;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Blender
@@ -930,7 +930,7 @@ struct blender_object : object3d_object
 	ColorRGBA blend_color;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // DynamicImage2D
@@ -946,7 +946,7 @@ struct dynamic2d_object : object3d_object
 	};
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Shader
@@ -955,7 +955,7 @@ struct shader_object : object3d_object
 	StringUTF8 source;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // FragmentShader
@@ -971,7 +971,7 @@ struct fragment_shader_object : shader_object
 	};
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // ImageCube
@@ -999,7 +999,7 @@ struct image_cube_object : image_base_object
 	face_s mipmaps[6];
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // PointSpriteMode
@@ -1022,7 +1022,7 @@ struct point_sprite_mode_object : object3d_object
 	Float32  point_size_clamp_max;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // RenderPass
@@ -1052,7 +1052,7 @@ struct render_pass_object : object3d_object
 	Int32 viewport_height;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // RenderTarget
@@ -1072,7 +1072,7 @@ struct render_target_object : object3d_object
 	Byte target_face;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // ShaderAppearance
@@ -1092,7 +1092,7 @@ struct shader_appearance_object : appearance_base_object
 	Boolean is_validate_enabled;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // ShaderProgram
@@ -1111,7 +1111,7 @@ struct shader_program_object : object3d_object
 	ObjectIndex vertex_shader;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // ShaderUniforms
@@ -1161,7 +1161,7 @@ struct shader_uniforms_object : object3d_object
 	std::vector<uniform_s> uniforms;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // Stencil
@@ -1198,7 +1198,7 @@ struct stencil_object : object3d_object
 	Byte stencil_pass_depth_pass_op_back;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // TextureCombiner
@@ -1225,7 +1225,7 @@ struct texture_combiner_object : object3d_object
 	UInt16 alpha_source2;
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // TextureCube
@@ -1241,7 +1241,7 @@ struct texture_cube_object : texture_object
 	};
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 // VertexShader
@@ -1257,7 +1257,7 @@ struct vertex_shader_object : shader_object
 	};
 
 	virtual int load(Stream& strm, int version);
-	virtual void print(FILE* out, char const* indent);
+	virtual void print(FILE* out, char const *indent, int version);
 };
 
 typedef std::vector<base_object*> lst_all_objects_t;

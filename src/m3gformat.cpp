@@ -536,6 +536,15 @@ struct object_registrator
 	}
 } do_object_registrator;
 
+#define OBJECT_PRINT_START(name) \
+	char new_indent[255]; \
+	strcpy(new_indent, indent); \
+	strcat(new_indent, "\t"); \
+	fprintf(out, "%s"##name##"\n{\n", indent);
+
+#define OBJECT_PRINT_END() \
+	fprintf(out, "%s};\n", indent);
+
 // Header object
 int header_object::load(Stream& strm, int version)
 {
@@ -547,13 +556,9 @@ int header_object::load(Stream& strm, int version)
 	size += strm.read(&authoring_field);
 	return size;
 }
-void header_object::print(FILE* out, char const *indent)
+void header_object::print(FILE* out, char const *indent, int version)
 {
-	char new_indent[255];
-	strcpy(new_indent, indent);
-	strcat(new_indent, "\t");
-
-	fprintf(out, "%sHeader\n{\n", indent);
+	OBJECT_PRINT_START("Header");
 	print_value(out, new_indent, "VersionNumber", version_number, 2);
 	print_value(out, new_indent, "hasExternalReferences",
 		has_external_references);
@@ -561,7 +566,7 @@ void header_object::print(FILE* out, char const *indent)
 	print_value(out, new_indent, "ApproximateContentSize",
 		approximate_content_size);
 	print_value(out, new_indent, "AuthoringField", authoring_field);
-	fprintf(out,"%s};\n", indent);
+	OBJECT_PRINT_END();
 }
 
 // External reference
@@ -570,14 +575,11 @@ int external_ref_object::load(Stream& strm, int version)
 	return strm.read(&URI);
 }
 
-void external_ref_object::print(FILE* out, char const *indent)
+void external_ref_object::print(FILE* out, char const *indent, int version)
 {
-	char new_indent[255];
-	strcpy(new_indent, indent);
-	strcat(new_indent, "\t");
-	fprintf(out, "%sExternalReferences\n{\n", indent);
+	OBJECT_PRINT_START("ExternalReferences");
 	print_value(out, new_indent, "URI", URI);
-	fprintf(out,"%s};\n", indent);
+	OBJECT_PRINT_END();
 }
 
 // External image reference
@@ -589,10 +591,12 @@ int external_image_ref_object::load(Stream& strm, int version)
 	return size;
 }
 
-void external_image_ref_object::print(FILE* out, char const *indent)
+void external_image_ref_object::print(FILE* out, char const *indent, int version)
 {
-	external_ref_object::print(out, indent);
-	fprintf(out, "format: %d\n", format);
+	OBJECT_PRINT_START("ExternalImageReferences");
+	external_ref_object::print(out, new_indent);
+	print_value(out, new_indent, "format", format);
+	OBJECT_PRINT_END();
 }
 
 // External object reference
@@ -603,9 +607,12 @@ int external_object_ref_object::load(Stream& strm, int version)
 	size += strm.read_varray(&user_id);
 	return size;
 }
-void external_object_ref_object::print(FILE* out, char const *indent)
+void external_object_ref_object::print(FILE* out, char const *indent, int version)
 {
-	external_ref_object::print(out, indent);
+	OBJECT_PRINT_START("ExternalObjectReferences");
+	external_ref_object::print(out, new_indent);
+	print_value(out, new_indent, "userID", user_id);
+	OBJECT_PRINT_END();
 }
 
 // Object3D
@@ -642,8 +649,35 @@ int object3d_object::load(Stream& strm, int version)
 	return size;
 }
 
-void object3d_object::print(FILE* out, char const *indent)
+void object3d_object::print(FILE* out, char const *indent, int version)
 {
+	UInt32 count;
+
+	OBJECT_PRINT_START("Object3D");
+	print_value(out, new_indent, "userID", user_id);
+	count = animation_tracks.size();
+	print_value(out, new_indent, "animationTrackCount", count);
+	for (int i = 0; i < animation_track.size(); ++i)
+	{
+		print_value_oi(out, new_indent, "animationTrack",
+			animation_track[i].animation_track);
+		if (version == M3G_FILE_FORMAT_20)
+			print_value(out, new_indent, "animationTrackIndex",
+				animation_track[i].animation_track_index);
+	}
+	count = parameters.size();
+	print_value(out, new_indent, "userParameterCount", count);
+	for (int i = 0; i < count; ++i)
+	{
+		print_value(out, new_indent, "parameterID",
+			parameters[i].parameter_id);
+		print_value(out, new_indent, "parameterValue",
+			parameters[i].parameter_value);
+	}
+	if (version == M3G_FILE_FORMAT_20)
+		print_value(out, new_indent, "animationEnabled",
+			animation_enabled);
+	OBJECT_PRINT_END();
 }
 
 // AnimationController
@@ -660,9 +694,23 @@ int animation_controller_object::load(Stream& strm, int version)
 	return size;
 }
 
-void animation_controller_object::print(FILE* out, char const *indent)
+void animation_controller_object::print(FILE* out, char const *indent, int version)
 {
-	object3d_object::print(out, indent);
+	OBJECT_PRINT_START("AnimationController");
+	object3d_object::print(out, new_indent);
+
+	print_value(out, new_indent, "speed", speed);
+	print_value(out, new_indent, "weight", weight);
+	print_value(out, new_indent, "activeIntervalStart",
+		active_interval_start);
+	print_value(out, new_indent, "activeIntervalEnd",
+		active_interval_end);
+	print_value(out, new_indent, "referenceSequenceTime",
+		reference_sequence_time);
+	print_value(out, new_indent, "referenceWorldTime",
+		reference_world_time);
+
+	OBJECT_PRINT_END();
 }
 
 //AnimationTrack
@@ -688,9 +736,29 @@ int animation_track_object::load(Stream& strm, int version)
 	return size;
 }
 
-void animation_track_object::print(FILE* out, char const *indent)
+void animation_track_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("AnimationTrack");
 	object3d_object::print(out, indent);
+
+	print_value_oi(out, new_indent, "keyframeSequence",
+		keyframe_sequence);
+	print_value_oi(out, new_indent, "animationController",
+		animation_controller);
+	if (version == M3G_FILE_FORMAT_20)
+	{
+		print_value(out, new_indent, "propertyID", property_id.v20);
+		if (property_id.v20 >= SHADERVARIABLE_FLOAT &&
+			property_id.v20 <= SHADERVARIABLE_SAMPLER_CUBE)
+			print_value(out, new_indent, "isNormalizedEnabled",
+				is_normalized_enabled);
+	}
+	else
+	{
+		print_value(out, new_indent, "propertyID", property_id.v10);
+	}
+
+	OBJECT_PRINT_END();
 }
 
 // AppearanceBase
@@ -718,9 +786,29 @@ int appearance_base_object::load(Stream& strm, int version)
 	return size;
 }
 
-void appearance_base_object::print(FILE* out, char const *indent)
+void appearance_base_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("AppearanceBase");
 	object3d_object::print(out, indent);
+
+	if (version == M3G_FILE_FORMAT_10)
+	{
+		print_value(out, new_indent, "layer", layer.v10);
+	}
+	else
+	{
+		print_value(out, new_indent, "layer", layer.v20);
+	}
+	print_value_oi(out, new_index, "compositingMode", compositing_mode);
+
+	if(version == M3G_FILE_FORMAT_20)
+	{
+		print_value_oi(out, new_indent, "polygon_mode", polygon_mode);
+		print_value(out, new_indent, "isDepthSortEnabled",
+			is_depth_sort_enabled);
+	}
+
+	OBJECT_PRINT_END();
 }
 
 // Appearance
@@ -743,9 +831,26 @@ int appearance_object::load(Stream& strm, int version)
 	size += strm.read_varray(&textures);
 	return size;
 }
-void appearance_object::print(FILE* out, char const *indent)
+void appearance_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("Appearance");
 	appearance_base_object::print(out, indent);
+
+	print_value_oi(out, new_indent, "fog", fog);
+	if (version == M3G_FILE_FORMAT_20)
+	{
+		print_value_oi(out, new_indent, "pointSpriteMode",
+			point_sprite_mode);
+	}
+	else
+	{
+		print_value_oi(out, new_indent, "polygonMode",
+			polygon_mode);
+	}
+	print_value_oi(out, new_indent, "material", material);
+	print_value_oi(out, new_indent, "textures", textures);
+
+	OBJECT_PRINT_END();
 }
 
 // Backgroud
@@ -776,9 +881,38 @@ int background_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void background_object::print(FILE* out, char const *indent)
+void background_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("Background");
 	object3d_object::print(out, indent);
+
+	print_value(out, new_indent, "backgroudColor", background_color);
+	print_value_oi(out, new_indent, "backgroungImage", background_image);
+	print_value(out, new_indent, "backgroundImageModeX",
+		background_image_mode_x);
+	print_value(out, new_indent, "backgroundImageModeY",
+		background_image_mode_y);
+	print_value(out, new_indent, "cropX", crop_x);
+	print_value(out, new_indent, "cropY", crop_y);
+	print_value(out, new_indent, "cropWidth", crop_width);
+	print_value(out, new_indent, "cropHeight", crop_heigth);
+	print_value(out, new_indent, "depthClearEnabled", depth_clear_enabled);
+	if (version == M3G_FILE_FORMAT_20)
+	{
+		print_value(out, new_indent, "depth", depth);
+		print_value(out, new_indent, "stencil", stencil);
+		print_value(out, new_indent, "stencilClearmask",
+			stencil_clear_mask);
+		print_value(out, new_indent, "colorClearMask",
+			color_clear_mask);
+	}
+	else
+	{
+		print_value(out, new_indent, "colorClearEnabled",
+			color_clear_enabled);
+	}
+
+	OBJECT_PRINT_END();
 }
 
 // Transformable
@@ -805,7 +939,7 @@ int transformable_object::load(Stream& strm, int version)
 
 	return size;
 }
-void transformable_object::print(FILE* out, char const *indent)
+void transformable_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -864,7 +998,7 @@ int node_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void node_object::print(FILE* out, char const *indent)
+void node_object::print(FILE* out, char const *indent, int version)
 {
 	transformable_object::print(out, indent);
 }
@@ -896,7 +1030,7 @@ int camera_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void camera_object::print(FILE* out, char const *indent)
+void camera_object::print(FILE* out, char const *indent, int version)
 {
 	node_object::print(out, indent);
 }
@@ -930,7 +1064,7 @@ int composition_mode_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void composition_mode_object::print(FILE* out, char const *indent)
+void composition_mode_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -955,7 +1089,7 @@ int fog_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void fog_object::print(FILE* out, char const *indent)
+void fog_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -975,7 +1109,7 @@ int group_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void group_object::print(FILE* out, char const *indent)
+void group_object::print(FILE* out, char const *indent, int version)
 {
 	node_object::print(out, indent);
 }
@@ -998,7 +1132,7 @@ int image_base_object::load(Stream& strm, int version)
 	size += strm.read(&heigth);
 	return size;
 }
-void image_base_object::print(FILE* out, char const *indent)
+void image_base_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1026,7 +1160,7 @@ int image2d_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void image2d_object::print(FILE* out, char const *indent)
+void image2d_object::print(FILE* out, char const *indent, int version)
 {
 	image_base_object::print(out, indent);
 }
@@ -1091,7 +1225,7 @@ int index_buffer_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void index_buffer_object::print(FILE* out, char const *indent)
+void index_buffer_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1167,7 +1301,7 @@ int keyframe_sequence_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void keyframe_sequence_object::print(FILE* out, char const *indent)
+void keyframe_sequence_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1189,7 +1323,7 @@ int light_object::load(Stream& strm, int version)
 	size += strm.read(&spot_exponent);
 	return size;
 }
-void light_object::print(FILE* out, char const *indent)
+void light_object::print(FILE* out, char const *indent, int version)
 {
 	node_object::print(out, indent);
 }
@@ -1207,7 +1341,7 @@ int material_object::load(Stream& strm, int version)
 	size += strm.read(&vertex_color_tracking_enabled);
 	return size;
 }
-void material_object::print(FILE* out, char const *indent)
+void material_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1242,7 +1376,7 @@ int mesh_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void mesh_object::print(FILE* out, char const *indent)
+void mesh_object::print(FILE* out, char const *indent, int version)
 {
 	node_object::print(out, indent);
 }
@@ -1266,7 +1400,7 @@ int morphing_mesh_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void morphing_mesh_object::print(FILE* out, char const *indent)
+void morphing_mesh_object::print(FILE* out, char const *indent, int version)
 {
 	mesh_object::print(out, indent);
 }
@@ -1286,7 +1420,7 @@ int polygon_mode_object::load(Stream& strm, int version)
 		size += strm.read(&line_width);
 	return size;
 }
-void polygon_mode_object::print(FILE* out, char const *indent)
+void polygon_mode_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1315,7 +1449,7 @@ int skinned_mesh_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void skinned_mesh_object::print(FILE* out, char const *indent)
+void skinned_mesh_object::print(FILE* out, char const *indent, int version)
 {
 	mesh_object::print(out, indent);
 }
@@ -1334,7 +1468,7 @@ int sprite3d_object::load(Stream& strm, int version)
 	size += strm.read(&crop_height);
 	return size;
 }
-void sprite3d_object::print(FILE* out, char const *indent)
+void sprite3d_object::print(FILE* out, char const *indent, int version)
 {
 	node_object::print(out, indent);
 }
@@ -1352,7 +1486,7 @@ int texture_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void texture_object::print(FILE* out, char const *indent)
+void texture_object::print(FILE* out, char const *indent, int version)
 {
 	transformable_object::print(out, indent);
 }
@@ -1378,7 +1512,7 @@ int texture2d_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void texture2d_object::print(FILE* out, char const *indent)
+void texture2d_object::print(FILE* out, char const *indent, int version)
 {
 	texture_object::print(out, indent);
 }
@@ -1395,7 +1529,7 @@ int triangle_strip_array_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void triangle_strip_array_object::print(FILE* out, char const *indent)
+void triangle_strip_array_object::print(FILE* out, char const *indent, int version)
 {
 	index_buffer_object::print(out, indent);
 }
@@ -1435,7 +1569,7 @@ int vertex_array_object::load(Stream& strm, int version)
 	return size;
 }
 
-void vertex_array_object::print(FILE* out, char const *indent)
+void vertex_array_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1487,7 +1621,7 @@ int vertex_buffer_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void vertex_buffer_object::print(FILE* out, char const *indent)
+void vertex_buffer_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1501,7 +1635,7 @@ int world_object::load(Stream& strm, int version)
 	size += strm.read(&background);
 	return size;
 }
-void world_object::print(FILE* out, char const *indent)
+void world_object::print(FILE* out, char const *indent, int version)
 {
 	group_object::print(out, indent);
 }
@@ -1520,7 +1654,7 @@ int blender_object::load(Stream& strm, int version)
 	size += strm.read(&blend_color);
 	return size;
 }
-void blender_object::print(FILE* out, char const *indent)
+void blender_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1532,7 +1666,7 @@ int dynamic2d_object::load(Stream& strm, int version)
 	size += object3d_object::load(strm, version);
 	return size;
 }
-void dynamic2d_object::print(FILE* out, char const *indent)
+void dynamic2d_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1545,7 +1679,7 @@ int shader_object::load(Stream& strm, int version)
 	size += strm.read(&source);
 	return size;
 }
-void shader_object::print(FILE* out, char const *indent)
+void shader_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1557,7 +1691,7 @@ int fragment_shader_object::load(Stream& strm, int version)
 	size += shader_object::load(strm, version);
 	return size;
 }
-void fragment_shader_object::print(FILE* out, char const *indent)
+void fragment_shader_object::print(FILE* out, char const *indent, int version)
 {
 	shader_object::print(out, indent);
 }
@@ -1585,7 +1719,7 @@ int image_cube_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void image_cube_object::print(FILE* out, char const *indent)
+void image_cube_object::print(FILE* out, char const *indent, int version)
 {
 	image_base_object::print(out, indent);
 }
@@ -1603,7 +1737,7 @@ int point_sprite_mode_object::load(Stream& strm, int version)
 	size += strm.read(&point_size_clamp_max);
 	return size;
 }
-void point_sprite_mode_object::print(FILE* out, char const *indent)
+void point_sprite_mode_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1630,7 +1764,7 @@ int render_pass_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void render_pass_object::print(FILE* out, char const *indent)
+void render_pass_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1645,7 +1779,7 @@ int render_target_object::load(Stream& strm, int version)
 	size += strm.read(&target_face);
 	return size;
 }
-void render_target_object::print(FILE* out, char const *indent)
+void render_target_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1660,7 +1794,7 @@ int shader_appearance_object::load(Stream& strm, int version)
 	size += strm.read(&is_validate_enabled);
 	return size;
 }
-void shader_appearance_object::print(FILE* out, char const *indent)
+void shader_appearance_object::print(FILE* out, char const *indent, int version)
 {
 	appearance_base_object::print(out, indent);
 }
@@ -1674,7 +1808,7 @@ int shader_program_object::load(Stream& strm, int version)
 	size += strm.read(&vertex_shader);
 	return size;
 }
-void shader_program_object::print(FILE* out, char const *indent)
+void shader_program_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1794,7 +1928,7 @@ int shader_uniforms_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void shader_uniforms_object::print(FILE* out, char const *indent)
+void shader_uniforms_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1820,7 +1954,7 @@ int stencil_object::load(Stream& strm, int version)
 	size += strm.read(&stencil_pass_depth_pass_op_back);
 	return size;
 }
-void stencil_object::print(FILE* out, char const *indent)
+void stencil_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1853,7 +1987,7 @@ int texture_combiner_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void texture_combiner_object::print(FILE* out, char const *indent)
+void texture_combiner_object::print(FILE* out, char const *indent, int version)
 {
 	object3d_object::print(out, indent);
 }
@@ -1865,7 +1999,7 @@ int texture_cube_object::load(Stream& strm, int version)
 	size += texture_object::load(strm, version);
 	return size;
 }
-void texture_cube_object::print(FILE* out, char const *indent)
+void texture_cube_object::print(FILE* out, char const *indent, int version)
 {
 	texture_object::print(out, indent);
 }
@@ -1877,7 +2011,7 @@ int vertex_shader_object::load(Stream& strm, int version)
 	size += shader_object::load(strm, version);
 	return size;
 }
-void vertex_shader_object::print(FILE* out, char const *indent)
+void vertex_shader_object::print(FILE* out, char const *indent, int version)
 {
 	shader_object::print(out, indent);
 }

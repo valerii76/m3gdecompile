@@ -199,7 +199,37 @@ inline void print_value(
 	char const *name,
 	std::vector<T> const& v)
 {
-	fprintf(out, "%sUInt32 count = %d;\n",indent, v.size());
+	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
+	print_value(out, indent, name, &v.front(), v.size());
+}
+
+inline void print_value_oi(
+	FILE *out,
+	char const *indent,
+	char const *name,
+	ObjectIndex* v)
+{
+	fprintf(out, "%s%s %s[%d] = {\n", indent, type_props_oi::name,
+		name, len);
+	for (int i = 0; i < len; ++i)
+	{
+		if (i < (len-1))
+			fprintf(out, "%s%s,\n",
+				indent, type_props_oi::to_string(v[i]));
+		else
+			fprintf(out, "%s%s\n",
+				indent, type_props_oi::to_string(v[i]));
+	}
+	fprintf(out, "%s};\n", indent);
+}
+
+inline void print_value_oi(
+	FILE *out,
+	char const *indent,
+	char const *name,
+	std::vector<ObjectIndex> const& v)
+{
+	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
 	print_value(out, indent, name, &v.front(), v.size());
 }
 
