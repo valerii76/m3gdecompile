@@ -594,7 +594,7 @@ int external_image_ref_object::load(Stream& strm, int version)
 void external_image_ref_object::print(FILE* out, char const *indent, int version)
 {
 	OBJECT_PRINT_START("ExternalImageReferences");
-	external_ref_object::print(out, new_indent);
+	external_ref_object::print(out, new_indent, version);
 	print_value(out, new_indent, "format", format);
 	OBJECT_PRINT_END();
 }
@@ -607,10 +607,11 @@ int external_object_ref_object::load(Stream& strm, int version)
 	size += strm.read_varray(&user_id);
 	return size;
 }
-void external_object_ref_object::print(FILE* out, char const *indent, int version)
+void external_object_ref_object::print(FILE* out, char const *indent,
+	int version)
 {
 	OBJECT_PRINT_START("ExternalObjectReferences");
-	external_ref_object::print(out, new_indent);
+	external_ref_object::print(out, new_indent, version);
 	print_value(out, new_indent, "userID", user_id);
 	OBJECT_PRINT_END();
 }
@@ -697,7 +698,7 @@ int animation_controller_object::load(Stream& strm, int version)
 void animation_controller_object::print(FILE* out, char const *indent, int version)
 {
 	OBJECT_PRINT_START("AnimationController");
-	object3d_object::print(out, new_indent);
+	object3d_object::print(out, new_indent, version);
 
 	print_value(out, new_indent, "speed", speed);
 	print_value(out, new_indent, "weight", weight);
@@ -739,7 +740,7 @@ int animation_track_object::load(Stream& strm, int version)
 void animation_track_object::print(FILE* out, char const *indent, int version)
 {
 	OBJECT_PRINT_START("AnimationTrack");
-	object3d_object::print(out, indent);
+	object3d_object::print(out, new_indent, version);
 
 	print_value_oi(out, new_indent, "keyframeSequence",
 		keyframe_sequence);
@@ -789,7 +790,7 @@ int appearance_base_object::load(Stream& strm, int version)
 void appearance_base_object::print(FILE* out, char const *indent, int version)
 {
 	OBJECT_PRINT_START("AppearanceBase");
-	object3d_object::print(out, indent);
+	object3d_object::print(out, new_indent, version);
 
 	if (version == M3G_FILE_FORMAT_10)
 	{
@@ -834,7 +835,7 @@ int appearance_object::load(Stream& strm, int version)
 void appearance_object::print(FILE* out, char const *indent, int version)
 {
 	OBJECT_PRINT_START("Appearance");
-	appearance_base_object::print(out, indent);
+	appearance_base_object::print(out, new_indent, version);
 
 	print_value_oi(out, new_indent, "fog", fog);
 	if (version == M3G_FILE_FORMAT_20)
@@ -884,7 +885,7 @@ int background_object::load(Stream& strm, int version)
 void background_object::print(FILE* out, char const *indent, int version)
 {
 	OBJECT_PRINT_START("Background");
-	object3d_object::print(out, indent);
+	object3d_object::print(out, new_indent, version);
 
 	print_value(out, new_indent, "backgroudColor", background_color);
 	print_value_oi(out, new_indent, "backgroungImage", background_image);
@@ -941,7 +942,27 @@ int transformable_object::load(Stream& strm, int version)
 }
 void transformable_object::print(FILE* out, char const *indent, int version)
 {
-	object3d_object::print(out, indent);
+	OBJECT_PRINT_START("Transformable");
+	object3d_object::print(out, new_indent, version);
+
+	print_value(out, new_indent, "hasComponentTransform",
+		has_component_transform);
+	if (has_component_transform)
+	{
+		print_value(out, new_indent, "translation", translation);
+		print_value(out, new_indent, "scale", scale);
+		print_value(out, new_indent, "orientationAngle",
+			orientation_angle);
+		print_value(out, new_indent, "oritntationAxis",
+			orientation_axis);
+	}
+	print_value(out, new_indent, "hasGenetalTransform",
+		has_general_transform);
+
+	if (has_general_transform)
+		print_value(out, new_indent, "transform", transform);
+
+	OBJECT_PRINT_END();
 }
 
 // Node
@@ -1000,7 +1021,68 @@ int node_object::load(Stream& strm, int version)
 }
 void node_object::print(FILE* out, char const *indent, int version)
 {
-	transformable_object::print(out, indent);
+	OBJECT_PRINT_START("Node");
+	transformable_object::print(out, new_indent, version);
+
+	print_value(out, new_indent, "enableRendering", enable_rendering);
+	print_value(out, new_indent, "enablePicking", enable_picking);
+	print_value(out, new_indent, "alphaFactor", alpha_factor);
+	print_value(out, new_indent, "scope", scope);
+	print_value(out, new_indent, "hasAlignment", has_alignment);
+	if (has_alignment)
+	{
+		print_value(out, new_indent, "zTarget", z_target);
+		print_value(out, new_indent, "yTarget", y_target);
+		print_value_fi(out, new_indent, "zReference", z_reference);
+		print_value_fi(out, new_indent, "yReference", y_reference);
+	}
+	if (version == M3G_FILE_FORMAT_20)
+	{
+		print_value(out, new_indent, "hasBoundingBox",
+			has_bounding_box);
+		if (has_bounding_box)
+		{
+			print_value(out, new_indent, "boundMinX",
+				bound_min_x);
+			print_value(out, new_indent, "boundMaxX",
+				bound_max_x);
+			print_value(out, new_indent, "boundMinY",
+				bound_min_y);
+			print_value(out, new_indent, "boundMaxY",
+				bound_max_y);
+			print_value(out, new_indent, "bountMinZ",
+				bound_min_z);
+			print_value(out, new_indent, "bountMaxZ",
+				bound_max_z);
+		}
+		print_value(out, new_indent, "hasBoudingSphere",
+			has_bounding_sphere);
+		if (has_bounding_sphere)
+		{
+			print_value(out, new_indent, "boundCenterX",
+				bound_center_x);
+			print_value(out, new_indent, "boundCenterY",
+				bound_center_y);
+			print_value(out, new_indent, "boundCenterZ",
+				bound_center_z);
+			print_value(out, new_indent, "boudnRadius",
+				bound_radius);
+		}
+		print_value(out, new_indent, "collisionEnabled",
+			collisionEnabled);
+		print_value(out, new_indent, "hasCollisionShape",
+			has_collision_shape);
+		if (has_collision_shape)
+		{
+			print_value(out, new_indent, "orientations",
+				orientations);
+			print_value(out, new_indent, "min", min);
+			print_value(out, new_indent, "max", max);
+		}
+		print_value(out, new_indent, "LODResolution", lod_resolution);
+	}
+
+	OBJECT_PRINT_STOP();
 }
 
 // Camera
@@ -1032,7 +1114,32 @@ int camera_object::load(Stream& strm, int version)
 }
 void camera_object::print(FILE* out, char const *indent, int version)
 {
-	node_object::print(out, indent);
+	OBJECT_PRINT_START("Camera");
+	node_object::print(out, new_indent, version);
+
+	print_value(out, new_indent, "projectionType", projection_type);
+	if (projection_type == CAMERA_GENERIC)
+	{
+		print_value(oue, new_indent, "projectionMatrix",
+			projection_matrix);
+	}
+	else if (version == M3G_FILE_FORMAT_20 &&
+		projection_type == CAMERA_SCREEN)
+	{
+		print_value(out, new_indent, "x", x);
+		print_value(out, new_indent, "y", y);
+		print_value(out, new_indent, "width", width);
+		print_value(out, new_indent, "height", height);
+	}
+	else
+	{
+		print_value(out, new_indent, "fovy", fovy);
+		print_value(out, new_indent, "AspectRatio", aspect_ratio);
+		print_value(out, new_indent, "near", near);
+		print_value(out, new_indent, "far", far);
+	}
+
+	OBJECT_PRINT_END();
 }
 
 // CompositionMode
@@ -1066,7 +1173,35 @@ int composition_mode_object::load(Stream& strm, int version)
 }
 void composition_mode_object::print(FILE* out, char const *indent, int version)
 {
-	object3d_object::print(out, indent);
+	OBJECT_PRINT_START("CompositingMode");
+	object3d_object::print(out, new_indent, version);
+
+	print_value(out, new_indent, "depthTestEnabled",
+		depth_test_enabled);
+	print_value(out, new_indent, "depthWriteEnabled",
+		depth_write_enabled);
+	if (version == M3G_FILE_FORMAT_10)
+	{
+		print_value(out, new_indent, "colorWriteEnabled",
+			color_write_enabled);
+		print_value(out, new_indent, "alphaWriteEnabled",
+			alpha_write_enabled);
+	}
+	print_value(out, new_indent, "blending", blending);
+	print_value(out, new_indent, "alpha_threshold", alpha_threshold);
+	print_value(out, new_indent, "depthOffsetFactor", depth_offset_factor);
+	print_value(out, new_indent, "depthOffsetUnits", depth_offset_units);
+	if (version == M3G_FILE_FORMAT_20)
+	{
+		print_value(out, new_indent, "depthTest", depth_test);
+		print_value(out, new_indent, "alphaTest", alpha_test);
+		print_value_oi(out, new_indent, "blender", blender);
+		print_value_oi(out, new_indent, "stencil", stencil);
+		print_value(out, new_indent, "colorWriteMask",
+			color_write_mask);
+	}
+
+	OBJECT_PRINT_ENT();
 }
 
 // Fog
@@ -1082,7 +1217,7 @@ int fog_object::load(Stream& strm, int version)
 	{
 		size += strm.read(&dencity);
 	}
-	else
+	else if (mode == FOG_LINEAR)
 	{
 		size += strm.read(&near);
 		size += strm.read(&far);
@@ -1091,7 +1226,21 @@ int fog_object::load(Stream& strm, int version)
 }
 void fog_object::print(FILE* out, char const *indent, int version)
 {
-	object3d_object::print(out, indent);
+	OBJECT_PRINT_START("Fog");
+	object3d_object::print(out, new_indent, version);
+
+	print_value(out, new_indent, "color", color);
+	print_value(out, new_indent, "mode", mode);
+	if (mode == FOG_EXPONENTIAL || (version == M3G_FILE_FORMAT_10
+		&& mode == FOG_EXPONENTIAL_SQUARED))
+		print_value(out, new_indent, "density", density);
+	else if (mode == FOG_LINEAR)
+	{
+		print_value(out, new_indent, "near", near);
+		print_value(out, new_indent, "far", far);
+	}
+
+	OBJECT_PRINT_END();
 }
 
 // Group
