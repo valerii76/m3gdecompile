@@ -156,7 +156,7 @@ char const *type_props<Matrix>::name = "Matrix";
 char const* type_props<Matrix>::to_string(Matrix &v)
 {
 	static char str[2048];
-	sprintf(str, "{ %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g }",
+	sprintf(str, "{ %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g }",
 		v.v[0], v.v[1], v.v[2], v.v[3],
 		v.v[4], v.v[5], v.v[6], v.v[7],
 		v.v[8], v.v[9], v.v[10], v.v[11],

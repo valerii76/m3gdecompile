@@ -640,7 +640,7 @@ int object3d_object::load(Stream& strm, int version)
 	{
 		parameter_s param;
 		size += strm.read(&param.parameter_id);
-		size += strm.read(&param.parameter_value);
+		size += strm.read_varray(&param.parameter_value);
 		parameters.push_back(param);
 	}
 
@@ -1318,7 +1318,7 @@ int image2d_object::load(Stream& strm, int version)
 {
 	int size = 0;
 	size += image_base_object::load(strm, version);
-	if (is_mutable)
+	if (is_mutable == false)
 	{
 		size += strm.read_varray(&palette);
 		size += strm.read_varray(&base_pixels);
@@ -1501,6 +1501,7 @@ void index_buffer_object::print(FILE* out, char const *indent, int version)
 int keyframe_sequence_object::load(Stream& strm, int version)
 {
 	int size = 0;
+	channel_count = 1;
 	size += object3d_object::load(strm, version);
 	size += strm.read(&interpolation);
 	size += strm.read(&repeat_mode);
@@ -1522,7 +1523,7 @@ int keyframe_sequence_object::load(Stream& strm, int version)
 			size += strm.read(&kf.time);
 			size += strm.read_array(
 				&kf.vector_value._float32,
-				keyframe_count * channel_count);
+				component_count * channel_count);
 			keyframes.push_back(kf);
 		}
 	}
@@ -1535,7 +1536,7 @@ int keyframe_sequence_object::load(Stream& strm, int version)
 			keyframe_s kf;
 			size += strm.read(&kf.time);
 			size += strm.read_array(&kf.vector_value._byte,
-				keyframe_count * channel_count);
+				component_count * channel_count);
 			keyframes.push_back(kf);
 		}
 	}
@@ -2069,6 +2070,7 @@ int vertex_array_object::load(Stream& strm, int version)
 				size += strm.read_array(&v._float32,
 					component_type);
 		}
+		components.push_back(v);
 	}
 	return size;
 }

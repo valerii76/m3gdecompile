@@ -200,7 +200,8 @@ inline void print_varray(
 	std::vector<T> &v)
 {
 	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
-	print_array(out, indent, name, &v.front(), v.size());
+	if (v.size())
+	    print_array(out, indent, name, &v.front(), v.size());
 }
 
 inline void print_array_oi(
@@ -231,7 +232,8 @@ inline void print_varray_oi(
 	std::vector<ObjectIndex> &v)
 {
 	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
-	print_array_oi(out, indent, name, &v.front(), v.size());
+	if (v.size())
+	    print_array_oi(out, indent, name, &v.front(), v.size());
 }
 
 #endif//__TYPE_PROPS_H__
