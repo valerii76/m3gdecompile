@@ -19,453 +19,6 @@
 #include "m3gformat.h"
 #include "type_props.h"
 
-const int ANIMATIONTRACK_ALPHA = 256;
-const int ANIMATIONTRACK_AMBIENT_COLOR = 257;
-const int ANIMATIONTRACK_ANIMATION_POSITION = 277;
-const int ANIMATIONTRACK_ANIMATION_SPEED = 278;
-const int ANIMATIONTRACK_ANIMATION_WEIGHT = 279;
-const int ANIMATIONTRACK_BOUNDING_BOX = 280;
-const int ANIMATIONTRACK_BOUNDING_SPHERE = 281;
-const int ANIMATIONTRACK_COLLISION_SHAPE = 282;
-const int ANIMATIONTRACK_COLOR = 258;
-const int ANIMATIONTRACK_CROP = 259;
-const int ANIMATIONTRACK_DENSITY = 260;
-const int ANIMATIONTRACK_DEPTH = 283;
-const int ANIMATIONTRACK_DIFFUSE_COLOR = 261;
-const int ANIMATIONTRACK_EMISSIVE_COLOR = 262;
-const int ANIMATIONTRACK_FAR_DISTANCE = 263;
-const int ANIMATIONTRACK_FIELD_OF_VIEW = 264;
-const int ANIMATIONTRACK_INTENSITY = 265;
-const int ANIMATIONTRACK_MORPH_WEIGHTS = 266;
-const int ANIMATIONTRACK_NEAR_DISTANCE = 267;
-const int ANIMATIONTRACK_ORIENTATION = 268;
-const int ANIMATIONTRACK_PICKABILITY = 269;
-const int ANIMATIONTRACK_POINT_SIZE = 284;
-const int ANIMATIONTRACK_SCALE = 270;
-const int ANIMATIONTRACK_SHININESS = 271;
-const int ANIMATIONTRACK_SPECULAR_COLOR = 272;
-const int ANIMATIONTRACK_SPOT_ANGLE = 273;
-const int ANIMATIONTRACK_SPOT_EXPONENT = 274;
-const int ANIMATIONTRACK_STENCIL = 285;
-const int ANIMATIONTRACK_TRANSLATION = 275;
-const int ANIMATIONTRACK_VISIBILITY = 276;
-const int BACKGROUND_BORDER = 32;
-const int BACKGROUND_REPEAT = 33;
-const int BLENDER_ADD = 88;
-const int BLENDER_CONSTANT_ALPHA = 125;
-const int BLENDER_CONSTANT_COLOR = 123;
-const int BLENDER_DST_ALPHA = 118;
-const int BLENDER_DST_COLOR = 120;
-const int BLENDER_ONE = 113;
-const int BLENDER_ONE_MINUS_CONSTANT_ALPHA = 126;
-const int BLENDER_ONE_MINUS_CONSTANT_COLOR = 124;
-const int BLENDER_ONE_MINUS_DST_ALPHA = 119;
-const int BLENDER_ONE_MINUS_DST_COLOR = 121;
-const int BLENDER_ONE_MINUS_SRC_ALPHA = 117;
-const int BLENDER_ONE_MINUS_SRC_COLOR = 115;
-const int BLENDER_REVERSE_SUBTRACT = 90;
-const int BLENDER_SRC_ALPHA = 116;
-const int BLENDER_SRC_ALPHA_SATURATE = 122;
-const int BLENDER_SRC_COLOR = 114;
-const int BLENDER_SUBTRACT = 89;
-const int BLENDER_ZERO = 112;
-const int CAMERA_GENERIC = 48;
-const int CAMERA_PARALLEL = 49;
-const int CAMERA_PERSPECTIVE = 50;
-const int CAMERA_SCREEN = 51;
-const int COMPOSITINGMODE_ADD = 69;
-const int COMPOSITINGMODE_ALPHA = 64;
-const int COMPOSITINGMODE_ALPHA_ADD = 65;
-const int COMPOSITINGMODE_ALPHA_DARKEN = 70;
-const int COMPOSITINGMODE_ALPHA_PREMULTIPLIED = 71;
-const int COMPOSITINGMODE_ALWAYS = 519;
-const int COMPOSITINGMODE_EQUAL = 514;
-const int COMPOSITINGMODE_GEQUAL = 518;
-const int COMPOSITINGMODE_GREATER = 516;
-const int COMPOSITINGMODE_LEQUAL = 515;
-const int COMPOSITINGMODE_LESS = 513;
-const int COMPOSITINGMODE_MODULATE = 66;
-const int COMPOSITINGMODE_MODULATE_INV = 72;
-const int COMPOSITINGMODE_MODULATE_X2 = 67;
-const int COMPOSITINGMODE_NEVER = 512;
-const int COMPOSITINGMODE_NOTEQUAL = 517;
-const int COMPOSITINGMODE_REPLACE = 68;
-const int FOG_EXPONENTIAL = 80;
-const int FOG_EXPONENTIAL_SQUARED = 82;
-const int FOG_LINEAR = 81;
-const int GRAPHICS3D_ANTIALIAS = 2;
-const int GRAPHICS3D_DEPTH = 64;
-const int GRAPHICS3D_DITHER = 4;
-const int GRAPHICS3D_NO_OVERLAYS = 32;
-const int GRAPHICS3D_OVERWRITE = 16;
-const int GRAPHICS3D_PURE3D = 48;
-const int GRAPHICS3D_STENCIL = 128;
-const int GRAPHICS3D_TRUE_COLOR = 8;
-const int GRAPHICS3D_VALIDATE = 256;
-const int IMAGEBASE_ALPHA = 96;
-const int IMAGEBASE_LOSSLESS = 16384;
-const int IMAGEBASE_LUMINANCE = 97;
-const int IMAGEBASE_LUMINANCE_ALPHA = 98;
-const int IMAGEBASE_NO_MIPMAPS = 32768;
-const int IMAGEBASE_R_COMPRESSED = 105;
-const int IMAGEBASE_RG_COMPRESSED = 106;
-const int IMAGEBASE_RGB = 99;
-const int IMAGEBASE_RGB_COMPRESSED = 107;
-const int IMAGEBASE_RGB_ETC = 104;
-const int IMAGEBASE_RGB565 = 101;
-const int IMAGEBASE_RGBA = 100;
-const int IMAGEBASE_RGBA_COMPRESSED = 108;
-const int IMAGEBASE_RGBA4444 = 103;
-const int IMAGEBASE_RGBA5551 = 102;
-const int IMAGEBASE_Y_UP = 65536;
-const int IMAGECUBE_NEG_X = 57;
-const int IMAGECUBE_NEG_Y = 59;
-const int IMAGECUBE_NEG_Z = 61;
-const int IMAGECUBE_POS_X = 56;
-const int IMAGECUBE_POS_Y = 58;
-const int IMAGECUBE_POS_Z = 60;
-const int INDEXBUFFER_LINES = 9;
-const int INDEXBUFFER_POINT_SPRITES = 10;
-const int INDEXBUFFER_TRIANGLES = 8;
-const int KEYFRAMESEQUENCE_ADDITIVE_LOOP = 194;
-const int KEYFRAMESEQUENCE_CONSTANT = 192;
-const int KEYFRAMESEQUENCE_LINEAR = 176;
-const int KEYFRAMESEQUENCE_LOOP = 193;
-const int KEYFRAMESEQUENCE_SLERP = 177;
-const int KEYFRAMESEQUENCE_SPLINE = 178;
-const int KEYFRAMESEQUENCE_SQUAD = 179;
-const int KEYFRAMESEQUENCE_STEP = 180;
-const int LIGHT_AMBIENT = 128;
-const int LIGHT_DIRECTIONAL = 129;
-const int LIGHT_OMNI = 130;
-const int LIGHT_SPOT = 131;
-const int MATERIAL_AMBIENT = 1024;
-const int MATERIAL_DIFFUSE = 2048;
-const int MATERIAL_EMISSIVE = 4096;
-const int MATERIAL_SPECULAR = 8192;
-const int NODE_NONE = 144;
-const int NODE_ORIGIN = 145;
-const int NODE_X_AXIS = 146;
-const int NODE_Y_AXIS = 147;
-const int NODE_Z_AXIS = 148;
-const int POLYGONMODE_CULL_BACK = 160;
-const int POLYGONMODE_CULL_FRONT = 161;
-const int POLYGONMODE_CULL_NONE = 162;
-const int POLYGONMODE_SHADE_FLAT = 164;
-const int POLYGONMODE_SHADE_SMOOTH = 165;
-const int POLYGONMODE_WINDING_CCW = 168;
-const int POLYGONMODE_WINDING_CW = 169;
-const int SHADERUNIFORMS_ALPHA_FACTOR = 384;
-const int SHADERUNIFORMS_BONE_MATRICES = 385;
-const int SHADERUNIFORMS_CAMERA_FAR_DISTANCE = 386;
-const int SHADERUNIFORMS_CAMERA_FIELD_OF_VIEW = 387;
-const int SHADERUNIFORMS_CAMERA_NEAR_DISTANCE = 388;
-const int SHADERUNIFORMS_CAMERA_PROJECTION = 389;
-const int SHADERUNIFORMS_CAMERA_SPACE_DIRECTION = 390;
-const int SHADERUNIFORMS_CAMERA_SPACE_POSITION = 391;
-const int SHADERUNIFORMS_COMPOSITE_MATRIX = 392;
-const int SHADERUNIFORMS_LIGHT_COLOR = 393;
-const int SHADERUNIFORMS_MATRIX = 394;
-const int SHADERUNIFORMS_MODEL_SPACE_DIRECTION = 395;
-const int SHADERUNIFORMS_MODEL_SPACE_POSITION = 396;
-const int SHADERUNIFORMS_ORIENTATION = 397;
-const int SHADERUNIFORMS_SCALE = 398;
-const int SHADERUNIFORMS_TRANSLATION = 399;
-const int SHADERUNIFORMS_WORLD_SPACE_DIRECTION = 400;
-const int SHADERUNIFORMS_WORLD_SPACE_POSITION = 401;
-const int SHADERVARIABLE_BOOL = 321;
-const int SHADERVARIABLE_BVEC2 = 326;
-const int SHADERVARIABLE_BVEC3 = 327;
-const int SHADERVARIABLE_BVEC4 = 328;
-const int SHADERVARIABLE_FLOAT = 320;
-const int SHADERVARIABLE_INT = 322;
-const int SHADERVARIABLE_IVEC2 = 329;
-const int SHADERVARIABLE_IVEC3 = 330;
-const int SHADERVARIABLE_IVEC4 = 331;
-const int SHADERVARIABLE_MAT2 = 332;
-const int SHADERVARIABLE_MAT3 = 333;
-const int SHADERVARIABLE_MAT3X4 = 335;
-const int SHADERVARIABLE_MAT4 = 334;
-const int SHADERVARIABLE_SAMPLER_2D = 336;
-const int SHADERVARIABLE_SAMPLER_CUBE = 337;
-const int SHADERVARIABLE_VEC2 = 323;
-const int SHADERVARIABLE_VEC3 = 324;
-const int SHADERVARIABLE_VEC4 = 325;
-const int STENCIL_BACK = 262144;
-const int STENCIL_DECR = 68;
-const int STENCIL_DECR_WRAP = 71;
-const int STENCIL_FRONT = 131072;
-const int STENCIL_INCR = 67;
-const int STENCIL_INCR_WRAP = 70;
-const int STENCIL_INVERT = 69;
-const int STENCIL_KEEP = 65;
-const int STENCIL_REPLACE = 66;
-const int STENCIL_ZERO = 64;
-const int TEXTURE_FILTER_ANISOTROPIC = 211;
-const int TEXTURE_FILTER_BASE_LEVEL = 208;
-const int TEXTURE_FILTER_LINEAR = 209;
-const int TEXTURE_FILTER_NEAREST = 210;
-const int TEXTURE2D_FUNC_ADD = 224;
-const int TEXTURE2D_FUNC_BLEND = 225;
-const int TEXTURE2D_FUNC_DECAL = 226;
-const int TEXTURE2D_FUNC_MODULATE = 227;
-const int TEXTURE2D_FUNC_REPLACE = 228;
-const int TEXTURE2D_WRAP_CLAMP = 240;
-const int TEXTURE2D_WRAP_MIRROR = 242;
-const int TEXTURE2D_WRAP_REPEAT = 241;
-const int TEXTURECOMBINER_ADD = 16;
-const int TEXTURECOMBINER_ADD_SIGNED = 17;
-const int TEXTURECOMBINER_ALPHA = 512;
-const int TEXTURECOMBINER_CONSTANT = 28;
-const int TEXTURECOMBINER_DOT3_RGB = 18;
-const int TEXTURECOMBINER_DOT3_RGBA = 19;
-const int TEXTURECOMBINER_INTERPOLATE = 20;
-const int TEXTURECOMBINER_INVERT = 256;
-const int TEXTURECOMBINER_MODULATE = 21;
-const int TEXTURECOMBINER_PREVIOUS = 30;
-const int TEXTURECOMBINER_PRIMARY = 29;
-const int TEXTURECOMBINER_REPLACE = 22;
-const int TEXTURECOMBINER_SUBTRACT = 23;
-const int TEXTURECOMBINER_TEXTURE = 31;
-const int VERTEXARRAY_BYTE = 1;
-const int VERTEXARRAY_FIXED = 3;
-const int VERTEXARRAY_FLOAT = 4;
-const int VERTEXARRAY_HALF = 5;
-const int VERTEXARRAY_SHORT = 2;
-const struct m3g_const_names_s
-{
-	int value; char const* name;
-} m3g_const_names[] =
-{
-	{ ANIMATIONTRACK_ALPHA, "ALPHA" },
-	{ ANIMATIONTRACK_AMBIENT_COLOR, "AMBIENT_COLOR" },
-	{ ANIMATIONTRACK_ANIMATION_POSITION, "ANIMATION_POSITION" },
-	{ ANIMATIONTRACK_ANIMATION_SPEED, "ANIMATION_SPEED" },
-	{ ANIMATIONTRACK_ANIMATION_WEIGHT, "ANIMATION_WEIGHT" },
-	{ ANIMATIONTRACK_BOUNDING_BOX, "BOUNDING_BOX" },
-	{ ANIMATIONTRACK_BOUNDING_SPHERE, "BOUNDING_SPHERE" },
-	{ ANIMATIONTRACK_COLLISION_SHAPE, "COLLISION_SHAPE" },
-	{ ANIMATIONTRACK_COLOR, "COLOR" },
-	{ ANIMATIONTRACK_CROP, "CROP" },
-	{ ANIMATIONTRACK_DENSITY, "DENSITY" },
-	{ ANIMATIONTRACK_DEPTH, "DEPTH" },
-	{ ANIMATIONTRACK_DIFFUSE_COLOR, "DIFFUSE_COLOR" },
-	{ ANIMATIONTRACK_EMISSIVE_COLOR, "EMISSIVE_COLOR" },
-	{ ANIMATIONTRACK_FAR_DISTANCE, "FAR_DISTANCE" },
-	{ ANIMATIONTRACK_FIELD_OF_VIEW, "FIELD_OF_VIEW" },
-	{ ANIMATIONTRACK_INTENSITY, "INTENSITY" },
-	{ ANIMATIONTRACK_MORPH_WEIGHTS, "MORPH_WEIGHTS" },
-	{ ANIMATIONTRACK_NEAR_DISTANCE, "NEAR_DISTANCE" },
-	{ ANIMATIONTRACK_ORIENTATION, "ORIENTATION" },
-	{ ANIMATIONTRACK_PICKABILITY, "PICKABILITY" },
-	{ ANIMATIONTRACK_POINT_SIZE, "POINT_SIZE" },
-	{ ANIMATIONTRACK_SCALE, "SCALE" },
-	{ ANIMATIONTRACK_SHININESS, "SHININESS" },
-	{ ANIMATIONTRACK_SPECULAR_COLOR, "SPECULAR_COLOR" },
-	{ ANIMATIONTRACK_SPOT_ANGLE, "SPOT_ANGLE" },
-	{ ANIMATIONTRACK_SPOT_EXPONENT, "SPOT_EXPONENT" },
-	{ ANIMATIONTRACK_STENCIL, "STENCIL" },
-	{ ANIMATIONTRACK_TRANSLATION, "TRANSLATION" },
-	{ ANIMATIONTRACK_VISIBILITY, "VISIBILITY" },
-	{ BACKGROUND_BORDER, "BORDER" },
-	{ BACKGROUND_REPEAT, "REPEAT" },
-	{ BLENDER_ADD, "ADD" },
-	{ BLENDER_CONSTANT_ALPHA, "CONSTANT_ALPHA" },
-	{ BLENDER_CONSTANT_COLOR, "CONSTANT_COLOR" },
-	{ BLENDER_DST_ALPHA, "DST_ALPHA" },
-	{ BLENDER_DST_COLOR, "DST_COLOR" },
-	{ BLENDER_ONE, "ONE" },
-	{ BLENDER_ONE_MINUS_CONSTANT_ALPHA, "ONE_MINUS_CONSTANT_ALPHA" },
-	{ BLENDER_ONE_MINUS_CONSTANT_COLOR, "ONE_MINUS_CONSTANT_COLOR" },
-	{ BLENDER_ONE_MINUS_DST_ALPHA, "ONE_MINUS_DST_ALPHA" },
-	{ BLENDER_ONE_MINUS_DST_COLOR, "ONE_MINUS_DST_COLOR" },
-	{ BLENDER_ONE_MINUS_SRC_ALPHA, "ONE_MINUS_SRC_ALPHA" },
-	{ BLENDER_ONE_MINUS_SRC_COLOR, "ONE_MINUS_SRC_COLOR" },
-	{ BLENDER_REVERSE_SUBTRACT, "REVERSE_SUBTRACT" },
-	{ BLENDER_SRC_ALPHA, "SRC_ALPHA" },
-	{ BLENDER_SRC_ALPHA_SATURATE, "SRC_ALPHA_SATURATE" },
-	{ BLENDER_SRC_COLOR, "SRC_COLOR" },
-	{ BLENDER_SUBTRACT, "SUBTRACT" },
-	{ BLENDER_ZERO, "ZERO" },
-	{ CAMERA_GENERIC, "GENERIC" },
-	{ CAMERA_PARALLEL, "PARALLEL" },
-	{ CAMERA_PERSPECTIVE, "PERSPECTIVE" },
-	{ CAMERA_SCREEN, "SCREEN" },
-	{ COMPOSITINGMODE_ADD, "ADD" },
-	{ COMPOSITINGMODE_ALPHA, "ALPHA" },
-	{ COMPOSITINGMODE_ALPHA_ADD, "ALPHA_ADD" },
-	{ COMPOSITINGMODE_ALPHA_DARKEN, "ALPHA_DARKEN" },
-	{ COMPOSITINGMODE_ALPHA_PREMULTIPLIED, "ALPHA_PREMULTIPLIED" },
-	{ COMPOSITINGMODE_ALWAYS, "ALWAYS" },
-	{ COMPOSITINGMODE_EQUAL, "EQUAL" },
-	{ COMPOSITINGMODE_GEQUAL, "GEQUAL" },
-	{ COMPOSITINGMODE_GREATER, "GREATER" },
-	{ COMPOSITINGMODE_LEQUAL, "LEQUAL" },
-	{ COMPOSITINGMODE_LESS, "LESS" },
-	{ COMPOSITINGMODE_MODULATE, "MODULATE" },
-	{ COMPOSITINGMODE_MODULATE_INV, "MODULATE_INV" },
-	{ COMPOSITINGMODE_MODULATE_X2, "MODULATE_X2" },
-	{ COMPOSITINGMODE_NEVER, "NEVER" },
-	{ COMPOSITINGMODE_NOTEQUAL, "NOTEQUAL" },
-	{ COMPOSITINGMODE_REPLACE, "REPLACE" },
-	{ FOG_EXPONENTIAL, "EXPONENTIAL" },
-	{ FOG_EXPONENTIAL_SQUARED, "EXPONENTIAL_SQUARED" },
-	{ FOG_LINEAR, "LINEAR" },
-	{ GRAPHICS3D_ANTIALIAS, "ANTIALIAS" },
-	{ GRAPHICS3D_DEPTH, "DEPTH" },
-	{ GRAPHICS3D_DITHER, "DITHER" },
-	{ GRAPHICS3D_NO_OVERLAYS, "NO_OVERLAYS" },
-	{ GRAPHICS3D_OVERWRITE, "OVERWRITE" },
-	{ GRAPHICS3D_PURE3D, "PURE3D" },
-	{ GRAPHICS3D_STENCIL, "STENCIL" },
-	{ GRAPHICS3D_TRUE_COLOR, "TRUE_COLOR" },
-	{ GRAPHICS3D_VALIDATE, "VALIDATE" },
-	{ IMAGEBASE_ALPHA, "ALPHA" },
-	{ IMAGEBASE_LOSSLESS, "LOSSLESS" },
-	{ IMAGEBASE_LUMINANCE, "LUMINANCE" },
-	{ IMAGEBASE_LUMINANCE_ALPHA, "LUMINANCE_ALPHA" },
-	{ IMAGEBASE_NO_MIPMAPS, "NO_MIPMAPS" },
-	{ IMAGEBASE_R_COMPRESSED, "R_COMPRESSED" },
-	{ IMAGEBASE_RG_COMPRESSED, "RG_COMPRESSED" },
-	{ IMAGEBASE_RGB, "RGB" },
-	{ IMAGEBASE_RGB_COMPRESSED, "RGB_COMPRESSED" },
-	{ IMAGEBASE_RGB_ETC, "RGB_ETC" },
-	{ IMAGEBASE_RGB565, "RGB565" },
-	{ IMAGEBASE_RGBA, "RGBA" },
-	{ IMAGEBASE_RGBA_COMPRESSED, "RGBA_COMPRESSED" },
-	{ IMAGEBASE_RGBA4444, "RGBA4444" },
-	{ IMAGEBASE_RGBA5551, "RGBA5551" },
-	{ IMAGEBASE_Y_UP, "Y_UP" },
-	{ IMAGECUBE_NEG_X, "NEG_X" },
-	{ IMAGECUBE_NEG_Y, "NEG_Y" },
-	{ IMAGECUBE_NEG_Z, "NEG_Z" },
-	{ IMAGECUBE_POS_X, "POS_X" },
-	{ IMAGECUBE_POS_Y, "POS_Y" },
-	{ IMAGECUBE_POS_Z, "POS_Z" },
-	{ INDEXBUFFER_LINES, "LINES" },
-	{ INDEXBUFFER_POINT_SPRITES, "POINT_SPRITES" },
-	{ INDEXBUFFER_TRIANGLES, "TRIANGLES" },
-	{ KEYFRAMESEQUENCE_ADDITIVE_LOOP, "ADDITIVE_LOOP" },
-	{ KEYFRAMESEQUENCE_CONSTANT, "CONSTANT" },
-	{ KEYFRAMESEQUENCE_LINEAR, "LINEAR" },
-	{ KEYFRAMESEQUENCE_LOOP, "LOOP" },
-	{ KEYFRAMESEQUENCE_SLERP, "SLERP" },
-	{ KEYFRAMESEQUENCE_SPLINE, "SPLINE" },
-	{ KEYFRAMESEQUENCE_SQUAD, "SQUAD" },
-	{ KEYFRAMESEQUENCE_STEP, "STEP" },
-	{ LIGHT_AMBIENT, "AMBIENT" },
-	{ LIGHT_DIRECTIONAL, "DIRECTIONAL" },
-	{ LIGHT_OMNI, "OMNI" },
-	{ LIGHT_SPOT, "SPOT" },
-	{ MATERIAL_AMBIENT, "AMBIENT" },
-	{ MATERIAL_DIFFUSE, "DIFFUSE" },
-	{ MATERIAL_EMISSIVE, "EMISSIVE" },
-	{ MATERIAL_SPECULAR, "SPECULAR" },
-	{ NODE_NONE, "NONE" },
-	{ NODE_ORIGIN, "ORIGIN" },
-	{ NODE_X_AXIS, "X_AXIS" },
-	{ NODE_Y_AXIS, "Y_AXIS" },
-	{ NODE_Z_AXIS, "Z_AXIS" },
-	{ POLYGONMODE_CULL_BACK, "CULL_BACK" },
-	{ POLYGONMODE_CULL_FRONT, "CULL_FRONT" },
-	{ POLYGONMODE_CULL_NONE, "CULL_NONE" },
-	{ POLYGONMODE_SHADE_FLAT, "SHADE_FLAT" },
-	{ POLYGONMODE_SHADE_SMOOTH, "SHADE_SMOOTH" },
-	{ POLYGONMODE_WINDING_CCW, "WINDING_CCW" },
-	{ POLYGONMODE_WINDING_CW, "WINDING_CW" },
-	{ SHADERUNIFORMS_ALPHA_FACTOR, "ALPHA_FACTOR" },
-	{ SHADERUNIFORMS_BONE_MATRICES, "BONE_MATRICES" },
-	{ SHADERUNIFORMS_CAMERA_FAR_DISTANCE, "CAMERA_FAR_DISTANCE" },
-	{ SHADERUNIFORMS_CAMERA_FIELD_OF_VIEW, "CAMERA_FIELD_OF_VIEW" },
-	{ SHADERUNIFORMS_CAMERA_NEAR_DISTANCE, "CAMERA_NEAR_DISTANCE" },
-	{ SHADERUNIFORMS_CAMERA_PROJECTION, "CAMERA_PROJECTION" },
-	{ SHADERUNIFORMS_CAMERA_SPACE_DIRECTION, "CAMERA_SPACE_DIRECTION" },
-	{ SHADERUNIFORMS_CAMERA_SPACE_POSITION, "CAMERA_SPACE_POSITION" },
-	{ SHADERUNIFORMS_COMPOSITE_MATRIX, "COMPOSITE_MATRIX" },
-	{ SHADERUNIFORMS_LIGHT_COLOR, "LIGHT_COLOR" },
-	{ SHADERUNIFORMS_MATRIX, "MATRIX" },
-	{ SHADERUNIFORMS_MODEL_SPACE_DIRECTION, "MODEL_SPACE_DIRECTION" },
-	{ SHADERUNIFORMS_MODEL_SPACE_POSITION, "MODEL_SPACE_POSITION" },
-	{ SHADERUNIFORMS_ORIENTATION, "ORIENTATION" },
-	{ SHADERUNIFORMS_SCALE, "SCALE" },
-	{ SHADERUNIFORMS_TRANSLATION, "TRANSLATION" },
-	{ SHADERUNIFORMS_WORLD_SPACE_DIRECTION, "WORLD_SPACE_DIRECTION" },
-	{ SHADERUNIFORMS_WORLD_SPACE_POSITION, "WORLD_SPACE_POSITION" },
-	{ SHADERVARIABLE_BOOL, "BOOL" },
-	{ SHADERVARIABLE_BVEC2, "BVEC2" },
-	{ SHADERVARIABLE_BVEC3, "BVEC3" },
-	{ SHADERVARIABLE_BVEC4, "BVEC4" },
-	{ SHADERVARIABLE_FLOAT, "FLOAT" },
-	{ SHADERVARIABLE_INT, "INT" },
-	{ SHADERVARIABLE_IVEC2, "IVEC2" },
-	{ SHADERVARIABLE_IVEC3, "IVEC3" },
-	{ SHADERVARIABLE_IVEC4, "IVEC4" },
-	{ SHADERVARIABLE_MAT2, "MAT2" },
-	{ SHADERVARIABLE_MAT3, "MAT3" },
-	{ SHADERVARIABLE_MAT3X4, "MAT3X4" },
-	{ SHADERVARIABLE_MAT4, "MAT4" },
-	{ SHADERVARIABLE_SAMPLER_2D, "SAMPLER_2D" },
-	{ SHADERVARIABLE_SAMPLER_CUBE, "SAMPLER_CUBE" },
-	{ SHADERVARIABLE_VEC2, "VEC2" },
-	{ SHADERVARIABLE_VEC3, "VEC3" },
-	{ SHADERVARIABLE_VEC4, "VEC4" },
-	{ STENCIL_BACK, "BACK" },
-	{ STENCIL_DECR, "DECR" },
-	{ STENCIL_DECR_WRAP, "DECR_WRAP" },
-	{ STENCIL_FRONT, "FRONT" },
-	{ STENCIL_INCR, "INCR" },
-	{ STENCIL_INCR_WRAP, "INCR_WRAP" },
-	{ STENCIL_INVERT, "INVERT" },
-	{ STENCIL_KEEP, "KEEP" },
-	{ STENCIL_REPLACE, "REPLACE" },
-	{ STENCIL_ZERO, "ZERO" },
-	{ TEXTURE_FILTER_ANISOTROPIC, "FILTER_ANISOTROPIC" },
-	{ TEXTURE_FILTER_BASE_LEVEL, "FILTER_BASE_LEVEL" },
-	{ TEXTURE_FILTER_LINEAR, "FILTER_LINEAR" },
-	{ TEXTURE_FILTER_NEAREST, "FILTER_NEAREST" },
-	{ TEXTURE2D_FUNC_ADD, "FUNC_ADD" },
-	{ TEXTURE2D_FUNC_BLEND, "FUNC_BLEND" },
-	{ TEXTURE2D_FUNC_DECAL, "FUNC_DECAL" },
-	{ TEXTURE2D_FUNC_MODULATE, "FUNC_MODULATE" },
-	{ TEXTURE2D_FUNC_REPLACE, "FUNC_REPLACE" },
-	{ TEXTURE2D_WRAP_CLAMP, "WRAP_CLAMP" },
-	{ TEXTURE2D_WRAP_MIRROR, "WRAP_MIRROR" },
-	{ TEXTURE2D_WRAP_REPEAT, "WRAP_REPEAT" },
-	{ TEXTURECOMBINER_ADD, "ADD" },
-	{ TEXTURECOMBINER_ADD_SIGNED, "ADD_SIGNED" },
-	{ TEXTURECOMBINER_ALPHA, "ALPHA" },
-	{ TEXTURECOMBINER_CONSTANT, "CONSTANT" },
-	{ TEXTURECOMBINER_DOT3_RGB, "DOT3_RGB" },
-	{ TEXTURECOMBINER_DOT3_RGBA, "DOT3_RGBA" },
-	{ TEXTURECOMBINER_INTERPOLATE, "INTERPOLATE" },
-	{ TEXTURECOMBINER_INVERT, "INVERT" },
-	{ TEXTURECOMBINER_MODULATE, "MODULATE" },
-	{ TEXTURECOMBINER_PREVIOUS, "PREVIOUS" },
-	{ TEXTURECOMBINER_PRIMARY, "PRIMARY" },
-	{ TEXTURECOMBINER_REPLACE, "REPLACE" },
-	{ TEXTURECOMBINER_SUBTRACT, "SUBTRACT" },
-	{ TEXTURECOMBINER_TEXTURE, "TEXTURE" },
-	{ VERTEXARRAY_BYTE, "BYTE" },
-	{ VERTEXARRAY_FIXED, "FIXED" },
-	{ VERTEXARRAY_FLOAT, "FLOAT" },
-	{ VERTEXARRAY_HALF, "HALF" },
-	{ VERTEXARRAY_SHORT, "SHORT" },
-	{ NULL, NULL },
-};
-
-char const* m3g_constant_name(int id)
-{
-	int i = 0;
-	static char const* unknown = "UNKNOWN";
-	m3g_const_names_s const* v = &m3g_const_names[i];
-	while (v->name != NULL)
-	{
-		if ( v->value != id)
-			return v->name;
-		v = &m3g_const_names[++i];
-	}
-	return unknown;
-}
 
 int const SECTION_COUNT = 256;
 typedef base_object* (*make_t)();
@@ -536,86 +89,6 @@ struct object_registrator
 	}
 } do_object_registrator;
 
-#define OBJECT_PRINT_START(name) \
-	char new_indent[255]; \
-	strcpy(new_indent, indent); \
-	strcat(new_indent, "\t"); \
-	fprintf(out, "%s" name "\n%s{\n", indent, indent);
-
-#define OBJECT_PRINT_END() \
-	fprintf(out, "%s};\n", indent);
-
-// Header object
-int header_object::load(Stream& strm, int version)
-{
-	int size = 0;
-	size += strm.read_fix_array(version_number, 2);
-	size += strm.read(&has_external_references);
-	size += strm.read(&total_file_size);
-	size += strm.read(&approximate_content_size);
-	size += strm.read(&authoring_field);
-	return size;
-}
-void header_object::print(FILE* out, char const *indent, int version)
-{
-	OBJECT_PRINT_START("Header");
-	print_array(out, new_indent, "VersionNumber", version_number, 2);
-	print_value(out, new_indent, "hasExternalReferences",
-		has_external_references);
-	print_value(out, new_indent, "TotalFileSize", total_file_size);
-	print_value(out, new_indent, "ApproximateContentSize",
-		approximate_content_size);
-	print_value(out, new_indent, "AuthoringField", authoring_field);
-	OBJECT_PRINT_END();
-}
-
-// External reference
-int external_ref_object::load(Stream& strm, int version)
-{
-	return strm.read(&URI);
-}
-
-void external_ref_object::print(FILE* out, char const *indent, int version)
-{
-	OBJECT_PRINT_START("ExternalReferences");
-	print_value(out, new_indent, "URI", URI);
-	OBJECT_PRINT_END();
-}
-
-// External image reference
-int external_image_ref_object::load(Stream& strm, int version)
-{
-	int size = 0;
-	size += external_ref_object::load(strm, version);
-	size += strm.read(&format);
-	return size;
-}
-
-void external_image_ref_object::print(FILE* out, char const *indent, int version)
-{
-	OBJECT_PRINT_START("ExternalImageReferences");
-	external_ref_object::print(out, new_indent, version);
-	print_value(out, new_indent, "format", format);
-	OBJECT_PRINT_END();
-}
-
-// External object reference
-int external_object_ref_object::load(Stream& strm, int version)
-{
-	int size = 0;
-	size += external_ref_object::load(strm, version);
-	size += strm.read_varray(&user_id);
-	return size;
-}
-void external_object_ref_object::print(FILE* out, char const *indent,
-	int version)
-{
-	OBJECT_PRINT_START("ExternalObjectReferences");
-	external_ref_object::print(out, new_indent, version);
-	print_varray(out, new_indent, "userID", user_id);
-	OBJECT_PRINT_END();
-}
-
 // Object3D
 int object3d_object::load(Stream& strm, int version)
 {
@@ -650,35 +123,35 @@ int object3d_object::load(Stream& strm, int version)
 	return size;
 }
 
-void object3d_object::print(FILE* out, char const *indent, int version)
+void object3d_object::print(FILE* out, std::string const &indent, int version)
 {
-	UInt32 count;
+//	UInt32 count;
 
-	OBJECT_PRINT_START("Object3D");
-	print_value(out, new_indent, "userID", user_id);
-	count = animation_tracks.size();
-	print_value(out, new_indent, "animationTrackCount", count);
-	for (int i = 0; i < count; ++i)
-	{
-		print_value_oi(out, new_indent, "animationTrack",
-			animation_tracks[i].animation_track);
-		if (version == M3G_FILE_FORMAT_20)
-			print_value(out, new_indent, "animationTrackIndex",
-				animation_tracks[i].animation_track_index);
-	}
-	count = parameters.size();
-	print_value(out, new_indent, "userParameterCount", count);
-	for (int i = 0; i < count; ++i)
-	{
-		print_value(out, new_indent, "parameterID",
-			parameters[i].parameter_id);
-		print_varray(out, new_indent, "parameterValue",
-			parameters[i].parameter_value);
-	}
-	if (version == M3G_FILE_FORMAT_20)
-		print_value(out, new_indent, "animationEnabled",
-			animation_enabled);
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Object3D");
+//	print_value(out, new_indent, "userID", user_id);
+//	count = animation_tracks.size();
+//	print_value(out, new_indent, "animationTrackCount", count);
+//	for (int i = 0; i < count; ++i)
+//	{
+//		print_value_oi(out, new_indent, "animationTrack",
+//			animation_tracks[i].animation_track);
+//		if (version == M3G_FILE_FORMAT_20)
+//			print_value(out, new_indent, "animationTrackIndex",
+//				animation_tracks[i].animation_track_index);
+//	}
+//	count = parameters.size();
+//	print_value(out, new_indent, "userParameterCount", count);
+//	for (int i = 0; i < count; ++i)
+//	{
+//		print_value(out, new_indent, "parameterID",
+//			parameters[i].parameter_id);
+//		print_varray(out, new_indent, "parameterValue",
+//			parameters[i].parameter_value);
+//	}
+//	if (version == M3G_FILE_FORMAT_20)
+//		print_value(out, new_indent, "animationEnabled",
+//			animation_enabled);
+//	OBJECT_PRINT_END();
 }
 
 // AnimationController
@@ -695,23 +168,24 @@ int animation_controller_object::load(Stream& strm, int version)
 	return size;
 }
 
-void animation_controller_object::print(FILE* out, char const *indent, int version)
+void animation_controller_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("AnimationController");
-	object3d_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "speed", speed);
-	print_value(out, new_indent, "weight", weight);
-	print_value(out, new_indent, "activeIntervalStart",
-		active_interval_start);
-	print_value(out, new_indent, "activeIntervalEnd",
-		active_interval_end);
-	print_value(out, new_indent, "referenceSequenceTime",
-		reference_sequence_time);
-	print_value(out, new_indent, "referenceWorldTime",
-		reference_world_time);
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("AnimationController");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "speed", speed);
+//	print_value(out, new_indent, "weight", weight);
+//	print_value(out, new_indent, "activeIntervalStart",
+//		active_interval_start);
+//	print_value(out, new_indent, "activeIntervalEnd",
+//		active_interval_end);
+//	print_value(out, new_indent, "referenceSequenceTime",
+//		reference_sequence_time);
+//	print_value(out, new_indent, "referenceWorldTime",
+//		reference_world_time);
+//
+//	OBJECT_PRINT_END();
 }
 
 //AnimationTrack
@@ -737,29 +211,30 @@ int animation_track_object::load(Stream& strm, int version)
 	return size;
 }
 
-void animation_track_object::print(FILE* out, char const *indent, int version)
+void animation_track_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("AnimationTrack");
-	object3d_object::print(out, new_indent, version);
-
-	print_value_oi(out, new_indent, "keyframeSequence",
-		keyframe_sequence);
-	print_value_oi(out, new_indent, "animationController",
-		animation_controller);
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		print_value(out, new_indent, "propertyID", property_id.v20);
-		if (property_id.v20 >= SHADERVARIABLE_FLOAT &&
-			property_id.v20 <= SHADERVARIABLE_SAMPLER_CUBE)
-			print_value(out, new_indent, "isNormalizedEnabled",
-				is_normalize_enabled);
-	}
-	else
-	{
-		print_value(out, new_indent, "propertyID", property_id.v10);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("AnimationTrack");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value_oi(out, new_indent, "keyframeSequence",
+//		keyframe_sequence);
+//	print_value_oi(out, new_indent, "animationController",
+//		animation_controller);
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		print_value(out, new_indent, "propertyID", property_id.v20);
+//		if (property_id.v20 >= SHADERVARIABLE_FLOAT &&
+//			property_id.v20 <= SHADERVARIABLE_SAMPLER_CUBE)
+//			print_value(out, new_indent, "isNormalizedEnabled",
+//				is_normalize_enabled);
+//	}
+//	else
+//	{
+//		print_value(out, new_indent, "propertyID", property_id.v10);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // AppearanceBase
@@ -787,29 +262,30 @@ int appearance_base_object::load(Stream& strm, int version)
 	return size;
 }
 
-void appearance_base_object::print(FILE* out, char const *indent, int version)
+void appearance_base_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("AppearanceBase");
-	object3d_object::print(out, new_indent, version);
-
-	if (version == M3G_FILE_FORMAT_10)
-	{
-		print_value(out, new_indent, "layer", layer.v10);
-	}
-	else
-	{
-		print_value(out, new_indent, "layer", layer.v20);
-	}
-	print_value_oi(out, new_indent, "compositingMode", compositing_mode);
-
-	if(version == M3G_FILE_FORMAT_20)
-	{
-		print_value_oi(out, new_indent, "polygon_mode", polygon_mode);
-		print_value(out, new_indent, "isDepthSortEnabled",
-			is_depth_sort_enabled);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("AppearanceBase");
+//	object3d_object::print(out, new_indent, version);
+//
+//	if (version == M3G_FILE_FORMAT_10)
+//	{
+//		print_value(out, new_indent, "layer", layer.v10);
+//	}
+//	else
+//	{
+//		print_value(out, new_indent, "layer", layer.v20);
+//	}
+//	print_value_oi(out, new_indent, "compositingMode", compositing_mode);
+//
+//	if(version == M3G_FILE_FORMAT_20)
+//	{
+//		print_value_oi(out, new_indent, "polygon_mode", polygon_mode);
+//		print_value(out, new_indent, "isDepthSortEnabled",
+//			is_depth_sort_enabled);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // Appearance
@@ -832,26 +308,26 @@ int appearance_object::load(Stream& strm, int version)
 	size += strm.read_varray(&textures);
 	return size;
 }
-void appearance_object::print(FILE* out, char const *indent, int version)
+void appearance_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Appearance");
-	appearance_base_object::print(out, new_indent, version);
-
-	print_value_oi(out, new_indent, "fog", fog);
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		print_value_oi(out, new_indent, "pointSpriteMode",
-			point_sprite_mode);
-	}
-	else
-	{
-		print_value_oi(out, new_indent, "polygonMode",
-			polygon_mode);
-	}
-	print_value_oi(out, new_indent, "material", material);
-	print_varray_oi(out, new_indent, "textures", textures);
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Appearance");
+//	appearance_base_object::print(out, new_indent, version);
+//
+//	print_value_oi(out, new_indent, "fog", fog);
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		print_value_oi(out, new_indent, "pointSpriteMode",
+//			point_sprite_mode);
+//	}
+//	else
+//	{
+//		print_value_oi(out, new_indent, "polygonMode",
+//			polygon_mode);
+//	}
+//	print_value_oi(out, new_indent, "material", material);
+//	print_varray_oi(out, new_indent, "textures", textures);
+//
+//	OBJECT_PRINT_END();
 }
 
 // Backgroud
@@ -882,38 +358,38 @@ int background_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void background_object::print(FILE* out, char const *indent, int version)
+void background_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Background");
-	object3d_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "backgroudColor", background_color);
-	print_value_oi(out, new_indent, "backgroungImage", background_image);
-	print_value(out, new_indent, "backgroundImageModeX",
-		background_image_mode_x);
-	print_value(out, new_indent, "backgroundImageModeY",
-		background_image_mode_y);
-	print_value(out, new_indent, "cropX", crop_x);
-	print_value(out, new_indent, "cropY", crop_y);
-	print_value(out, new_indent, "cropWidth", crop_width);
-	print_value(out, new_indent, "cropHeight", crop_heigth);
-	print_value(out, new_indent, "depthClearEnabled", depth_clear_enabled);
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		print_value(out, new_indent, "depth", depth);
-		print_value(out, new_indent, "stencil", stencil);
-		print_value(out, new_indent, "stencilClearmask",
-			stencil_clear_mask);
-		print_value(out, new_indent, "colorClearMask",
-			color_clear_mask);
-	}
-	else
-	{
-		print_value(out, new_indent, "colorClearEnabled",
-			color_clear_enabled);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Background");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "backgroudColor", background_color);
+//	print_value_oi(out, new_indent, "backgroungImage", background_image);
+//	print_value(out, new_indent, "backgroundImageModeX",
+//		background_image_mode_x);
+//	print_value(out, new_indent, "backgroundImageModeY",
+//		background_image_mode_y);
+//	print_value(out, new_indent, "cropX", crop_x);
+//	print_value(out, new_indent, "cropY", crop_y);
+//	print_value(out, new_indent, "cropWidth", crop_width);
+//	print_value(out, new_indent, "cropHeight", crop_heigth);
+//	print_value(out, new_indent, "depthClearEnabled", depth_clear_enabled);
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		print_value(out, new_indent, "depth", depth);
+//		print_value(out, new_indent, "stencil", stencil);
+//		print_value(out, new_indent, "stencilClearmask",
+//			stencil_clear_mask);
+//		print_value(out, new_indent, "colorClearMask",
+//			color_clear_mask);
+//	}
+//	else
+//	{
+//		print_value(out, new_indent, "colorClearEnabled",
+//			color_clear_enabled);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // Transformable
@@ -940,29 +416,30 @@ int transformable_object::load(Stream& strm, int version)
 
 	return size;
 }
-void transformable_object::print(FILE* out, char const *indent, int version)
+void transformable_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("Transformable");
-	object3d_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "hasComponentTransform",
-		has_component_transform);
-	if (has_component_transform)
-	{
-		print_value(out, new_indent, "translation", translation);
-		print_value(out, new_indent, "scale", scale);
-		print_value(out, new_indent, "orientationAngle",
-			orientation_angle);
-		print_value(out, new_indent, "oritntationAxis",
-			orientation_axis);
-	}
-	print_value(out, new_indent, "hasGenetalTransform",
-		has_general_transform);
-
-	if (has_general_transform)
-		print_value(out, new_indent, "transform", transform);
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Transformable");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "hasComponentTransform",
+//		has_component_transform);
+//	if (has_component_transform)
+//	{
+//		print_value(out, new_indent, "translation", translation);
+//		print_value(out, new_indent, "scale", scale);
+//		print_value(out, new_indent, "orientationAngle",
+//			orientation_angle);
+//		print_value(out, new_indent, "oritntationAxis",
+//			orientation_axis);
+//	}
+//	print_value(out, new_indent, "hasGenetalTransform",
+//		has_general_transform);
+//
+//	if (has_general_transform)
+//		print_value(out, new_indent, "transform", transform);
+//
+//	OBJECT_PRINT_END();
 }
 
 // Node
@@ -1019,70 +496,70 @@ int node_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void node_object::print(FILE* out, char const *indent, int version)
+void node_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Node");
-	transformable_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "enableRendering", enable_rendering);
-	print_value(out, new_indent, "enablePicking", enable_picking);
-	print_value(out, new_indent, "alphaFactor", alpha_factor);
-	print_value(out, new_indent, "scope", scope);
-	print_value(out, new_indent, "hasAlignment", has_alignment);
-	if (has_alignment)
-	{
-		print_value(out, new_indent, "zTarget", z_target);
-		print_value(out, new_indent, "yTarget", y_target);
-		print_value_fi(out, new_indent, "zReference", z_reference);
-		print_value_fi(out, new_indent, "yReference", y_reference);
-	}
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		print_value(out, new_indent, "hasBoundingBox",
-			has_bounding_box);
-		if (has_bounding_box)
-		{
-			print_value(out, new_indent, "boundMinX",
-				bound_min_x);
-			print_value(out, new_indent, "boundMaxX",
-				bound_max_x);
-			print_value(out, new_indent, "boundMinY",
-				bound_min_y);
-			print_value(out, new_indent, "boundMaxY",
-				bound_max_y);
-			print_value(out, new_indent, "bountMinZ",
-				bound_min_z);
-			print_value(out, new_indent, "bountMaxZ",
-				bound_max_z);
-		}
-		print_value(out, new_indent, "hasBoudingSphere",
-			has_bounding_sphere);
-		if (has_bounding_sphere)
-		{
-			print_value(out, new_indent, "boundCenterX",
-				bound_center_x);
-			print_value(out, new_indent, "boundCenterY",
-				bound_center_y);
-			print_value(out, new_indent, "boundCenterZ",
-				bound_center_z);
-			print_value(out, new_indent, "boudnRadius",
-				bound_radius);
-		}
-		print_value(out, new_indent, "collisionEnabled",
-			collision_enabled);
-		print_value(out, new_indent, "hasCollisionShape",
-			has_collision_shape);
-		if (has_collision_shape)
-		{
-			print_value(out, new_indent, "orientations",
-				orientations);
-			print_array(out, new_indent, "min", min, 13);
-			print_array(out, new_indent, "max", max, 13);
-		}
-		print_value(out, new_indent, "LODResolution", lod_resolution);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Node");
+//	transformable_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "enableRendering", enable_rendering);
+//	print_value(out, new_indent, "enablePicking", enable_picking);
+//	print_value(out, new_indent, "alphaFactor", alpha_factor);
+//	print_value(out, new_indent, "scope", scope);
+//	print_value(out, new_indent, "hasAlignment", has_alignment);
+//	if (has_alignment)
+//	{
+//		print_value(out, new_indent, "zTarget", z_target);
+//		print_value(out, new_indent, "yTarget", y_target);
+//		print_value_fi(out, new_indent, "zReference", z_reference);
+//		print_value_fi(out, new_indent, "yReference", y_reference);
+//	}
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		print_value(out, new_indent, "hasBoundingBox",
+//			has_bounding_box);
+//		if (has_bounding_box)
+//		{
+//			print_value(out, new_indent, "boundMinX",
+//				bound_min_x);
+//			print_value(out, new_indent, "boundMaxX",
+//				bound_max_x);
+//			print_value(out, new_indent, "boundMinY",
+//				bound_min_y);
+//			print_value(out, new_indent, "boundMaxY",
+//				bound_max_y);
+//			print_value(out, new_indent, "bountMinZ",
+//				bound_min_z);
+//			print_value(out, new_indent, "bountMaxZ",
+//				bound_max_z);
+//		}
+//		print_value(out, new_indent, "hasBoudingSphere",
+//			has_bounding_sphere);
+//		if (has_bounding_sphere)
+//		{
+//			print_value(out, new_indent, "boundCenterX",
+//				bound_center_x);
+//			print_value(out, new_indent, "boundCenterY",
+//				bound_center_y);
+//			print_value(out, new_indent, "boundCenterZ",
+//				bound_center_z);
+//			print_value(out, new_indent, "boudnRadius",
+//				bound_radius);
+//		}
+//		print_value(out, new_indent, "collisionEnabled",
+//			collision_enabled);
+//		print_value(out, new_indent, "hasCollisionShape",
+//			has_collision_shape);
+//		if (has_collision_shape)
+//		{
+//			print_value(out, new_indent, "orientations",
+//				orientations);
+//			print_array(out, new_indent, "min", min, 13);
+//			print_array(out, new_indent, "max", max, 13);
+//		}
+//		print_value(out, new_indent, "LODResolution", lod_resolution);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // Camera
@@ -1112,34 +589,34 @@ int camera_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void camera_object::print(FILE* out, char const *indent, int version)
+void camera_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Camera");
-	node_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "projectionType", projection_type);
-	if (projection_type == CAMERA_GENERIC)
-	{
-		print_value(out, new_indent, "projectionMatrix",
-			projection_matrix);
-	}
-	else if (version == M3G_FILE_FORMAT_20 &&
-		projection_type == CAMERA_SCREEN)
-	{
-		print_value(out, new_indent, "x", x);
-		print_value(out, new_indent, "y", y);
-		print_value(out, new_indent, "width", width);
-		print_value(out, new_indent, "height", height);
-	}
-	else
-	{
-		print_value(out, new_indent, "fovy", fovy);
-		print_value(out, new_indent, "AspectRatio", aspect_ratio);
-		print_value(out, new_indent, "near", near);
-		print_value(out, new_indent, "far", far);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Camera");
+//	node_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "projectionType", projection_type);
+//	if (projection_type == CAMERA_GENERIC)
+//	{
+//		print_value(out, new_indent, "projectionMatrix",
+//			projection_matrix);
+//	}
+//	else if (version == M3G_FILE_FORMAT_20 &&
+//		projection_type == CAMERA_SCREEN)
+//	{
+//		print_value(out, new_indent, "x", x);
+//		print_value(out, new_indent, "y", y);
+//		print_value(out, new_indent, "width", width);
+//		print_value(out, new_indent, "height", height);
+//	}
+//	else
+//	{
+//		print_value(out, new_indent, "fovy", fovy);
+//		print_value(out, new_indent, "AspectRatio", aspect_ratio);
+//		print_value(out, new_indent, "near", near);
+//		print_value(out, new_indent, "far", far);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // CompositionMode
@@ -1171,37 +648,38 @@ int composition_mode_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void composition_mode_object::print(FILE* out, char const *indent, int version)
+void composition_mode_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("CompositingMode");
-	object3d_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "depthTestEnabled",
-		depth_test_enabled);
-	print_value(out, new_indent, "depthWriteEnabled",
-		depth_write_enabled);
-	if (version == M3G_FILE_FORMAT_10)
-	{
-		print_value(out, new_indent, "colorWriteEnabled",
-			color_write_enabled);
-		print_value(out, new_indent, "alphaWriteEnabled",
-			alpha_write_enabled);
-	}
-	print_value(out, new_indent, "blending", blending);
-	print_value(out, new_indent, "alpha_threshold", alpha_threshold);
-	print_value(out, new_indent, "depthOffsetFactor", depth_offset_factor);
-	print_value(out, new_indent, "depthOffsetUnits", depth_offset_units);
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		print_value(out, new_indent, "depthTest", depth_test);
-		print_value(out, new_indent, "alphaTest", alpha_test);
-		print_value_oi(out, new_indent, "blender", blender);
-		print_value_oi(out, new_indent, "stencil", stencil);
-		print_value(out, new_indent, "colorWriteMask",
-			color_write_mask);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("CompositingMode");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "depthTestEnabled",
+//		depth_test_enabled);
+//	print_value(out, new_indent, "depthWriteEnabled",
+//		depth_write_enabled);
+//	if (version == M3G_FILE_FORMAT_10)
+//	{
+//		print_value(out, new_indent, "colorWriteEnabled",
+//			color_write_enabled);
+//		print_value(out, new_indent, "alphaWriteEnabled",
+//			alpha_write_enabled);
+//	}
+//	print_value(out, new_indent, "blending", blending);
+//	print_value(out, new_indent, "alpha_threshold", alpha_threshold);
+//	print_value(out, new_indent, "depthOffsetFactor", depth_offset_factor);
+//	print_value(out, new_indent, "depthOffsetUnits", depth_offset_units);
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		print_value(out, new_indent, "depthTest", depth_test);
+//		print_value(out, new_indent, "alphaTest", alpha_test);
+//		print_value_oi(out, new_indent, "blender", blender);
+//		print_value_oi(out, new_indent, "stencil", stencil);
+//		print_value(out, new_indent, "colorWriteMask",
+//			color_write_mask);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // Fog
@@ -1224,23 +702,23 @@ int fog_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void fog_object::print(FILE* out, char const *indent, int version)
+void fog_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Fog");
-	object3d_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "color", color);
-	print_value(out, new_indent, "mode", mode);
-	if (mode == FOG_EXPONENTIAL || (version == M3G_FILE_FORMAT_10
-		&& mode == FOG_EXPONENTIAL_SQUARED))
-		print_value(out, new_indent, "density", density);
-	else if (mode == FOG_LINEAR)
-	{
-		print_value(out, new_indent, "near", near);
-		print_value(out, new_indent, "far", far);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Fog");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "color", color);
+//	print_value(out, new_indent, "mode", mode);
+//	if (mode == FOG_EXPONENTIAL || (version == M3G_FILE_FORMAT_10
+//		&& mode == FOG_EXPONENTIAL_SQUARED))
+//		print_value(out, new_indent, "density", density);
+//	else if (mode == FOG_LINEAR)
+//	{
+//		print_value(out, new_indent, "near", near);
+//		print_value(out, new_indent, "far", far);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // Group
@@ -1258,20 +736,20 @@ int group_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void group_object::print(FILE* out, char const *indent, int version)
+void group_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Group");
-	node_object::print(out, new_indent, version);
-
-	print_varray(out, new_indent, "children", children);
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		print_value(out, new_indent, "isLodEnabled", is_lod_enabled);
-		print_value(out, new_indent, "hysteresis", hysteresis);
-		print_value(out, new_indent, "offset", offset);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Group");
+//	node_object::print(out, new_indent, version);
+//
+//	print_varray(out, new_indent, "children", children);
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		print_value(out, new_indent, "isLodEnabled", is_lod_enabled);
+//		print_value(out, new_indent, "hysteresis", hysteresis);
+//		print_value(out, new_indent, "offset", offset);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // ImageBase
@@ -1292,25 +770,25 @@ int image_base_object::load(Stream& strm, int version)
 	size += strm.read(&height);
 	return size;
 }
-void image_base_object::print(FILE* out, char const *indent, int version)
+void image_base_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("ImageBase");
-	object3d_object::print(out, new_indent, version);
-
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		print_value(out, new_indent, "format", format.v20);
-	}
-	else
-	{
-		print_value(out, new_indent, "format", format.v10);
-	}
-
-	print_value(out, new_indent, "isMutable", is_mutable);
-	print_value(out, new_indent, "width", width);
-	print_value(out, new_indent, "height", height);
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("ImageBase");
+//	object3d_object::print(out, new_indent, version);
+//
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		print_value(out, new_indent, "format", format.v20);
+//	}
+//	else
+//	{
+//		print_value(out, new_indent, "format", format.v10);
+//	}
+//
+//	print_value(out, new_indent, "isMutable", is_mutable);
+//	print_value(out, new_indent, "width", width);
+//	print_value(out, new_indent, "height", height);
+//
+//	OBJECT_PRINT_END();
 }
 
 // Image2D
@@ -1336,29 +814,29 @@ int image2d_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void image2d_object::print(FILE* out, char const *indent, int version)
+void image2d_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Image2D");
-	image_base_object::print(out, new_indent, version);
-
-	if (is_mutable == false)
-	{
-		print_varray(out, new_indent, "palette", palette);
-		print_varray(out, new_indent, "basePixels", base_pixels);
-
-		if (version == M3G_FILE_FORMAT_20)
-		{
-			print_value(out, new_indent, "mipmapCount",
-				mipmap_count);
-			for (int i = 0; i < mipmap_count; ++i)
-			{
-				print_varray(out, new_indent, "mipmapPixels",
-					mipmaps[i].mipmap_pixels);
-			}
-		}
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Image2D");
+//	image_base_object::print(out, new_indent, version);
+//
+//	if (is_mutable == false)
+//	{
+//		print_varray(out, new_indent, "palette", palette);
+//		print_varray(out, new_indent, "basePixels", base_pixels);
+//
+//		if (version == M3G_FILE_FORMAT_20)
+//		{
+//			print_value(out, new_indent, "mipmapCount",
+//				mipmap_count);
+//			for (int i = 0; i < mipmap_count; ++i)
+//			{
+//				print_varray(out, new_indent, "mipmapPixels",
+//					mipmaps[i].mipmap_pixels);
+//			}
+//		}
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // IndexBuffer
@@ -1421,80 +899,81 @@ int index_buffer_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void index_buffer_object::print(FILE* out, char const *indent, int version)
+void index_buffer_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("IndexBuffer");
-	object3d_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "encoding", encoding);
-
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		print_value(out, new_indent, "isImmutable", is_immutable);
-		print_value(out, new_indent, "primitiveType", primitive_type);
-		print_value(out, new_indent, "stripEncoding", strip_encoding);
-
-		if (strip_encoding == 0 || strip_encoding == 128)
-		{
-			print_value(out, new_indent, "primitiveCount",
-				primitive_count._uint32);
-			if (strip_encoding == 128)
-				print_array(out, new_indent, "stripLengths",
-					&strip_lengths._uint32.front(),
-					primitive_count._uint32);
-		}
-		else if (strip_encoding == 1 || strip_encoding == 129)
-		{
-			print_value(out, new_indent, "primitiveCount",
-				primitive_count._byte);
-			if (strip_encoding == 129)
-				print_array(out, new_indent, "stripLengths",
-					&strip_lengths._byte.front(),
-					primitive_count._byte);
-		}
-		else if (strip_encoding == 2 || strip_encoding == 130)
-		{
-			print_value(out, new_indent, "primitiveCount",
-				primitive_count._uint16);
-			if (strip_encoding == 130)
-				print_array(out, new_indent, "stripLengths",
-					&strip_lengths._uint16.front(),
-					primitive_count._uint16);
-		}
-	}
-
-	if (encoding == 0)
-		print_value(out, new_indent, "startIndex",
-			start_index._uint32);
-	else if (encoding == 1)
-		print_value(out, new_indent, "startIndex",
-			start_index._byte);
-	else if (encoding == 2)
-		print_value(out, new_indent, "startIndex",
-			start_index._uint16);
-	else if (encoding == 128)
-		print_varray(out, new_indent, "indices",
-			indices._uint32);
-	else if (encoding == 129)
-		print_varray(out, new_indent, "indices",
-			indices._byte);
-	else if (encoding == 130)
-		print_varray(out, new_indent, "indices",
-			indices._uint16);
-	else if (version == M3G_FILE_FORMAT_20)
-	{
-		if (encoding == 192)
-			print_varray(out, new_indent, "indexDeltas",
-				index_deltas._i32);
-		else if (encoding == 193)
-			print_varray(out, new_indent, "indexDeltas",
-				index_deltas._byte);
-		else if (encoding == 194)
-			print_varray(out, new_indent, "indexDeltas",
-				index_deltas._i16);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("IndexBuffer");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "encoding", encoding);
+//
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		print_value(out, new_indent, "isImmutable", is_immutable);
+//		print_value(out, new_indent, "primitiveType", primitive_type);
+//		print_value(out, new_indent, "stripEncoding", strip_encoding);
+//
+//		if (strip_encoding == 0 || strip_encoding == 128)
+//		{
+//			print_value(out, new_indent, "primitiveCount",
+//				primitive_count._uint32);
+//			if (strip_encoding == 128)
+//				print_array(out, new_indent, "stripLengths",
+//					&strip_lengths._uint32.front(),
+//					primitive_count._uint32);
+//		}
+//		else if (strip_encoding == 1 || strip_encoding == 129)
+//		{
+//			print_value(out, new_indent, "primitiveCount",
+//				primitive_count._byte);
+//			if (strip_encoding == 129)
+//				print_array(out, new_indent, "stripLengths",
+//					&strip_lengths._byte.front(),
+//					primitive_count._byte);
+//		}
+//		else if (strip_encoding == 2 || strip_encoding == 130)
+//		{
+//			print_value(out, new_indent, "primitiveCount",
+//				primitive_count._uint16);
+//			if (strip_encoding == 130)
+//				print_array(out, new_indent, "stripLengths",
+//					&strip_lengths._uint16.front(),
+//					primitive_count._uint16);
+//		}
+//	}
+//
+//	if (encoding == 0)
+//		print_value(out, new_indent, "startIndex",
+//			start_index._uint32);
+//	else if (encoding == 1)
+//		print_value(out, new_indent, "startIndex",
+//			start_index._byte);
+//	else if (encoding == 2)
+//		print_value(out, new_indent, "startIndex",
+//			start_index._uint16);
+//	else if (encoding == 128)
+//		print_varray(out, new_indent, "indices",
+//			indices._uint32);
+//	else if (encoding == 129)
+//		print_varray(out, new_indent, "indices",
+//			indices._byte);
+//	else if (encoding == 130)
+//		print_varray(out, new_indent, "indices",
+//			indices._uint16);
+//	else if (version == M3G_FILE_FORMAT_20)
+//	{
+//		if (encoding == 192)
+//			print_varray(out, new_indent, "indexDeltas",
+//				index_deltas._i32);
+//		else if (encoding == 193)
+//			print_varray(out, new_indent, "indexDeltas",
+//				index_deltas._byte);
+//		else if (encoding == 194)
+//			print_varray(out, new_indent, "indexDeltas",
+//				index_deltas._i16);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // Keyframe sequence
@@ -1569,81 +1048,82 @@ int keyframe_sequence_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void keyframe_sequence_object::print(FILE* out, char const *indent, int version)
+void keyframe_sequence_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("KeyframeSequence");
-	object3d_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "interpolation", interpolation);
-	print_value(out, new_indent, "repeatMode", repeat_mode);
-	print_value(out, new_indent, "encoding", encoding);
-	print_value(out, new_indent, "duration", duration);
-	print_value(out, new_indent, "validRangeFirst", valid_range_first);
-	print_value(out, new_indent, "validRangeLast", valid_range_last);
-	print_value(out, new_indent, "componentCount", component_count);
-	print_value(out, new_indent, "keyframeCount", keyframe_count);
-
-	if (version == M3G_FILE_FORMAT_20)
-		print_value(out, new_indent, "channelCount", channel_count);
-
-	if (encoding == 0)
-	{
-		for (int i = 0; i < keyframe_count; ++i)
-		{
-			print_value(out, new_indent, "time",
-				keyframes[i].time);
-			print_array(out, new_indent, "vectorValue",
-				&keyframes[i].vector_value._float32.front(),
-				component_count * channel_count);
-		}
-	}
-	if (encoding == 1)
-	{
-		print_array(out, new_indent, "vectorBias",
-			&vector_bias.front(), component_count);
-		print_array(out, new_indent, "vectorScale",
-			&vector_scale.front(), component_count);
-
-		for (int i = 0; i < keyframe_count; ++i)
-		{
-			print_value(out, new_indent, "time",
-				keyframes[i].time);
-			print_array(out, new_indent, "vectorValue",
-				&keyframes[i].vector_value._byte.front(),
-				component_count * channel_count);
-		}
-	}
-	else if (encoding == 2)
-	{
-		print_array(out, new_indent, "vectorBias",
-			&vector_bias.front(), component_count);
-		print_array(out, new_indent, "vectorScale",
-			&vector_scale.front(), component_count);
-
-		for (int i = 0; i < keyframe_count; ++i)
-		{
-			print_value(out, new_indent, "time",
-				keyframes[i].time);
-			print_array(out, new_indent, "vectorValue",
-				&keyframes[i].vector_value._uint16.front(),
-				component_count * channel_count);
-		}
-	}
-
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		UInt32 event_count = events.size();
-		print_value(out, new_indent, "eventCount", event_count);
-		for (int i = 0; i < event_count; ++i)
-		{
-			print_value(out, new_indent, "eventTime",
-				events[i].event_time);
-			print_value(out, new_indent, "eventID",
-				events[i].event_id);
-		}
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("KeyframeSequence");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "interpolation", interpolation);
+//	print_value(out, new_indent, "repeatMode", repeat_mode);
+//	print_value(out, new_indent, "encoding", encoding);
+//	print_value(out, new_indent, "duration", duration);
+//	print_value(out, new_indent, "validRangeFirst", valid_range_first);
+//	print_value(out, new_indent, "validRangeLast", valid_range_last);
+//	print_value(out, new_indent, "componentCount", component_count);
+//	print_value(out, new_indent, "keyframeCount", keyframe_count);
+//
+//	if (version == M3G_FILE_FORMAT_20)
+//		print_value(out, new_indent, "channelCount", channel_count);
+//
+//	if (encoding == 0)
+//	{
+//		for (int i = 0; i < keyframe_count; ++i)
+//		{
+//			print_value(out, new_indent, "time",
+//				keyframes[i].time);
+//			print_array(out, new_indent, "vectorValue",
+//				&keyframes[i].vector_value._float32.front(),
+//				component_count * channel_count);
+//		}
+//	}
+//	if (encoding == 1)
+//	{
+//		print_array(out, new_indent, "vectorBias",
+//			&vector_bias.front(), component_count);
+//		print_array(out, new_indent, "vectorScale",
+//			&vector_scale.front(), component_count);
+//
+//		for (int i = 0; i < keyframe_count; ++i)
+//		{
+//			print_value(out, new_indent, "time",
+//				keyframes[i].time);
+//			print_array(out, new_indent, "vectorValue",
+//				&keyframes[i].vector_value._byte.front(),
+//				component_count * channel_count);
+//		}
+//	}
+//	else if (encoding == 2)
+//	{
+//		print_array(out, new_indent, "vectorBias",
+//			&vector_bias.front(), component_count);
+//		print_array(out, new_indent, "vectorScale",
+//			&vector_scale.front(), component_count);
+//
+//		for (int i = 0; i < keyframe_count; ++i)
+//		{
+//			print_value(out, new_indent, "time",
+//				keyframes[i].time);
+//			print_array(out, new_indent, "vectorValue",
+//				&keyframes[i].vector_value._uint16.front(),
+//				component_count * channel_count);
+//		}
+//	}
+//
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		UInt32 event_count = events.size();
+//		print_value(out, new_indent, "eventCount", event_count);
+//		for (int i = 0; i < event_count; ++i)
+//		{
+//			print_value(out, new_indent, "eventTime",
+//				events[i].event_time);
+//			print_value(out, new_indent, "eventID",
+//				events[i].event_id);
+//		}
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 
@@ -1663,24 +1143,24 @@ int light_object::load(Stream& strm, int version)
 	size += strm.read(&spot_exponent);
 	return size;
 }
-void light_object::print(FILE* out, char const *indent, int version)
+void light_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Light");
-	node_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "attenuationConstant",
-		attenuation_constant);
-	print_value(out, new_indent, "attenuationLinear",
-		attenuation_linear);
-	print_value(out, new_indent, "attenuationQuadratic",
-		attenuation_quadratic);
-	print_value(out, new_indent, "color", color);
-	print_value(out, new_indent, "mode", mode);
-	print_value(out, new_indent, "intensity", intensity);
-	print_value(out, new_indent, "spotAngle", spot_angle);
-	print_value(out, new_indent, "spotExponent", spot_exponent);
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Light");
+//	node_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "attenuationConstant",
+//		attenuation_constant);
+//	print_value(out, new_indent, "attenuationLinear",
+//		attenuation_linear);
+//	print_value(out, new_indent, "attenuationQuadratic",
+//		attenuation_quadratic);
+//	print_value(out, new_indent, "color", color);
+//	print_value(out, new_indent, "mode", mode);
+//	print_value(out, new_indent, "intensity", intensity);
+//	print_value(out, new_indent, "spotAngle", spot_angle);
+//	print_value(out, new_indent, "spotExponent", spot_exponent);
+//
+//	OBJECT_PRINT_END();
 }
 
 // Material
@@ -1696,20 +1176,20 @@ int material_object::load(Stream& strm, int version)
 	size += strm.read(&vertex_color_tracking_enabled);
 	return size;
 }
-void material_object::print(FILE* out, char const *indent, int version)
+void material_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Material");
-	object3d_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "ambientColor", ambient_color);
-	print_value(out, new_indent, "diffuseColor", diffuse_color);
-	print_value(out, new_indent, "emissiveColor", emissive_color);
-	print_value(out, new_indent, "specularColor", specular_color);
-	print_value(out, new_indent, "shininess", shininess);
-	print_value(out, new_indent, "vertexColorTrackingEnabled",
-		vertex_color_tracking_enabled);
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Material");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "ambientColor", ambient_color);
+//	print_value(out, new_indent, "diffuseColor", diffuse_color);
+//	print_value(out, new_indent, "emissiveColor", emissive_color);
+//	print_value(out, new_indent, "specularColor", specular_color);
+//	print_value(out, new_indent, "shininess", shininess);
+//	print_value(out, new_indent, "vertexColorTrackingEnabled",
+//		vertex_color_tracking_enabled);
+//
+//	OBJECT_PRINT_END();
 }
 
 // Mesh
@@ -1742,37 +1222,37 @@ int mesh_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void mesh_object::print(FILE* out, char const *indent, int version)
+void mesh_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Mesh");
-	node_object::print(out, new_indent, version);
-
-	print_value_oi(out, new_indent, "vertexBuffer", vertex_buffer);
-	print_value(out, new_indent, "submeshCount", submesh_count);
-	for (int i = 0; i < submesh_count; ++i)
-	{
-		print_value_oi(out, new_indent, "indexBuffer",
-			submeshes[i].index_buffer);
-		print_value_oi(out, new_indent, "appearance",
-			submeshes[i].appearance);
-	}
-
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		UInt32 morph_target_count = target_buffers.size();
-		print_value(out, new_indent, "morphTargetCount",
-			morph_target_count);
-		for (int i = 0; i < morph_target_count; ++i)
-		{
-			print_value_oi(out, new_indent, "morphTarget",
-				target_buffers[i].morph_target);
-			print_value(out, new_indent, "initialWeight",
-				target_buffers[i].initial_weight);
-		}
-		print_varray(out, new_indent, "morphSubset", morph_subset);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Mesh");
+//	node_object::print(out, new_indent, version);
+//
+//	print_value_oi(out, new_indent, "vertexBuffer", vertex_buffer);
+//	print_value(out, new_indent, "submeshCount", submesh_count);
+//	for (int i = 0; i < submesh_count; ++i)
+//	{
+//		print_value_oi(out, new_indent, "indexBuffer",
+//			submeshes[i].index_buffer);
+//		print_value_oi(out, new_indent, "appearance",
+//			submeshes[i].appearance);
+//	}
+//
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		UInt32 morph_target_count = target_buffers.size();
+//		print_value(out, new_indent, "morphTargetCount",
+//			morph_target_count);
+//		for (int i = 0; i < morph_target_count; ++i)
+//		{
+//			print_value_oi(out, new_indent, "morphTarget",
+//				target_buffers[i].morph_target);
+//			print_value(out, new_indent, "initialWeight",
+//				target_buffers[i].initial_weight);
+//		}
+//		print_varray(out, new_indent, "morphSubset", morph_subset);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // MorphingMesh
@@ -1794,26 +1274,27 @@ int morphing_mesh_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void morphing_mesh_object::print(FILE* out, char const *indent, int version)
+void morphing_mesh_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("MorphingMesh");
-	mesh_object::print(out, new_indent, version);
-
-	if (version == M3G_FILE_FORMAT_10)
-	{
-		UInt32 morph_target_count = target_buffers.size();
-		print_value(out, new_indent, "morphTargetCount",
-			morph_target_count);
-		for (int i = 0; i < morph_target_count; ++i)
-		{
-			print_value_oi(out, new_indent, "morphTarget",
-				target_buffers[i].morph_target);
-			print_value(out, new_indent, "initialWeight",
-				target_buffers[i].initial_weight);
-		}
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("MorphingMesh");
+//	mesh_object::print(out, new_indent, version);
+//
+//	if (version == M3G_FILE_FORMAT_10)
+//	{
+//		UInt32 morph_target_count = target_buffers.size();
+//		print_value(out, new_indent, "morphTargetCount",
+//			morph_target_count);
+//		for (int i = 0; i < morph_target_count; ++i)
+//		{
+//			print_value_oi(out, new_indent, "morphTarget",
+//				target_buffers[i].morph_target);
+//			print_value(out, new_indent, "initialWeight",
+//				target_buffers[i].initial_weight);
+//		}
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // PolygonMode
@@ -1831,25 +1312,26 @@ int polygon_mode_object::load(Stream& strm, int version)
 		size += strm.read(&line_width);
 	return size;
 }
-void polygon_mode_object::print(FILE* out, char const *indent, int version)
+void polygon_mode_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("PolygonMode");
-	object3d_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "culling", culling);
-	print_value(out, new_indent, "shading", shading);
-	print_value(out, new_indent, "winding", winding);
-	print_value(out, new_indent, "twoSidedLightingEnabled",
-		two_sided_lighting_enabled);
-	print_value(out, new_indent, "localCameraLightingEnabled",
-		local_camera_lighting_enabled);
-	print_value(out, new_indent, "perspectiveCorrectionEnabled",
-		perspective_correction_enabled);
-
-	if (version == M3G_FILE_FORMAT_20)
-		print_value(out, new_indent, "lineWidth", line_width);
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("PolygonMode");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "culling", culling);
+//	print_value(out, new_indent, "shading", shading);
+//	print_value(out, new_indent, "winding", winding);
+//	print_value(out, new_indent, "twoSidedLightingEnabled",
+//		two_sided_lighting_enabled);
+//	print_value(out, new_indent, "localCameraLightingEnabled",
+//		local_camera_lighting_enabled);
+//	print_value(out, new_indent, "perspectiveCorrectionEnabled",
+//		perspective_correction_enabled);
+//
+//	if (version == M3G_FILE_FORMAT_20)
+//		print_value(out, new_indent, "lineWidth", line_width);
+//
+//	OBJECT_PRINT_END();
 }
 
 // SkinnedMesh
@@ -1876,36 +1358,37 @@ int skinned_mesh_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void skinned_mesh_object::print(FILE* out, char const *indent, int version)
+void skinned_mesh_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("SkinnedMesh");
-	mesh_object::print(out, new_indent, version);
-
-	print_value_oi(out, new_indent, "skeleton", skeleton);
-
-	if (version == M3G_FILE_FORMAT_20)
-		print_value(out, new_indent, "isUsingAddTransform",
-			is_using_add_transform);
-
-	UInt32 transform_reference_count = bones.size();
-	print_value(out, new_indent, "transformReferenceCount",
-		transform_reference_count);
-	for (int i = 0; i < transform_reference_count; ++i)
-	{
-		print_value_oi(out, new_indent, "transformNode",
-			bones[i].transform_node);
-		if (is_using_add_transform)
-		{
-			print_value(out, new_indent, "firstVertex",
-				bones[i].first_vertex);
-			print_value(out, new_indent, "vertexCount",
-				bones[i].vertex_count);
-			print_value(out, new_indent, "weight",
-				bones[i].weight);
-		}
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("SkinnedMesh");
+//	mesh_object::print(out, new_indent, version);
+//
+//	print_value_oi(out, new_indent, "skeleton", skeleton);
+//
+//	if (version == M3G_FILE_FORMAT_20)
+//		print_value(out, new_indent, "isUsingAddTransform",
+//			is_using_add_transform);
+//
+//	UInt32 transform_reference_count = bones.size();
+//	print_value(out, new_indent, "transformReferenceCount",
+//		transform_reference_count);
+//	for (int i = 0; i < transform_reference_count; ++i)
+//	{
+//		print_value_oi(out, new_indent, "transformNode",
+//			bones[i].transform_node);
+//		if (is_using_add_transform)
+//		{
+//			print_value(out, new_indent, "firstVertex",
+//				bones[i].first_vertex);
+//			print_value(out, new_indent, "vertexCount",
+//				bones[i].vertex_count);
+//			print_value(out, new_indent, "weight",
+//				bones[i].weight);
+//		}
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // Sprite3D
@@ -1922,20 +1405,20 @@ int sprite3d_object::load(Stream& strm, int version)
 	size += strm.read(&crop_height);
 	return size;
 }
-void sprite3d_object::print(FILE* out, char const *indent, int version)
+void sprite3d_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Sprite3D");
-	node_object::print(out, new_indent, version);
-
-	print_value_oi(out, new_indent, "image", image);
-	print_value_oi(out, new_indent, "appearance", appearance);
-	print_value(out, new_indent, "isScaled", is_scaled);
-	print_value(out, new_indent, "cropX", crop_x);
-	print_value(out, new_indent, "cropY", crop_y);
-	print_value(out, new_indent, "cropWidth", crop_width);
-	print_value(out, new_indent, "cropHeight", crop_height);
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Sprite3D");
+//	node_object::print(out, new_indent, version);
+//
+//	print_value_oi(out, new_indent, "image", image);
+//	print_value_oi(out, new_indent, "appearance", appearance);
+//	print_value(out, new_indent, "isScaled", is_scaled);
+//	print_value(out, new_indent, "cropX", crop_x);
+//	print_value(out, new_indent, "cropY", crop_y);
+//	print_value(out, new_indent, "cropWidth", crop_width);
+//	print_value(out, new_indent, "cropHeight", crop_height);
+//
+//	OBJECT_PRINT_END();
 }
 
 // Texture
@@ -1951,19 +1434,19 @@ int texture_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void texture_object::print(FILE* out, char const *indent, int version)
+void texture_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Texture");
-	transformable_object::print(out, new_indent, version);
-
-	print_value_oi(out, new_indent, "image", image);
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		print_value(out, new_indent, "levelFilter", level_filter);
-		print_value(out, new_indent, "imageFilter", image_filter);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Texture");
+//	transformable_object::print(out, new_indent, version);
+//
+//	print_value_oi(out, new_indent, "image", image);
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		print_value(out, new_indent, "levelFilter", level_filter);
+//		print_value(out, new_indent, "imageFilter", image_filter);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // Texture2D
@@ -1987,31 +1470,31 @@ int texture2d_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void texture2d_object::print(FILE* out, char const *indent, int version)
+void texture2d_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("Texture2D");
-	texture_object::print(out, new_indent, version);
-
-	if (version == M3G_FILE_FORMAT_20)
-		print_value(out, new_indent, "blendColor",
-			blend_color.rgba);
-	else
-		print_value(out, new_indent, "blendColor",
-			blend_color.rgb);
-
-	print_value(out, new_indent, "blending", blending);
-	print_value(out, new_indent, "wrappingS", wrapping_s);
-	print_value(out, new_indent, "wrappingT", wrapping_t);
-
-	if (version == M3G_FILE_FORMAT_20)
-		print_value_oi(out, new_indent, "combiner", combiner);
-	else
-	{
-		print_value(out, new_indent, "levelFilter", level_filter);
-		print_value(out, new_indent, "imageFilter", image_filter);
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("Texture2D");
+//	texture_object::print(out, new_indent, version);
+//
+//	if (version == M3G_FILE_FORMAT_20)
+//		print_value(out, new_indent, "blendColor",
+//			blend_color.rgba);
+//	else
+//		print_value(out, new_indent, "blendColor",
+//			blend_color.rgb);
+//
+//	print_value(out, new_indent, "blending", blending);
+//	print_value(out, new_indent, "wrappingS", wrapping_s);
+//	print_value(out, new_indent, "wrappingT", wrapping_t);
+//
+//	if (version == M3G_FILE_FORMAT_20)
+//		print_value_oi(out, new_indent, "combiner", combiner);
+//	else
+//	{
+//		print_value(out, new_indent, "levelFilter", level_filter);
+//		print_value(out, new_indent, "imageFilter", image_filter);
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // TriangleStripArray
@@ -2027,16 +1510,16 @@ int triangle_strip_array_object::load(Stream& strm, int version)
 	return size;
 }
 void triangle_strip_array_object::print(FILE* out,
-	char const *indent, int version)
+	std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("TriangleStripArray");
-	index_buffer_object::print(out, new_indent, version);
-
-	if (version == M3G_FILE_FORMAT_10)
-		print_varray(out, new_indent, "stripLengths",
-			strip_lengths._uint32);
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("TriangleStripArray");
+//	index_buffer_object::print(out, new_indent, version);
+//
+//	if (version == M3G_FILE_FORMAT_10)
+//		print_varray(out, new_indent, "stripLengths",
+//			strip_lengths._uint32);
+//
+//	OBJECT_PRINT_END();
 }
 
 // VertexArray
@@ -2075,42 +1558,43 @@ int vertex_array_object::load(Stream& strm, int version)
 	return size;
 }
 
-void vertex_array_object::print(FILE* out, char const *indent, int version)
+void vertex_array_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("VertexArray");
-	object3d_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "componentType", component_type);
-	print_value(out, new_indent, "compoenntCount", component_count);
-	print_value(out, new_indent, "encoding", encoding);
-	print_value(out, new_indent, "vertexCount", vertex_count);
-
-	for (int i = 0; i < vertex_count; ++i)
-	{
-		if (component_type == VERTEXARRAY_BYTE)
-			print_array(out, new_indent, "components",
-				&components[i]._byte.front(),
-				component_count);
-		else if (component_type == VERTEXARRAY_SHORT)
-			print_array(out, new_indent, "components",
-				&components[i]._i16.front(),
-				component_count);
-		else if (version == M3G_FILE_FORMAT_20)
-		{
-			if (component_type == VERTEXARRAY_FIXED)
-				print_array(out, new_indent, "components",
-					&components[i]._i32.front(),
-					component_count);
-			else if (component_type == VERTEXARRAY_HALF)
-				; /*FIXME: later */
-			else if (component_type == VERTEXARRAY_FLOAT)
-				print_array(out, new_indent, "components",
-					&components[i]._float32.front(),
-					component_count);
-		}
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("VertexArray");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "componentType", component_type);
+//	print_value(out, new_indent, "compoenntCount", component_count);
+//	print_value(out, new_indent, "encoding", encoding);
+//	print_value(out, new_indent, "vertexCount", vertex_count);
+//
+//	for (int i = 0; i < vertex_count; ++i)
+//	{
+//		if (component_type == VERTEXARRAY_BYTE)
+//			print_array(out, new_indent, "components",
+//				&components[i]._byte.front(),
+//				component_count);
+//		else if (component_type == VERTEXARRAY_SHORT)
+//			print_array(out, new_indent, "components",
+//				&components[i]._i16.front(),
+//				component_count);
+//		else if (version == M3G_FILE_FORMAT_20)
+//		{
+//			if (component_type == VERTEXARRAY_FIXED)
+//				print_array(out, new_indent, "components",
+//					&components[i]._i32.front(),
+//					component_count);
+//			else if (component_type == VERTEXARRAY_HALF)
+//				; /*FIXME: later */
+//			else if (component_type == VERTEXARRAY_FLOAT)
+//				print_array(out, new_indent, "components",
+//					&components[i]._float32.front(),
+//					component_count);
+//		}
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // VertexBuffer
@@ -2160,58 +1644,59 @@ int vertex_buffer_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void vertex_buffer_object::print(FILE* out, char const *indent, int version)
+void vertex_buffer_object::print(FILE* out, std::string const &indent,
+	int version)
 {
-	OBJECT_PRINT_START("VertexBuffer");
-	object3d_object::print(out, new_indent, version);
-
-	print_value(out, new_indent, "defaultColor", default_color);
-	print_value_oi(out, new_indent, "positions", positions);
-	print_array(out, new_indent, "positionBias", position_bias, 3);
-	print_value(out, new_indent, "positionScale", position_scale);
-	print_value_oi(out, new_indent, "normals", normals);
-	print_value_oi(out, new_indent, "colors", colors);
-
-	UInt32 tex_count = textures.size();
-	print_value(out, new_indent, "texcoordsArrayCount", tex_count);
-	for (int i = 0; i < tex_count; ++i)
-	{
-		print_value_oi(out, new_indent, "texCoords",
-			textures[i].coord);
-		print_array(out, new_indent, "texCoordBias",
-			textures[i].bias, 3);
-		print_value(out, new_indent, "texCoordScale",
-			textures[i].scale);
-	}
-
-	if (version == M3G_FILE_FORMAT_20)
-	{
-		print_value(out, new_indent, "isImmutable", is_immutable);
-		print_value_oi(out, new_indent, "pointSizes", point_sizes);
-		print_value(out, new_indent, "defaultPointSize",
-			default_point_size);
-		print_value_oi(out, new_indent, "boneIndices", bone_indices);
-		print_value_oi(out, new_indent, "boneWeights", bone_weights);
-
-		UInt32 attr_count = attributes.size();;
-		print_value(out, new_indent, "namedAttributeCount",
-			attr_count);
-		for (int i = 0; i < attr_count; ++i)
-		{
-			print_value(out, new_indent, "name",
-				attributes[i].name);
-			print_value_oi(out, new_indent, "attribute",
-				attributes[i].attribute);
-			print_value(out, new_indent, "signed",
-				attributes[i]._signed);
-			print_value(out, new_indent, "normalized",
-				attributes[i]._normalized);
-			print_array(out, new_indent, "defaultAttributeValue",
-				attributes[i].default_attribute_value, 4);
-		}
-	}
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("VertexBuffer");
+//	object3d_object::print(out, new_indent, version);
+//
+//	print_value(out, new_indent, "defaultColor", default_color);
+//	print_value_oi(out, new_indent, "positions", positions);
+//	print_array(out, new_indent, "positionBias", position_bias, 3);
+//	print_value(out, new_indent, "positionScale", position_scale);
+//	print_value_oi(out, new_indent, "normals", normals);
+//	print_value_oi(out, new_indent, "colors", colors);
+//
+//	UInt32 tex_count = textures.size();
+//	print_value(out, new_indent, "texcoordsArrayCount", tex_count);
+//	for (int i = 0; i < tex_count; ++i)
+//	{
+//		print_value_oi(out, new_indent, "texCoords",
+//			textures[i].coord);
+//		print_array(out, new_indent, "texCoordBias",
+//			textures[i].bias, 3);
+//		print_value(out, new_indent, "texCoordScale",
+//			textures[i].scale);
+//	}
+//
+//	if (version == M3G_FILE_FORMAT_20)
+//	{
+//		print_value(out, new_indent, "isImmutable", is_immutable);
+//		print_value_oi(out, new_indent, "pointSizes", point_sizes);
+//		print_value(out, new_indent, "defaultPointSize",
+//			default_point_size);
+//		print_value_oi(out, new_indent, "boneIndices", bone_indices);
+//		print_value_oi(out, new_indent, "boneWeights", bone_weights);
+//
+//		UInt32 attr_count = attributes.size();;
+//		print_value(out, new_indent, "namedAttributeCount",
+//			attr_count);
+//		for (int i = 0; i < attr_count; ++i)
+//		{
+//			print_value(out, new_indent, "name",
+//				attributes[i].name);
+//			print_value_oi(out, new_indent, "attribute",
+//				attributes[i].attribute);
+//			print_value(out, new_indent, "signed",
+//				attributes[i]._signed);
+//			print_value(out, new_indent, "normalized",
+//				attributes[i]._normalized);
+//			print_array(out, new_indent, "defaultAttributeValue",
+//				attributes[i].default_attribute_value, 4);
+//		}
+//	}
+//
+//	OBJECT_PRINT_END();
 }
 
 // World
@@ -2223,15 +1708,15 @@ int world_object::load(Stream& strm, int version)
 	size += strm.read(&background);
 	return size;
 }
-void world_object::print(FILE* out, char const *indent, int version)
+void world_object::print(FILE* out, std::string const &indent, int version)
 {
-	OBJECT_PRINT_START("World");
-	group_object::print(out, new_indent, version);
-
-	print_value_oi(out, new_indent, "activeCamera", active_camera);
-	print_value_oi(out, new_indent, "background", background);
-
-	OBJECT_PRINT_END();
+//	OBJECT_PRINT_START("World");
+//	group_object::print(out, new_indent, version);
+//
+//	print_value_oi(out, new_indent, "activeCamera", active_camera);
+//	print_value_oi(out, new_indent, "background", background);
+//
+//	OBJECT_PRINT_END();
 }
 
 // Blender
@@ -2248,7 +1733,7 @@ int blender_object::load(Stream& strm, int version)
 	size += strm.read(&blend_color);
 	return size;
 }
-void blender_object::print(FILE* out, char const *indent, int version)
+void blender_object::print(FILE* out, std::string const &indent, int version)
 {
 	object3d_object::print(out, indent, version);
 }
@@ -2260,7 +1745,7 @@ int dynamic2d_object::load(Stream& strm, int version)
 	size += object3d_object::load(strm, version);
 	return size;
 }
-void dynamic2d_object::print(FILE* out, char const *indent, int version)
+void dynamic2d_object::print(FILE* out, std::string const &indent, int version)
 {
 	object3d_object::print(out, indent, version);
 }
@@ -2273,7 +1758,7 @@ int shader_object::load(Stream& strm, int version)
 	size += strm.read(&source);
 	return size;
 }
-void shader_object::print(FILE* out, char const *indent, int version)
+void shader_object::print(FILE* out, std::string const &indent, int version)
 {
 	object3d_object::print(out, indent, version);
 }
@@ -2285,7 +1770,8 @@ int fragment_shader_object::load(Stream& strm, int version)
 	size += shader_object::load(strm, version);
 	return size;
 }
-void fragment_shader_object::print(FILE* out, char const *indent, int version)
+void fragment_shader_object::print(FILE* out, std::string const &indent,
+	int version)
 {
 	shader_object::print(out, indent, version);
 }
@@ -2313,7 +1799,7 @@ int image_cube_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void image_cube_object::print(FILE* out, char const *indent, int version)
+void image_cube_object::print(FILE* out, std::string const &indent, int version)
 {
 	image_base_object::print(out, indent, version);
 }
@@ -2331,7 +1817,8 @@ int point_sprite_mode_object::load(Stream& strm, int version)
 	size += strm.read(&point_size_clamp_max);
 	return size;
 }
-void point_sprite_mode_object::print(FILE* out, char const *indent, int version)
+void point_sprite_mode_object::print(FILE* out, std::string const &indent,
+	int version)
 {
 	object3d_object::print(out, indent, version);
 }
@@ -2358,7 +1845,8 @@ int render_pass_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void render_pass_object::print(FILE* out, char const *indent, int version)
+void render_pass_object::print(FILE* out, std::string const &indent,
+	int version)
 {
 	object3d_object::print(out, indent, version);
 }
@@ -2373,7 +1861,8 @@ int render_target_object::load(Stream& strm, int version)
 	size += strm.read(&target_face);
 	return size;
 }
-void render_target_object::print(FILE* out, char const *indent, int version)
+void render_target_object::print(FILE* out, std::string const &indent,
+	int version)
 {
 	object3d_object::print(out, indent, version);
 }
@@ -2388,7 +1877,8 @@ int shader_appearance_object::load(Stream& strm, int version)
 	size += strm.read(&is_validate_enabled);
 	return size;
 }
-void shader_appearance_object::print(FILE* out, char const *indent, int version)
+void shader_appearance_object::print(FILE* out, std::string const &indent,
+	int version)
 {
 	appearance_base_object::print(out, indent, version);
 }
@@ -2402,7 +1892,8 @@ int shader_program_object::load(Stream& strm, int version)
 	size += strm.read(&vertex_shader);
 	return size;
 }
-void shader_program_object::print(FILE* out, char const *indent, int version)
+void shader_program_object::print(FILE* out, std::string const &indent,
+	int version)
 {
 	object3d_object::print(out, indent, version);
 }
@@ -2522,7 +2013,8 @@ int shader_uniforms_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void shader_uniforms_object::print(FILE* out, char const *indent, int version)
+void shader_uniforms_object::print(FILE* out, std::string const &indent,
+	int version)
 {
 	object3d_object::print(out, indent, version);
 }
@@ -2548,7 +2040,7 @@ int stencil_object::load(Stream& strm, int version)
 	size += strm.read(&stencil_pass_depth_pass_op_back);
 	return size;
 }
-void stencil_object::print(FILE* out, char const *indent, int version)
+void stencil_object::print(FILE* out, std::string const &indent, int version)
 {
 	object3d_object::print(out, indent, version);
 }
@@ -2581,7 +2073,8 @@ int texture_combiner_object::load(Stream& strm, int version)
 	}
 	return size;
 }
-void texture_combiner_object::print(FILE* out, char const *indent, int version)
+void texture_combiner_object::print(FILE* out, std::string const &indent,
+	int version)
 {
 	object3d_object::print(out, indent, version);
 }
@@ -2593,7 +2086,8 @@ int texture_cube_object::load(Stream& strm, int version)
 	size += texture_object::load(strm, version);
 	return size;
 }
-void texture_cube_object::print(FILE* out, char const *indent, int version)
+void texture_cube_object::print(FILE* out, std::string const &indent,
+	int version)
 {
 	texture_object::print(out, indent, version);
 }
@@ -2605,7 +2099,8 @@ int vertex_shader_object::load(Stream& strm, int version)
 	size += shader_object::load(strm, version);
 	return size;
 }
-void vertex_shader_object::print(FILE* out, char const *indent, int version)
+void vertex_shader_object::print(FILE* out, std::string const &indent,
+	int version)
 {
 	shader_object::print(out, indent, version);
 }

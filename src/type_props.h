@@ -201,7 +201,7 @@ inline void print_varray(
 {
 	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
 	if (v.size())
-	    print_array(out, indent, name, &v.front(), v.size());
+		print_array(out, indent, name, &v.front(), v.size());
 }
 
 inline void print_array_oi(
@@ -233,7 +233,7 @@ inline void print_varray_oi(
 {
 	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
 	if (v.size())
-	    print_array_oi(out, indent, name, &v.front(), v.size());
+		print_array_oi(out, indent, name, &v.front(), v.size());
 }
 
 #endif//__TYPE_PROPS_H__

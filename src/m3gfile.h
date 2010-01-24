@@ -30,7 +30,7 @@ typedef unsigned long	UInt32;
 typedef float		Float32;
 typedef short		Float16;	//FIXME: NEED TO HALF-PERCISION FLOAT
 typedef bool		Boolean;
-typedef std::string	StringUTF8;
+typedef std::string	String;
 
 struct Vector3D
 {
@@ -67,8 +67,9 @@ typedef UInt32		ForwardIndex;
 
 enum
 {
-	M3G_FILE_FORMAT_10 = 0,
-	M3G_FILE_FORMAT_20,
+	M3G_FILE_FORMAT_10 = 1,
+	M3G_FILE_FORMAT_20 = 1 << 1,
+	M3G_FILE_FORMAT_ALL = (M3G_FILE_FORMAT_10 | M3G_FILE_FORMAT_20),
 };
 
 enum

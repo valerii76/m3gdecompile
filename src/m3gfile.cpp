@@ -92,7 +92,7 @@ struct m3g_file_objects
 		if (obj->class_type() == OBJ_CLASS_HEADER)
 		{
 			header = dynamic_cast<header_object*>(obj);
-			if (header->version_number[0] == 2)
+			if (M3G_TYPE_CAST_ARRAY_OBJ("VersionNumber", Byte, 2, header)[0] == 2)
 				file_version = M3G_FILE_FORMAT_20;
 		}
 		else if (obj->class_type() == OBJ_CLASS_OBJECT3D)
@@ -228,7 +228,7 @@ int m3g_check_file(char const* file_name)
 	if (!check_m3g_file_identifier(strm))
 		return M3G_FALSE;
 	/* read head section */
-	while(strm.error_code() == STREAM_SUCCESS)
+	//while(strm.error_code() == STREAM_SUCCESS)
 	{
 		load_section(strm, objs);
 	}
