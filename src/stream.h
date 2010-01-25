@@ -253,18 +253,5 @@ private:
 	StreamReader* impl;
 };
 
-template<>
-inline int Stream::read(StringUTF8* value)
-{
-	Byte v;
-	int size = 0;
-	size += impl->read((char*)&v, sizeof(Byte));
-	while (v)
-	{
-		value->push_back(v);
-		size += impl->read((char*)&v, sizeof(Byte));
-	}
-	return size;
-}
 
 #endif//__STREAM_H__

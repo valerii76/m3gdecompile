@@ -60,7 +60,7 @@ struct m3g_file_objects
 {
 	int file_version;
 	header_object* header;
-	lst_objects_t objects;
+	//lst_objects_t objects;
 	lst_ext_refs_t ext_refs;
 	lst_ext_img_refs_t img_refs;
 	lst_ext_obj_refs_t obj_refs;
@@ -95,8 +95,8 @@ struct m3g_file_objects
 			if (M3G_TYPE_CAST_ARRAY_OBJ("VersionNumber", Byte, 2, header)[0] == 2)
 				file_version = M3G_FILE_FORMAT_20;
 		}
-		else if (obj->class_type() == OBJ_CLASS_OBJECT3D)
-			objects.push_back(dynamic_cast<object3d_object*>(obj));
+		//else if (obj->class_type() == OBJ_CLASS_OBJECT3D)
+		//	objects.push_back(dynamic_cast<object3d_object*>(obj));
 		else if (obj->class_type() == OBJ_CLASS_EXT_REF)
 			ext_refs.push_back(
 				dynamic_cast<external_ref_object*>(obj));

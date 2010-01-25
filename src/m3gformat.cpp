@@ -50,45 +50,45 @@ struct object_registrator
 		register_object<external_image_ref_object>();
 		register_object<external_object_ref_object>();
 		register_object<animation_controller_object>();
-		register_object<animation_track_object>();
-		register_object<appearance_object>();
-		register_object<background_object>();
-		register_object<camera_object>();
-		register_object<composition_mode_object>();
-		register_object<fog_object>();
-		register_object<polygon_mode_object>();
-		register_object<group_object>();
-		register_object<image2d_object>();
-		register_object<triangle_strip_array_object>();
-		register_object<light_object>();
-		register_object<material_object>();
-		register_object<mesh_object>();
-		register_object<morphing_mesh_object>();
-		register_object<skinned_mesh_object>();
-		register_object<texture2d_object>();
-		register_object<sprite3d_object>();
-		register_object<keyframe_sequence_object>();
-		register_object<vertex_array_object>();
-		register_object<vertex_buffer_object>();
-		register_object<world_object>();
-		register_object<blender_object>();
-		register_object<dynamic2d_object>();
-		register_object<fragment_shader_object>();
-		register_object<image_cube_object>();
-		register_object<index_buffer_object>();
-		register_object<point_sprite_mode_object>();
-		register_object<render_pass_object>();
-		register_object<render_target_object>();
-		register_object<shader_appearance_object>();
-		register_object<shader_program_object>();
-		register_object<shader_uniforms_object>();
-		register_object<stencil_object>();
-		register_object<texture_combiner_object>();
-		register_object<texture_cube_object>();
-		register_object<vertex_shader_object>();
+//		register_object<animation_track_object>();
+//		register_object<appearance_object>();
+//		register_object<background_object>();
+//		register_object<camera_object>();
+//		register_object<composition_mode_object>();
+//		register_object<fog_object>();
+//		register_object<polygon_mode_object>();
+//		register_object<group_object>();
+//		register_object<image2d_object>();
+//		register_object<triangle_strip_array_object>();
+//		register_object<light_object>();
+//		register_object<material_object>();
+//		register_object<mesh_object>();
+//		register_object<morphing_mesh_object>();
+//		register_object<skinned_mesh_object>();
+//		register_object<texture2d_object>();
+//		register_object<sprite3d_object>();
+//		register_object<keyframe_sequence_object>();
+//		register_object<vertex_array_object>();
+//		register_object<vertex_buffer_object>();
+//		register_object<world_object>();
+//		register_object<blender_object>();
+//		register_object<dynamic2d_object>();
+//		register_object<fragment_shader_object>();
+//		register_object<image_cube_object>();
+//		register_object<index_buffer_object>();
+//		register_object<point_sprite_mode_object>();
+//		register_object<render_pass_object>();
+//		register_object<render_target_object>();
+//		register_object<shader_appearance_object>();
+//		register_object<shader_program_object>();
+//		register_object<shader_uniforms_object>();
+//		register_object<stencil_object>();
+//		register_object<texture_combiner_object>();
+//		register_object<texture_cube_object>();
+//		register_object<vertex_shader_object>();
 	}
 } do_object_registrator;
-
+/*
 // Object3D
 int object3d_object::load(Stream& strm, int version)
 {
@@ -96,7 +96,6 @@ int object3d_object::load(Stream& strm, int version)
 	UInt32 count;
 	size += strm.read(&user_id);
 
-	/* read animation tracks */
 	size += strm.read(&count);
 	for (unsigned int i = 0; i < count; ++i)
 	{
@@ -107,7 +106,6 @@ int object3d_object::load(Stream& strm, int version)
 		animation_tracks.push_back(track);
 	}
 
-	/* read parameters */
 	size += strm.read(&count);
 	for (unsigned int i = 0; i < count; ++i)
 	{
@@ -1586,7 +1584,7 @@ void vertex_array_object::print(FILE* out, std::string const &indent,
 //					&components[i]._i32.front(),
 //					component_count);
 //			else if (component_type == VERTEXARRAY_HALF)
-//				; /*FIXME: later */
+//				; 
 //			else if (component_type == VERTEXARRAY_FLOAT)
 //				print_array(out, new_indent, "components",
 //					&components[i]._float32.front(),
@@ -2104,4 +2102,4 @@ void vertex_shader_object::print(FILE* out, std::string const &indent,
 {
 	shader_object::print(out, indent, version);
 }
-
+*/

@@ -19,7 +19,7 @@
 #if !(defined __TYPE_PROPS_H__)
 #define __TYPE_PROPS_H__
 
-#include "m3gfile.h"
+#include "m3gtypes.h"
 #include <vector>
 #include <stdio.h>
 
@@ -90,10 +90,10 @@ struct type_props<Float16>
 */
 
 template<>
-struct type_props<StringUTF8>
+struct type_props<String>
 {
 	static char const *name;
-	static char const* to_string(StringUTF8 &v);
+	static char const* to_string(String &v);
 };
 
 template<>

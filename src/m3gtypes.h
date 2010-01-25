@@ -63,4 +63,50 @@ struct ColorRGBA
 typedef UInt32		ObjectIndex;
 typedef UInt32		ForwardIndex;
 
+enum
+{
+	M3G_FILE_FORMAT_10 = 1,
+	M3G_FILE_FORMAT_20 = 1 << 1,
+	M3G_FILE_FORMAT_ALL = (M3G_FILE_FORMAT_10 | M3G_FILE_FORMAT_20),
+};
+
+#define M3G_TRUE 1
+#define M3G_FALSE 0
+
+
+struct m3g_base_type
+{
+	m3g_base_type()
+		: name("")
+		, version_support(M3G_FILE_FORMAT_ALL)
+	{}
+
+	m3g_base_type(std::string const &_name, int version)
+		: name(_name)
+		, version_support(version)
+	{
+	}
+
+	lst_fields_t fields;
+	virtual void print(FILE *out, std::string const &indent,
+		int version)
+	{
+	}
+	virtual int load(Stream &strm, int version)
+	{
+		return 0;
+	}
+	virtual int save(Stream &strm, int version)
+	{
+		return 0;
+	}
+
+	virtual ~m3g_base_type() {}
+
+
+	std::string name;
+	int version_support;
+};
+
+
 #endif//__M3GTYPES_H__

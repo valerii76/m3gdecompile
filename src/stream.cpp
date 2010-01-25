@@ -2,12 +2,12 @@
 /*
  * =============================================================================
  *
- *       Filename:  m3gfile.h
+ *       Filename:  stream.cpp
  *
  *    Description:  
  *
  *        Version:  1.0
- *        Created:  01/12/2010 08:42:18 PM
+ *        Created:  01/25/2010 09:58:22 PM
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -16,22 +16,19 @@
  *
  * =============================================================================
  */
-#if !defined(__M3GFILE_H__)
-#define __M3GFILE_H__
+#include "stream.h"
 
-
-enum
+template<>
+inline int Stream::read(String* value)
 {
-	M3G_SUCCESS			= 0,
-	M3G_INVALID_FILE_IDENTIFIER,
+	Byte v;
+	int size = 0;
+	size += impl->read((char*)&v, sizeof(Byte));
+	while (v)
+	{
+		value->push_back(v);
+		size += impl->read((char*)&v, sizeof(Byte));
+	}
+	return size;
+}
 
-	M3G_MAX = 0x7fff,
-};
-
-int m3g_last_error();
-char* m3g_error_string(int error);
-
-int m3g_check_file(char const* file_name);
-int m3g_check_data(char const* data, int size);
-
-#endif//__M3GFILE_H__

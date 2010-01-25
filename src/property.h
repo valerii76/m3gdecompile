@@ -20,10 +20,10 @@
 #if !defined (__PROPERTY_H__)
 #define __PROPERTY_H__
 
+#include "m3gtypes.h"
 #include "type_props.h"
 #include "stream.h"
 #include <map>
-#include "m3gfile.h"
 
 struct m3g_base_type;
 typedef std::map<std::string, m3g_base_type*> lst_fields_t;
@@ -37,40 +37,6 @@ template<class T>
 struct get_type<T*>
 {
 	typedef T type;
-};
-
-struct m3g_base_type
-{
-	m3g_base_type()
-		: name("")
-		, version_support(M3G_FILE_FORMAT_ALL)
-	{}
-
-	m3g_base_type(std::string const &_name, int version)
-		: name(_name)
-		, version_support(version)
-	{
-	}
-
-	lst_fields_t fields;
-	virtual void print(FILE *out, std::string const &indent,
-		int version)
-	{
-	}
-	virtual int load(Stream &strm, int version)
-	{
-		return 0;
-	}
-	virtual int save(Stream &strm, int version)
-	{
-		return 0;
-	}
-
-	virtual ~m3g_base_type() {}
-
-
-	std::string name;
-	int version_support;
 };
 
 template<class T, int l>

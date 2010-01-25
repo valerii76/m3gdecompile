@@ -107,10 +107,10 @@ struct base_object
 
 #define PRINT_TEMPLATE(base, name, out, indent, version) \
 	operation_print op(out, indent + "\t", version); \
-	fprintf(out, "%s%s\n%s{\n", indent, name, indent); \
+	fprintf(out, "%s%s\n%s{\n", indent.c_str(), name, indent.c_str()); \
 	base::print(out, indent + "\t", version); \
 	traverse(op); \
-	fpritnf(out, "%s}\n", indent);
+	fprintf(out, "%s}\n", indent.c_str());
 
 // Header object
 struct header_object : base_object
@@ -135,7 +135,7 @@ struct header_object : base_object
 			M3G_FILE_FORMAT_ALL);
 		DEFINE_M3G_TYPE(UInt32, "ApproximateContentSize", 0,
 			M3G_FILE_FORMAT_ALL);
-		DEFINE_M3G_TYPE(StringUTF8, "AuthoringField", "",
+		DEFINE_M3G_TYPE(String, "AuthoringField", "",
 			M3G_FILE_FORMAT_ALL);
 	}
 
@@ -155,7 +155,7 @@ struct header_object : base_object
 	}
 	virtual int save(Stream& strm, int version)
 	{
-		SAVE_TEMPLATE(base_object, strm version);
+		SAVE_TEMPLATE(base_object, strm, version);
 	}
 	virtual void print(FILE* out, std::string const &indent, int version)
 	{
@@ -294,6 +294,7 @@ struct external_object_ref_object : external_ref_object
 	}
 };
 
+/* 
 // Object3D
 struct object3d_object : base_object
 {
@@ -306,13 +307,26 @@ struct object3d_object : base_object
 				0, M3G_FILE_FORMAT_ALL);
 			DEFINE_M3G_TYPE(UInt32, "animationTrackIndex",
 				0, M3G_FILE_FORMAT_20);
-
 		}
 		template<class T>
 		void traverse(T& op)
 		{
 			M3G_TYPE("animationTrack", op);
 			M3G_TYPE("animationTrackIndex", op);
+		}
+		virtual int load(Stream &strm, int version)
+		{
+			LOAD_TEMPLATE(m3g_base_type, strm, version);
+		}
+		virtual int save(Stream &strm, int version)
+		{
+			SAVE_TEMPLATE(m3g_base_type, strm, version);
+		}
+		virtual void print(FILE *out, std::string const &indent,
+			int version)
+		{
+			PRINT_TEMPLATE(m3g_base_type, "AnimTrack",
+				out, indent, version);
 		}
 	};
 	struct parameter_s
@@ -329,7 +343,8 @@ struct object3d_object : base_object
 	object3d()
 	{
 		DEFINE_M3G_TYPE(Int32, "userID", 0, M3G_FILE_FORMAT_ALL);
-		
+		DEFINE_M3G_VARRAY(anim_track, "animationTracks",
+			M3G_FILE_FORMAT_ALL);
 	}
 
 	template<class T>
@@ -393,7 +408,8 @@ struct animation_controller_object : object3d_object
 			out, indent, version);
 	}
 };
-
+*/
+/*
 //AnimationTrack
 struct animation_track_object : object3d_object
 {
@@ -2096,9 +2112,9 @@ struct vertex_shader_object : shader_object
 			out, indent, version);
 	}
 };
-
+*/
 typedef std::vector<base_object*> lst_all_objects_t;
-typedef std::vector<object3d_object*> lst_objects_t;
+//typedef std::vector<object3d_object*> lst_objects_t;
 typedef std::vector<external_ref_object*> lst_ext_refs_t;
 typedef std::vector<external_object_ref_object*> lst_ext_obj_refs_t;
 typedef std::vector<external_image_ref_object*> lst_ext_img_refs_t;
