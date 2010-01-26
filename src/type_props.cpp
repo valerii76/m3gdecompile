@@ -125,10 +125,10 @@ char const* type_props<Float16>::to_string(Float16 v)
 }
 */
 
-char const *type_props<StringUTF8>::name = "String";
-char const* type_props<StringUTF8>::to_string(StringUTF8 &v)
+char const *type_props<String>::name = "String";
+char const* type_props<String>::to_string(String &v)
 {
-	static StringUTF8 str;
+	static String str;
 	str = '\"' + v + '\"';
 	return str.c_str();
 }

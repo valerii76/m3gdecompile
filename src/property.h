@@ -25,8 +25,6 @@
 #include "stream.h"
 #include <map>
 
-struct m3g_base_type;
-typedef std::map<std::string, m3g_base_type*> lst_fields_t;
 
 template<class T>
 struct get_type
@@ -108,7 +106,7 @@ struct m3g_type_print
 		std::string const &indent,
 		m3g_type<T, len> *v)
 	{
-		print_array(out, indent.c_str(),
+		print_value(out, indent.c_str(),
 			v->name.c_str(), v->value, len);
 	}
 };

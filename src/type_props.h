@@ -144,7 +144,7 @@ struct type_props_fi
 };
 
 template<class T>
-inline void print_value(FILE *out, char const *indent, char const *name, T v)
+inline void print_value(FILE *out, char const *indent, char const *name, T &v)
 {
 	fprintf(out, "%s%s %s = %s;\n", indent, type_props<T>::name,
 		name, type_props<T>::to_string(v));
@@ -171,7 +171,7 @@ inline void print_value_fi(
 }
 
 template<class T>
-inline void print_array(
+inline void print_value(
 	FILE *out,
 	char const *indent,
 	char const *name,
@@ -193,7 +193,7 @@ inline void print_array(
 }
 
 template<class T>
-inline void print_varray(
+inline void print_value(
 	FILE *out,
 	char const *indent,
 	char const *name,
@@ -201,7 +201,7 @@ inline void print_varray(
 {
 	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
 	if (v.size())
-		print_array(out, indent, name, &v.front(), v.size());
+		print_value(out, indent, name, &v.front(), v.size());
 }
 
 inline void print_array_oi(

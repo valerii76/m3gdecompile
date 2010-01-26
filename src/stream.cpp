@@ -16,8 +16,9 @@
  *
  * =============================================================================
  */
-#include "stream.h"
 
+#include "m3gtypes.h"
+#include "stream.h"
 template<>
 inline int Stream::read(String* value)
 {

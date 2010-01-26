@@ -23,6 +23,7 @@ set(m3gdecompile_SRCS
 	main.cpp
 	m3gfile.cpp
 	m3gformat.cpp
+	stream.cpp
 	type_props.cpp
 )
 

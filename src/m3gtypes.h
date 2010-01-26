@@ -21,6 +21,7 @@
 #define __M3GTYPES_H__
 
 #include <string>
+#include <map>
 
 typedef unsigned char	Byte;
 typedef char		SByte;
@@ -31,7 +32,7 @@ typedef unsigned long	UInt32;
 typedef float		Float32;
 typedef short		Float16;	//FIXME: NEED TO HALF-PERCISION FLOAT
 typedef bool		Boolean;
-typedef std::string	StringUTF8;
+typedef std::string	String;
 
 struct Vector3D
 {
@@ -73,6 +74,9 @@ enum
 #define M3G_TRUE 1
 #define M3G_FALSE 0
 
+class Stream;
+struct m3g_base_type;
+typedef std::map<std::string, m3g_base_type*> lst_fields_t;
 
 struct m3g_base_type
 {
