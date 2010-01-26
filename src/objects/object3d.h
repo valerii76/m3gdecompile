@@ -128,23 +128,65 @@ struct object3d_object : base_object
 };
 
 inline void print_value(FILE *out, char const *indent, char const *name,
-	std::vector< object3d_object::anim_track >& v)
+	std::vector< object3d_object::anim_track >& v, int version)
 {
+	std::string new_indent = std::string(indent) + "\t";
+	operation_print op(out, new_indent, version);
+	if (v.size() == 0)
+		return;
+	fprintf(out, "%s%s\n%s{\n", indent, name, indent);
+	fprintf(out, "%sUInt count = %d;\n", new_indent.c_str(), v.size());
+	for (int i = 0; i < v.size(); ++i)
+	{
+		fprintf(out, "%s/* %d */\n", new_indent.c_str(), i);
+		v[i].traverse(op);
+	}
+	fprintf(out, "%s}\n", indent);
 }
 inline void print_value(FILE *out, char const *indent, char const *name,
-	std::vector< object3d_object::parameter > &v)
+	std::vector< object3d_object::parameter > &v, int version)
 {
+	std::string new_indent = std::string(indent) + "\t";
+	operation_print op(out, new_indent, version);
+	if (v.size() == 0)
+		return;
+	fprintf(out, "%s%s\n%s{\n", indent, name, indent);
+	fprintf(out, "%sUInt count = %d;\n", new_indent.c_str(), v.size());
+	for (int i = 0; i < v.size(); ++i)
+	{
+		fprintf(out, "%s/* %d */\n", new_indent.c_str(), i);
+		v[i].traverse(op);
+	}
+	fprintf(out, "%s}\n", indent);
 }
 
 template<>
 inline int Stream::read(std::vector< object3d_object::anim_track >* v)
 {
-	return 0;
+	int size = 0;
+	UInt32 count = 0;
+	size += impl->read((char*)&count, sizeof(UInt32));
+	for (int i = 0; i < count; ++i)
+	{
+		object3d_object::anim_track t;
+		t.load(*this, version);
+		v->push_back(t);
+	}
+	return size;
 }
 template<>
 inline int Stream::read(std::vector< object3d_object::parameter >* v)
 {
-	return 0;
+	int size = 0;
+	UInt32 count = 0;
+	size += impl->read((char*)&count, sizeof(UInt32));
+	for (int i = 0; i < count; ++i)
+	{
+		object3d_object::parameter t;
+		t.load(*this, version);
+		v->push_back(t);
+	}
+	return size;
 }
 
 #endif//__OBJECT3D_OBJECT_H__

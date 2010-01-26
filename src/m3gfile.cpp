@@ -21,6 +21,7 @@
 #include <vector>
 
 #include "m3gformat.h"
+#include "objects/header.h"
 #include "stream.h"
 
 //==============================================================================
@@ -191,7 +192,8 @@ int load_section(Stream& strm, m3g_file_objects& objs)
 	/* read objects */
 	Stream obj_strm((char*)&objects.front(), objects.size(),
 		sh.compression_scheme == M3G_COMPRESSION_SCHEME_ZLIB ?
-			STREAM_COMPRESSED : STREAM_UNCOMPRESSED);
+			STREAM_COMPRESSED : STREAM_UNCOMPRESSED,
+		objs.file_version);
 	while (obj_strm.error_code() == STREAM_SUCCESS)
 	{
 		read(obj_strm, &oh);
@@ -203,6 +205,7 @@ int load_section(Stream& strm, m3g_file_objects& objs)
 		if (obj)
 		{
 			obj->load(obj_strm, objs.file_version);
+			//obj->print(stdout, "", objs.file_version);
 			objs.push_back(obj);
 		}
 		else
@@ -223,12 +226,12 @@ int load_section(Stream& strm, m3g_file_objects& objs)
 int m3g_check_file(char const* file_name)
 {
 	m3g_file_objects objs;
-	Stream strm(file_name);
+	Stream strm(file_name, M3G_FILE_FORMAT_10);
 	/* check m3g file identifier */
 	if (!check_m3g_file_identifier(strm))
 		return M3G_FALSE;
 	/* read head section */
-	//while(strm.error_code() == STREAM_SUCCESS)
+	while(strm.error_code() == STREAM_SUCCESS)
 	{
 		load_section(strm, objs);
 	}

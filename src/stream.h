@@ -25,6 +25,7 @@
 #include <vector>
 #include <string>
 #include <zlib.h>
+#include "m3gtypes.h"
 
 enum
 {
@@ -191,12 +192,14 @@ private:
 class Stream
 {
 public:
-	Stream(char const* file_name)
+	Stream(char const* file_name, int _version)
+		: version(_version)
 	{
 		impl = new FileStreamReader(file_name);
 	}
 
-	Stream(char* data, int size, int mode)
+	Stream(char* data, int size, int mode, int _version)
+		: version(_version)
 	{
 		impl = new MemoryStreamReader(data, size, mode);
 	}
@@ -251,7 +254,22 @@ public:
 
 private:
 	StreamReader* impl;
+	int version;
 };
+
+template<>
+inline int Stream::read(String* value)
+{
+	Byte v;
+	int size = 0;
+	size += impl->read((char*)&v, sizeof(Byte));
+	while (v)
+	{
+		value->push_back(v);
+		size += impl->read((char*)&v, sizeof(Byte));
+	}
+	return size;
+}
 
 
 #endif//__STREAM_H__

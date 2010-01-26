@@ -19,6 +19,8 @@
 #if !defined(__ANIMATION_CONTROLLER_OBJECT_H__)
 #define __ANIMATION_CONTROLLER_OBJECT_H__
 
+#include "object3d.h"
+
 // AnimationController
 struct animation_controller_object : object3d_object
 {
@@ -49,7 +51,6 @@ struct animation_controller_object : object3d_object
 	template<class T>
 	void traverse(T op)
 	{
-		object3d_object::traverse(op);
 		M3G_TYPE("speed", op);
 		M3G_TYPE("weight", op);
 		M3G_TYPE("activeIntervalStart", op);

@@ -20,6 +20,16 @@
 #define __BASE_H__
 
 #include "m3gtypes.h"
+#include "stream.h"
+
+enum
+{
+	OBJ_CLASS_HEADER = 0,
+	OBJ_CLASS_EXT_REF,
+	OBJ_CLASS_EXT_IMG,
+	OBJ_CLASS_EXT_OBJ,
+	OBJ_CLASS_OBJECT3D,
+};
 
 struct operation_load
 {
@@ -39,21 +49,21 @@ struct operation_load
 };
 struct operation_print
 {
-	operation_print(FILE *_out, std::string const &_indent, int version)
+	operation_print(FILE *_out, std::string const &_indent, int _version)
 		: out(_out)
-		, file_version(version)
+		, version(_version)
 		, indent(_indent)
 	{
 	}
 
 	void operator () (m3g_base_type* o)
 	{
-		o->print(out, indent, file_version);
+		o->print(out, indent, version);
 	}
 
 	FILE *out;
 	std::string indent;
-	int file_version;
+	int version;
 };
 struct operation_save
 {

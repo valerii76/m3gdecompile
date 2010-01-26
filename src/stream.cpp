@@ -19,17 +19,4 @@
 
 #include "m3gtypes.h"
 #include "stream.h"
-template<>
-inline int Stream::read(String* value)
-{
-	Byte v;
-	int size = 0;
-	size += impl->read((char*)&v, sizeof(Byte));
-	while (v)
-	{
-		value->push_back(v);
-		size += impl->read((char*)&v, sizeof(Byte));
-	}
-	return size;
-}
 

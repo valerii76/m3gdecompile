@@ -144,7 +144,8 @@ struct type_props_fi
 };
 
 template<class T>
-inline void print_value(FILE *out, char const *indent, char const *name, T &v)
+inline void print_value(FILE *out, char const *indent,
+	char const *name, T &v, int version)
 {
 	fprintf(out, "%s%s %s = %s;\n", indent, type_props<T>::name,
 		name, type_props<T>::to_string(v));
@@ -154,7 +155,8 @@ inline void print_value_oi(
 	FILE* out,
 	char const* indent,
 	char const* name,
-	ObjectIndex& value)
+	ObjectIndex& value,
+	int version)
 {
 	fprintf(out, "%s%s %s = %s;\n", indent, type_props_oi::name,
 		name, type_props_oi::to_string(value));
@@ -164,7 +166,8 @@ inline void print_value_fi(
 	FILE* out,
 	char const* indent,
 	char const* name,
-	ForwardIndex& value)
+	ForwardIndex& value,
+	int version)
 {
 	fprintf(out, "%s%s %s = %s;\n", indent, type_props_fi::name,
 		name, type_props_fi::to_string(value));
@@ -176,10 +179,13 @@ inline void print_value(
 	char const *indent,
 	char const *name,
 	T* v,
-	int len)
+	int len,
+	int version,
+	int varray = 0)
 {
-	fprintf(out, "%s%s %s[%d] = {\n", indent, type_props<T>::name,
-		name, len);
+	if (varray == 0)
+		fprintf(out, "%s%s %s[%d] = {\n", indent, type_props<T>::name,
+			name, len);
 	for (int i = 0; i < len; ++i)
 	{
 		if (i < (len-1))
@@ -189,7 +195,8 @@ inline void print_value(
 			fprintf(out, "%s%s\n",
 				indent, type_props<T>::to_string(v[i]));
 	}
-	fprintf(out, "%s};\n", indent);
+	if (varray == 0)
+		fprintf(out, "%s};\n", indent);
 }
 
 template<class T>
@@ -197,11 +204,15 @@ inline void print_value(
 	FILE *out,
 	char const *indent,
 	char const *name,
-	std::vector<T> &v)
+	std::vector<T> &v,
+	int version)
 {
+	fprintf(out, "%s%s %s [] = {\n", indent, type_props<T>::name, name);
 	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
 	if (v.size())
-		print_value(out, indent, name, &v.front(), v.size());
+		print_value(out, indent, name, &v.front(), v.size(),
+			version, 1);
+	fprintf(out, "%s};\n", indent);
 }
 
 inline void print_array_oi(
@@ -209,7 +220,8 @@ inline void print_array_oi(
 	char const *indent,
 	char const *name,
 	ObjectIndex *v,
-	int len)
+	int len,
+	int version)
 {
 	fprintf(out, "%s%s %s[%d] = {\n", indent, type_props_oi::name,
 		name, len);
@@ -229,11 +241,13 @@ inline void print_varray_oi(
 	FILE *out,
 	char const *indent,
 	char const *name,
-	std::vector<ObjectIndex> &v)
+	std::vector<ObjectIndex> &v,
+	int version)
 {
 	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
 	if (v.size())
-		print_array_oi(out, indent, name, &v.front(), v.size());
+		print_array_oi(out, indent, name, &v.front(),
+			v.size(), version);
 }
 
 #endif//__TYPE_PROPS_H__

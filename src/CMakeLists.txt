@@ -2,6 +2,8 @@
 project (m3gdecompile-bin)
 
 include_directories(${CMAKE_SOURCE_DIR}/zlib)
+include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/src/objects)
 
 #add_custom_command (
 #	OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/java.yy.c

@@ -104,10 +104,11 @@ struct m3g_type_print
 {
 	static void print(FILE *out,
 		std::string const &indent,
-		m3g_type<T, len> *v)
+		m3g_type<T, len> *v,
+		int version)
 	{
 		print_value(out, indent.c_str(),
-			v->name.c_str(), v->value, len);
+			v->name.c_str(), v->value, len, version);
 	}
 };
 template<class T>
@@ -115,10 +116,11 @@ struct m3g_type_print<T, 0>
 {
 	static void print(FILE *out,
 		std::string const &indent,
-		m3g_type<T, 0> *v)
+		m3g_type<T, 0> *v,
+		int version)
 	{
 		print_value(out, indent.c_str(),
-			v->name.c_str(), v->value);
+			v->name.c_str(), v->value, version);
 	}
 };
 template<class T, int len>
@@ -135,6 +137,14 @@ struct m3g_type_read<T, 0>
 	static int read(Stream &strm, m3g_type<T, 0> *v)
 	{
 		return strm.read(&v->value);
+	}
+};
+template<class T>
+struct m3g_type_read< std::vector< T >, 0 >
+{
+	static int read(Stream &strm, m3g_type< std::vector< T >, 0 > *v)
+	{
+		return strm.read_varray(&v->value);
 	}
 };
 
@@ -162,7 +172,7 @@ inline void m3g_type<T, len>::print(FILE *out, std::string const &indent,
 	int version)
 {
 	if (version_support & version)
-		m3g_type_print<T, len>::print(out, indent, this);
+		m3g_type_print<T, len>::print(out, indent, this, version);
 }
 template<class T, int len>
 inline int m3g_type<T, len>::load(Stream &strm, int version)

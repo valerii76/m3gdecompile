@@ -19,6 +19,15 @@
 #include "m3gformat.h"
 #include "type_props.h"
 
+#include "objects/header.h"
+#include "objects/external_ref.h"
+#include "objects/external_image_ref.h"
+#include "objects/external_object_ref.h"
+#include "objects/animation_controller.h"
+#include "objects/animation_track.h"
+#include "objects/appearance.h"
+#include "objects/background.h"
+
 
 int const SECTION_COUNT = 256;
 typedef base_object* (*make_t)();
@@ -50,9 +59,9 @@ struct object_registrator
 		register_object<external_image_ref_object>();
 		register_object<external_object_ref_object>();
 		register_object<animation_controller_object>();
-//		register_object<animation_track_object>();
-//		register_object<appearance_object>();
-//		register_object<background_object>();
+		register_object<animation_track_object>();
+		register_object<appearance_object>();
+		register_object<background_object>();
 //		register_object<camera_object>();
 //		register_object<composition_mode_object>();
 //		register_object<fog_object>();
