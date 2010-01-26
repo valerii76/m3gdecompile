@@ -11,9 +11,8 @@
  *       Revision:  none
  *       Compiler:  
  *
- *         Author:  Valery Volgutov (MSN:valerii76@hotmail.com)
- *                  valery.volgutov@lge.com
- *        Company:  LGERP St.Petersburg Lab
+ *         Author:  Valery Volgutov (valerii76), valerii76@gmail.com
+ *        Company:  
  *
  * =============================================================================
  */
