@@ -135,7 +135,7 @@ inline void print_value(FILE *out, char const *indent, char const *name,
 	if (v.size() == 0)
 		return;
 	fprintf(out, "%s%s\n%s{\n", indent, name, indent);
-	fprintf(out, "%sUInt count = %d;\n", new_indent.c_str(), v.size());
+	fprintf(out, "%sUInt32 count = %d;\n", new_indent.c_str(), v.size());
 	for (int i = 0; i < v.size(); ++i)
 	{
 		fprintf(out, "%s/* %d */\n", new_indent.c_str(), i);
@@ -151,7 +151,7 @@ inline void print_value(FILE *out, char const *indent, char const *name,
 	if (v.size() == 0)
 		return;
 	fprintf(out, "%s%s\n%s{\n", indent, name, indent);
-	fprintf(out, "%sUInt count = %d;\n", new_indent.c_str(), v.size());
+	fprintf(out, "%sUInt32 count = %d;\n", new_indent.c_str(), v.size());
 	for (int i = 0; i < v.size(); ++i)
 	{
 		fprintf(out, "%s/* %d */\n", new_indent.c_str(), i);
