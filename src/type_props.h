@@ -20,6 +20,7 @@
 #define __TYPE_PROPS_H__
 
 #include "m3gfile.h"
+#include <string.h>
 #include <vector>
 #include <stdio.h>
 
@@ -79,6 +80,7 @@ struct type_props<Float32>
 {
 	static char const *name;
 	static char const* to_string(Float32 v);
+	static char const* to_hex(Float32 v) { return 0;}
 };
 /*
 template<>
@@ -94,6 +96,7 @@ struct type_props<StringUTF8>
 {
 	static char const *name;
 	static char const* to_string(StringUTF8 &v);
+	static char const* to_hex(StringUTF8 &v) { return 0;}
 };
 
 template<>
@@ -101,6 +104,7 @@ struct type_props<Boolean>
 {
 	static char const *name;
 	static char const* to_string(Boolean v);
+	static char const* to_hex(Boolean v) { return 0;}
 };
 
 template<>
@@ -108,6 +112,7 @@ struct type_props<Vector3D>
 {
 	static char const *name;
 	static char const* to_string(Vector3D &v);
+	static char const* to_hex(Vector3D &v) { return 0;}
 };
 
 template<>
@@ -115,6 +120,7 @@ struct type_props<Matrix>
 {
 	static char const *name;
 	static char const* to_string(Matrix &v);
+	static char const* to_hex(Matrix &v) { return 0;}
 };
 
 template<>
@@ -122,6 +128,7 @@ struct type_props<ColorRGB>
 {
 	static char const *name;
 	static char const* to_string(ColorRGB &v);
+	static char const* to_hex(ColorRGB &v) { return 0;}
 };
 
 template<>
@@ -129,18 +136,21 @@ struct type_props<ColorRGBA>
 {
 	static char const *name;
 	static char const* to_string(ColorRGBA &v);
+	static char const* to_hex(ColorRGBA &v) { return 0;}
 };
 
 struct type_props_oi
 {
 	static char const *name;
 	static char const* to_string(ObjectIndex v);
+	static char const* to_hex(ObjectIndex v) { return 0;}
 };
 
 struct type_props_fi
 {
 	static char const *name;
 	static char const* to_string(ForwardIndex v);
+	static char const* to_hex(ForwardIndex v) { return 0;}
 };
 
 template<class T>
@@ -176,20 +186,62 @@ inline void print_array(
 	char const *indent,
 	char const *name,
 	T* v,
-	int len)
+	int len,
+	int hex,
+	int varray = false)
 {
-	fprintf(out, "%s%s %s[%d] = {\n", indent, type_props<T>::name,
-		name, len);
+	char new_indent[255];
+	strcpy(new_indent, indent);
+	strcat(new_indent, "\t");
+	if (!varray)
+		fprintf(out, "%s%s %s[%d] = {\n", indent, type_props<T>::name,
+			name, len);
+
+	int const cols = 80;
+	char row[8196];
+	int curr_len = 0;
+	memset(row, 0, 8196);
 	for (int i = 0; i < len; ++i)
 	{
-		if (i < (len-1))
-			fprintf(out, "%s%s,\n",
-				indent, type_props<T>::to_string(v[i]));
+		char const *value_str = 0;
+		if (hex)
+			value_str = type_props<T>::to_hex(v[i]);
 		else
-			fprintf(out, "%s%s\n",
-				indent, type_props<T>::to_string(v[i]));
+			value_str = type_props<T>::to_string(v[i]);
+		if (!hex)
+		{
+			if (i < (len-1))
+				fprintf(out, "%s%s,\n", new_indent, value_str);
+			else
+				fprintf(out, "%s%s\n", new_indent, value_str);
+		}
+		else
+		{
+			int value_len = strlen(value_str);
+			if ((curr_len + value_len) < cols)
+			{
+				strcat(row, value_str);
+				curr_len = strlen(row);
+			}
+			else
+			{
+				if (strlen(row))
+					fprintf(out, "%s%s\n", new_indent, row);
+				strcpy(row, value_str);
+				curr_len = value_len;
+			}
+			if (i < (len-1))
+			{
+				strcat(row, ", ");
+				curr_len = strlen(row);
+			}
+		}
 	}
-	fprintf(out, "%s};\n", indent);
+	if (strlen(row))
+		fprintf(out, "%s%s\n", new_indent, row);
+
+	if (!varray)
+		fprintf(out, "%s};\n", indent);
 }
 
 template<class T>
@@ -197,11 +249,19 @@ inline void print_varray(
 	FILE *out,
 	char const *indent,
 	char const *name,
-	std::vector<T> &v)
+	std::vector<T> &v,
+	int hex)
 {
-	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
+	char new_indent[255];
+	strcpy(new_indent, indent);
+	strcat(new_indent, "\t");
+	fprintf(out, "%svarray(%s) %s\n%s{\n", indent,
+		type_props<T>::name, name, indent);
+	fprintf(out, "%sUInt32 count = %d;\n", new_indent, v.size());
 	if (v.size())
-	    print_array(out, indent, name, &v.front(), v.size());
+		print_array(out, indent, name,
+			&v.front(), v.size(), hex, 1);
+	fprintf(out, "%s};\n", indent);
 }
 
 inline void print_array_oi(
@@ -209,20 +269,26 @@ inline void print_array_oi(
 	char const *indent,
 	char const *name,
 	ObjectIndex *v,
-	int len)
+	int len,
+	int varray = 0)
 {
-	fprintf(out, "%s%s %s[%d] = {\n", indent, type_props_oi::name,
-		name, len);
+	char new_indent[255];
+	strcpy(new_indent, indent);
+	strcat(new_indent, "\t");
+	if (!varray)
+		fprintf(out, "%s%s %s[%d] = {\n", indent, type_props_oi::name,
+			name, len);
 	for (int i = 0; i < len; ++i)
 	{
 		if (i < (len-1))
 			fprintf(out, "%s%s,\n",
-				indent, type_props_oi::to_string(v[i]));
+				new_indent, type_props_oi::to_string(v[i]));
 		else
 			fprintf(out, "%s%s\n",
-				indent, type_props_oi::to_string(v[i]));
+				new_indent, type_props_oi::to_string(v[i]));
 	}
-	fprintf(out, "%s};\n", indent);
+	if (!varray)
+		fprintf(out, "%s};\n", indent);
 }
 
 inline void print_varray_oi(
@@ -231,9 +297,15 @@ inline void print_varray_oi(
 	char const *name,
 	std::vector<ObjectIndex> &v)
 {
-	fprintf(out, "%sUInt32 count = %d;\n", indent, v.size());
+	char new_indent[255];
+	strcpy(new_indent, indent);
+	strcat(new_indent, "\t");
+	fprintf(out, "%svarray(%s) %s\n%s{\n", indent,
+		type_props_oi::name, name, indent);
+	fprintf(out, "%sUInt32 count = %d;\n", new_indent, v.size());
 	if (v.size())
-	    print_array_oi(out, indent, name, &v.front(), v.size());
+		print_array_oi(out, indent, name, &v.front(), v.size(), 1);
+	fprintf(out, "%s};\n", indent);
 }
 
 #endif//__TYPE_PROPS_H__

@@ -188,6 +188,13 @@ int load_section(Stream& strm, m3g_file_objects& objs)
 	if (strm.error_code() != STREAM_SUCCESS)
 		return M3G_FALSE;
 
+	// skip section
+	if (sh.uncompression_length == 0)
+	{
+		read(strm, &st);
+		return M3G_TRUE;
+	}
+
 	/* read objects */
 	Stream obj_strm((char*)&objects.front(), objects.size(),
 		sh.compression_scheme == M3G_COMPRESSION_SCHEME_ZLIB ?

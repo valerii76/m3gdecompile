@@ -559,7 +559,7 @@ int header_object::load(Stream& strm, int version)
 void header_object::print(FILE* out, char const *indent, int version)
 {
 	OBJECT_PRINT_START("Header");
-	print_array(out, new_indent, "VersionNumber", version_number, 2);
+	print_array(out, new_indent, "VersionNumber", version_number, 2, 0);
 	print_value(out, new_indent, "hasExternalReferences",
 		has_external_references);
 	print_value(out, new_indent, "TotalFileSize", total_file_size);
@@ -612,7 +612,7 @@ void external_object_ref_object::print(FILE* out, char const *indent,
 {
 	OBJECT_PRINT_START("ExternalObjectReferences");
 	external_ref_object::print(out, new_indent, version);
-	print_varray(out, new_indent, "userID", user_id);
+	print_varray(out, new_indent, "userID", user_id, 0);
 	OBJECT_PRINT_END();
 }
 
@@ -673,7 +673,7 @@ void object3d_object::print(FILE* out, char const *indent, int version)
 		print_value(out, new_indent, "parameterID",
 			parameters[i].parameter_id);
 		print_varray(out, new_indent, "parameterValue",
-			parameters[i].parameter_value);
+			parameters[i].parameter_value, 1);
 	}
 	if (version == M3G_FILE_FORMAT_20)
 		print_value(out, new_indent, "animationEnabled",
@@ -1076,8 +1076,8 @@ void node_object::print(FILE* out, char const *indent, int version)
 		{
 			print_value(out, new_indent, "orientations",
 				orientations);
-			print_array(out, new_indent, "min", min, 13);
-			print_array(out, new_indent, "max", max, 13);
+			print_array(out, new_indent, "min", min, 13, 0);
+			print_array(out, new_indent, "max", max, 13, 0);
 		}
 		print_value(out, new_indent, "LODResolution", lod_resolution);
 	}
@@ -1263,7 +1263,7 @@ void group_object::print(FILE* out, char const *indent, int version)
 	OBJECT_PRINT_START("Group");
 	node_object::print(out, new_indent, version);
 
-	print_varray(out, new_indent, "children", children);
+	print_varray_oi(out, new_indent, "children", children);
 	if (version == M3G_FILE_FORMAT_20)
 	{
 		print_value(out, new_indent, "isLodEnabled", is_lod_enabled);
@@ -1343,8 +1343,8 @@ void image2d_object::print(FILE* out, char const *indent, int version)
 
 	if (is_mutable == false)
 	{
-		print_varray(out, new_indent, "palette", palette);
-		print_varray(out, new_indent, "basePixels", base_pixels);
+		print_varray(out, new_indent, "palette", palette, 1);
+		print_varray(out, new_indent, "basePixels", base_pixels, 1);
 
 		if (version == M3G_FILE_FORMAT_20)
 		{
@@ -1353,7 +1353,7 @@ void image2d_object::print(FILE* out, char const *indent, int version)
 			for (int i = 0; i < mipmap_count; ++i)
 			{
 				print_varray(out, new_indent, "mipmapPixels",
-					mipmaps[i].mipmap_pixels);
+					mipmaps[i].mipmap_pixels, 1);
 			}
 		}
 	}
@@ -1441,7 +1441,7 @@ void index_buffer_object::print(FILE* out, char const *indent, int version)
 			if (strip_encoding == 128)
 				print_array(out, new_indent, "stripLengths",
 					&strip_lengths._uint32.front(),
-					primitive_count._uint32);
+					primitive_count._uint32, 0);
 		}
 		else if (strip_encoding == 1 || strip_encoding == 129)
 		{
@@ -1450,7 +1450,7 @@ void index_buffer_object::print(FILE* out, char const *indent, int version)
 			if (strip_encoding == 129)
 				print_array(out, new_indent, "stripLengths",
 					&strip_lengths._byte.front(),
-					primitive_count._byte);
+					primitive_count._byte, 0);
 		}
 		else if (strip_encoding == 2 || strip_encoding == 130)
 		{
@@ -1459,7 +1459,7 @@ void index_buffer_object::print(FILE* out, char const *indent, int version)
 			if (strip_encoding == 130)
 				print_array(out, new_indent, "stripLengths",
 					&strip_lengths._uint16.front(),
-					primitive_count._uint16);
+					primitive_count._uint16, 0);
 		}
 	}
 
@@ -1474,24 +1474,24 @@ void index_buffer_object::print(FILE* out, char const *indent, int version)
 			start_index._uint16);
 	else if (encoding == 128)
 		print_varray(out, new_indent, "indices",
-			indices._uint32);
+			indices._uint32, 0);
 	else if (encoding == 129)
 		print_varray(out, new_indent, "indices",
-			indices._byte);
+			indices._byte, 0);
 	else if (encoding == 130)
 		print_varray(out, new_indent, "indices",
-			indices._uint16);
+			indices._uint16, 0);
 	else if (version == M3G_FILE_FORMAT_20)
 	{
 		if (encoding == 192)
 			print_varray(out, new_indent, "indexDeltas",
-				index_deltas._i32);
+				index_deltas._i32, 0);
 		else if (encoding == 193)
 			print_varray(out, new_indent, "indexDeltas",
-				index_deltas._byte);
+				index_deltas._byte, 0);
 		else if (encoding == 194)
 			print_varray(out, new_indent, "indexDeltas",
-				index_deltas._i16);
+				index_deltas._i16, 0);
 	}
 
 	OBJECT_PRINT_END();
@@ -1594,15 +1594,15 @@ void keyframe_sequence_object::print(FILE* out, char const *indent, int version)
 				keyframes[i].time);
 			print_array(out, new_indent, "vectorValue",
 				&keyframes[i].vector_value._float32.front(),
-				component_count * channel_count);
+				component_count * channel_count, 0);
 		}
 	}
 	if (encoding == 1)
 	{
 		print_array(out, new_indent, "vectorBias",
-			&vector_bias.front(), component_count);
+			&vector_bias.front(), component_count, 0);
 		print_array(out, new_indent, "vectorScale",
-			&vector_scale.front(), component_count);
+			&vector_scale.front(), component_count, 0);
 
 		for (int i = 0; i < keyframe_count; ++i)
 		{
@@ -1610,15 +1610,15 @@ void keyframe_sequence_object::print(FILE* out, char const *indent, int version)
 				keyframes[i].time);
 			print_array(out, new_indent, "vectorValue",
 				&keyframes[i].vector_value._byte.front(),
-				component_count * channel_count);
+				component_count * channel_count, 0);
 		}
 	}
 	else if (encoding == 2)
 	{
 		print_array(out, new_indent, "vectorBias",
-			&vector_bias.front(), component_count);
+			&vector_bias.front(), component_count, 0);
 		print_array(out, new_indent, "vectorScale",
-			&vector_scale.front(), component_count);
+			&vector_scale.front(), component_count, 0);
 
 		for (int i = 0; i < keyframe_count; ++i)
 		{
@@ -1626,7 +1626,7 @@ void keyframe_sequence_object::print(FILE* out, char const *indent, int version)
 				keyframes[i].time);
 			print_array(out, new_indent, "vectorValue",
 				&keyframes[i].vector_value._uint16.front(),
-				component_count * channel_count);
+				component_count * channel_count, 0);
 		}
 	}
 
@@ -1769,7 +1769,7 @@ void mesh_object::print(FILE* out, char const *indent, int version)
 			print_value(out, new_indent, "initialWeight",
 				target_buffers[i].initial_weight);
 		}
-		print_varray(out, new_indent, "morphSubset", morph_subset);
+		print_varray(out, new_indent, "morphSubset", morph_subset, 0);
 	}
 
 	OBJECT_PRINT_END();
@@ -2034,7 +2034,7 @@ void triangle_strip_array_object::print(FILE* out,
 
 	if (version == M3G_FILE_FORMAT_10)
 		print_varray(out, new_indent, "stripLengths",
-			strip_lengths._uint32);
+			strip_lengths._uint32, 0);
 
 	OBJECT_PRINT_END();
 }
@@ -2090,23 +2090,23 @@ void vertex_array_object::print(FILE* out, char const *indent, int version)
 		if (component_type == VERTEXARRAY_BYTE)
 			print_array(out, new_indent, "components",
 				&components[i]._byte.front(),
-				component_count);
+				component_count, 0);
 		else if (component_type == VERTEXARRAY_SHORT)
 			print_array(out, new_indent, "components",
 				&components[i]._i16.front(),
-				component_count);
+				component_count, 0);
 		else if (version == M3G_FILE_FORMAT_20)
 		{
 			if (component_type == VERTEXARRAY_FIXED)
 				print_array(out, new_indent, "components",
 					&components[i]._i32.front(),
-					component_count);
+					component_count, 0);
 			else if (component_type == VERTEXARRAY_HALF)
 				; /*FIXME: later */
 			else if (component_type == VERTEXARRAY_FLOAT)
 				print_array(out, new_indent, "components",
 					&components[i]._float32.front(),
-					component_count);
+					component_count, 0);
 		}
 	}
 
@@ -2167,7 +2167,7 @@ void vertex_buffer_object::print(FILE* out, char const *indent, int version)
 
 	print_value(out, new_indent, "defaultColor", default_color);
 	print_value_oi(out, new_indent, "positions", positions);
-	print_array(out, new_indent, "positionBias", position_bias, 3);
+	print_array(out, new_indent, "positionBias", position_bias, 3, 0);
 	print_value(out, new_indent, "positionScale", position_scale);
 	print_value_oi(out, new_indent, "normals", normals);
 	print_value_oi(out, new_indent, "colors", colors);
@@ -2179,7 +2179,7 @@ void vertex_buffer_object::print(FILE* out, char const *indent, int version)
 		print_value_oi(out, new_indent, "texCoords",
 			textures[i].coord);
 		print_array(out, new_indent, "texCoordBias",
-			textures[i].bias, 3);
+			textures[i].bias, 3, 0);
 		print_value(out, new_indent, "texCoordScale",
 			textures[i].scale);
 	}
@@ -2207,7 +2207,7 @@ void vertex_buffer_object::print(FILE* out, char const *indent, int version)
 			print_value(out, new_indent, "normalized",
 				attributes[i]._normalized);
 			print_array(out, new_indent, "defaultAttributeValue",
-				attributes[i].default_attribute_value, 4);
+				attributes[i].default_attribute_value, 4, 0);
 		}
 	}
 
