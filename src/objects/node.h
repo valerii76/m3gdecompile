@@ -52,7 +52,7 @@ struct node_object : transformable_object
 		DEFINE_M3G_TYPE(Float32, "boundMaxY", 0, M3G_FILE_FORMAT_20);
 		DEFINE_M3G_TYPE(Float32, "boundMinZ", 0, M3G_FILE_FORMAT_20);
 		DEFINE_M3G_TYPE(Float32, "boundMaxZ", 0, M3G_FILE_FORMAT_20);
-		DEFINE_M3G_TYPE(Boolean, "hasBoundingSphere", false,T
+		DEFINE_M3G_TYPE(Boolean, "hasBoundingSphere", false,
 			M3G_FILE_FORMAT_20);
 		DEFINE_M3G_TYPE(Float32, "boundCenterX", 0,
 			M3G_FILE_FORMAT_20);
@@ -68,8 +68,8 @@ struct node_object : transformable_object
 			M3G_FILE_FORMAT_20);
 		DEFINE_M3G_TYPE(Int32, "orientations", 0,
 			M3G_FILE_FORMAT_20);
-		DEFINE_M3G_FARRAY(Float32, "min", 13, M3G_FILE_FORMAT_20);
-		DEFINE_M3G_FARRAY(Float32, "max", 13, M3G_FILE_FORMAT_20);
+		DEFINE_M3G_FARRAY(Float32, 13, "min", M3G_FILE_FORMAT_20);
+		DEFINE_M3G_FARRAY(Float32, 13, "max", M3G_FILE_FORMAT_20);
 		DEFINE_M3G_TYPE(Float32, "LODResolution", 0,
 			M3G_FILE_FORMAT_20);
 	}
@@ -101,7 +101,7 @@ struct node_object : transformable_object
 			M3G_TYPE("boundMaxZ", op);
 		}
 		M3G_TYPE("hasBoundingSphere", op);
-		if (M3G_TYPE_CAST("hasBoundingSphere", op))
+		if (M3G_TYPE_CAST("hasBoundingSphere", Boolean))
 		{
 			M3G_TYPE("boundCenterX", op);
 			M3G_TYPE("boundCenterY", op);

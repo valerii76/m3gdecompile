@@ -35,7 +35,7 @@ struct image_base_object : object3d_object
 			M3G_FILE_FORMAT_ALL);
 		DEFINE_M3G_TYPE(UInt32, "width", 0,
 			M3G_FILE_FORMAT_ALL);
-		DEFINE_M3G_TYPE(UIint32, "height", 0,
+		DEFINE_M3G_TYPE(UInt32, "height", 0,
 			M3G_FILE_FORMAT_ALL);
 	}
 
@@ -46,7 +46,7 @@ struct image_base_object : object3d_object
 		M3G_TYPE("format_10", op);
 		M3G_TYPE("isMutable", op);
 		M3G_TYPE("width", op);
-		M3G_TYPE("height", opo);
+		M3G_TYPE("height", op);
 	}
 	virtual int load(Stream& strm, int version)
 	{

@@ -90,7 +90,7 @@ struct index_buffer_object : object3d_object
 			M3G_FILE_FORMAT_ALL);
 		DEFINE_M3G_TYPE(Byte, "startIndex_b", 0,
 			M3G_FILE_FORMAT_ALL);
-		DEFINE_M3G_TYPE(UInt16, "startIndex_ui16", 0
+		DEFINE_M3G_TYPE(UInt16, "startIndex_ui16", 0,
 			M3G_FILE_FORMAT_ALL);
 		DEFINE_M3G_VARRAY(UInt32, "indices_ui32",
 			M3G_FILE_FORMAT_ALL);

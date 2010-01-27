@@ -27,6 +27,13 @@
 #include "objects/animation_track.h"
 #include "objects/appearance.h"
 #include "objects/background.h"
+#include "objects/camera.h"
+#include "objects/compositing_mode.h"
+#include "objects/fog.h"
+#include "objects/group.h"
+#include "objects/image2d.h"
+#include "objects/index_buffer.h"
+#include "objects/keyframe_sequence.h"
 
 
 int const SECTION_COUNT = 256;
@@ -62,12 +69,12 @@ struct object_registrator
 		register_object<animation_track_object>();
 		register_object<appearance_object>();
 		register_object<background_object>();
-//		register_object<camera_object>();
-//		register_object<composition_mode_object>();
-//		register_object<fog_object>();
+		register_object<camera_object>();
+		register_object<composition_mode_object>();
+		register_object<fog_object>();
 //		register_object<polygon_mode_object>();
-//		register_object<group_object>();
-//		register_object<image2d_object>();
+		register_object<group_object>();
+		register_object<image2d_object>();
 //		register_object<triangle_strip_array_object>();
 //		register_object<light_object>();
 //		register_object<material_object>();
@@ -76,7 +83,7 @@ struct object_registrator
 //		register_object<skinned_mesh_object>();
 //		register_object<texture2d_object>();
 //		register_object<sprite3d_object>();
-//		register_object<keyframe_sequence_object>();
+		register_object<keyframe_sequence_object>();
 //		register_object<vertex_array_object>();
 //		register_object<vertex_buffer_object>();
 //		register_object<world_object>();
@@ -84,7 +91,7 @@ struct object_registrator
 //		register_object<dynamic2d_object>();
 //		register_object<fragment_shader_object>();
 //		register_object<image_cube_object>();
-//		register_object<index_buffer_object>();
+		register_object<index_buffer_object>();
 //		register_object<point_sprite_mode_object>();
 //		register_object<render_pass_object>();
 //		register_object<render_target_object>();

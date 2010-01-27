@@ -71,7 +71,7 @@ struct image2d_object : image_base_object
 			M3G_FILE_FORMAT_ALL);
 		DEFINE_M3G_TYPE(Byte, "mipmapCount", 0,
 			M3G_FILE_FORMAT_20);
-		DEFINE_M3G_VARRAY(mipmaps, "Mipmaps",
+		DEFINE_M3G_VARRAY(mipmap, "Mipmaps",
 			M3G_FILE_FORMAT_20);
 	}
 
@@ -104,7 +104,7 @@ struct image2d_object : image_base_object
 };
 
 inline void print_value(FILE *out, char const *indent, char const *name,
-	std::vector< image2d_object::mipmaps>& v, int version)
+	std::vector< image2d_object::mipmap>& v, int version)
 {
 	std::string new_indent = std::string(indent) + "\t";
 	operation_print op(out, new_indent, version);
@@ -120,7 +120,7 @@ inline void print_value(FILE *out, char const *indent, char const *name,
 	fprintf(out, "%s}\n", indent);
 }
 template<>
-inline int Stream::read(std::vector< image2d_object::mipmaps >* v, int count)
+inline int Stream::read(std::vector< image2d_object::mipmap > > *v, int count)
 {
 	int size = 0;
 	for (int i = 0; i < count; ++i)

@@ -19,10 +19,12 @@
 #if !defined (__TRANSFORMABLE_H__)
 #define __TRANSFORMABLE_H__
 
+#include "object3d.h"
+
 // Transformable
 struct transformable_object : object3d_object
 {
-	transformable()
+	transformable_object()
 	{
 		DEFINE_M3G_TYPE(Boolean, "hasComponentTransform", false,
 			M3G_FILE_FORMAT_ALL);

@@ -45,9 +45,9 @@ struct group_object : node_object
 			M3G_FILE_FORMAT_ALL);
 		DEFINE_M3G_TYPE(Boolean, "isLodEnabled", false,
 			M3G_FILE_FORMAT_20);
-		DEFINE_M3G_TYPE(Float, "hysteresis", 0,
+		DEFINE_M3G_TYPE(Float16, "hysteresis", 0,
 			M3G_FILE_FORMAT_20);
-		DEFINE_M3G_TYPE(Float, "offset", 0,
+		DEFINE_M3G_TYPE(Float16, "offset", 0,
 			M3G_FILE_FORMAT_20);
 	}
 
