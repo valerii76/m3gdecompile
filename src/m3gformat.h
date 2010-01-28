@@ -429,8 +429,8 @@ struct group_object : node_object
 
 	std::vector<ObjectIndex> children;
 	Boolean is_lod_enabled;
-	Float16 hysteresis;
-	Float16 offset;
+	Float32 hysteresis;
+	Float32 offset;
 
 	virtual int load(Stream& strm, int version);
 	virtual void print(FILE* out, char const *indent, int version);

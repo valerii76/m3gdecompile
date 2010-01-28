@@ -630,7 +630,7 @@ int object3d_object::load(Stream& strm, int version)
 		anim_track_s track;
 		size += strm.read(&track.animation_track);
 		if (version == M3G_FILE_FORMAT_20)
-			size = strm.read(&track.animation_track_index);
+			size += strm.read(&track.animation_track_index);
 		animation_tracks.push_back(track);
 	}
 
@@ -1389,7 +1389,7 @@ int index_buffer_object::load(Stream& strm, int version)
 					&strip_lengths._byte,
 					primitive_count._byte);
 		}
-		else if (strip_encoding = 2 || strip_encoding == 130)
+		else if (strip_encoding == 2 || strip_encoding == 130)
 		{
 			size += strm.read(&primitive_count._uint16);
 			if (strip_encoding == 130)
