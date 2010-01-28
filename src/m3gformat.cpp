@@ -475,6 +475,7 @@ base_object* base_object::make(int obj_type)
 {
 	if (create_object[obj_type])
 		return create_object[obj_type]();
+	throw invalid_object_type(obj_type);
 	return NULL;
 }
 
@@ -536,6 +537,19 @@ struct object_registrator
 	}
 } do_object_registrator;
 
+void check_type(std::string const &obj,
+	std::string const &prop, Boolean v)
+{
+	if (v != 0 || v != 1)
+		throw invalid_property_value<Boolean>(obj, prop, v);
+}
+void check_version(std::string const &obj,
+	std::string const &prop, Byte *v)
+{
+	if (v[0] != 1 && v[0] != 2 && v[1] != 0)
+		throw invalid_property_value<Byte>(obj, prop, v[0]);
+}
+
 #define OBJECT_PRINT_START(name) \
 	char new_indent[255]; \
 	strcpy(new_indent, indent); \
@@ -591,7 +605,8 @@ int external_image_ref_object::load(Stream& strm, int version)
 	return size;
 }
 
-void external_image_ref_object::print(FILE* out, char const *indent, int version)
+void external_image_ref_object::print(FILE* out, char const *indent,
+	int version)
 {
 	OBJECT_PRINT_START("ExternalImageReferences");
 	external_ref_object::print(out, new_indent, version);

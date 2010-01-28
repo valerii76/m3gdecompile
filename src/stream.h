@@ -26,6 +26,8 @@
 #include <string>
 #include <zlib.h>
 
+#include "exceptions.h"
+
 enum
 {
 	STREAM_SUCCESS = 0,
@@ -68,7 +70,10 @@ public:
 	{
 		file = fopen(file_name, "rb");
 		if (file == NULL)
+		{
 			error_code = STREAM_FILE_NOT_OPEN;
+			throw file_not_open(file_name);
+		}
 	}
 	~FileStreamReader()
 	{
@@ -82,8 +87,11 @@ public:
 		if (error_code != STREAM_SUCCESS || size == 0)
 			return 0;
 		ret = fread(data, 1, size, file);
-		if (ret != size)
+		if (ret != size && !feof(file))
+		{
 			error_code = STREAM_FILE_READ_ERROR;
+			throw file_read_error();
+		}
 		if (feof(file))
 			error_code = STREAM_END;
 		return ret;
@@ -124,6 +132,7 @@ public:
 			if (ret != Z_OK)
 			{
 				error_code = STREAM_MEMORY_NO_DATA;
+				throw memory_no_data();
 				return;
 			}
 
@@ -142,6 +151,7 @@ public:
 				{
 					inflateEnd(&strm);
 					error_code = STREAM_MEMORY_NO_DATA;
+					throw memory_data_corrupt();
 					return;
 				}
 				have = CHUNK - strm.avail_out;
@@ -167,12 +177,11 @@ public:
 	virtual int read(char* _data, int _size)
 	{
 		int readed = _size;
-		if (data == 0 || _size == 0 || error_code != STREAM_SUCCESS)
-			return 0;
 		if (_size > (total_size - curr))
 		{
 			readed = total_size - curr;
 			error_code = STREAM_MEMORY_READ_OUT_OF_BOUND;
+			throw memory_read_out_of_bound();
 			return 0;
 		}
 		memcpy(_data, data + curr, readed);

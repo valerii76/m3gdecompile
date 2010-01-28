@@ -19,6 +19,7 @@
 
 #include "m3gfile.h"
 #include <vector>
+#include "exceptions.h"
 
 #include "m3gformat.h"
 #include "stream.h"
@@ -168,6 +169,7 @@ int check_m3g_file_identifier(Stream& strm)
 		memcmp(&file_id.front(), m3g_file_identifier, 12))
 	{
 		m3g_error = M3G_INVALID_FILE_IDENTIFIER;
+		throw incorrect_m3g_signature();
 		return M3G_FALSE;
 	}
 	return M3G_TRUE;
@@ -230,14 +232,21 @@ int load_section(Stream& strm, m3g_file_objects& objs)
 int m3g_check_file(char const* file_name)
 {
 	m3g_file_objects objs;
-	Stream strm(file_name);
-	/* check m3g file identifier */
-	if (!check_m3g_file_identifier(strm))
-		return M3G_FALSE;
-	/* read head section */
-	while(strm.error_code() == STREAM_SUCCESS)
+	try
 	{
-		load_section(strm, objs);
+		Stream strm(file_name);
+		/* check m3g file identifier */
+		check_m3g_file_identifier(strm);
+		/* read head section */
+		while(strm.error_code() == STREAM_SUCCESS)
+		{
+			load_section(strm, objs);
+		}
+	}
+	catch(std::exception const& e)
+	{
+		printf("Exception: %s\n", e.what());
+		return M3G_FALSE;
 	}
 
 	objs.print_all(stdout);
@@ -249,5 +258,4 @@ int m3g_check_data(char const* data, int size)
 {
     return 0;
 }
-
 

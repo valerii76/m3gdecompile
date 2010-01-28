@@ -21,11 +21,12 @@
 
 int main(int argc, char** argv)
 {
-	printf("m3gdecompile\n");
 	if (m3g_check_file(argv[1]))
+	{
 		printf("file ok\n");
-	else
-		printf("file has error\n");
-	return 0;
+		return 0;
+	}
+	printf("file has error\n");
+	return -1;
 }
 
