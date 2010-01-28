@@ -997,7 +997,7 @@ int node_object::load(Stream& strm, int version)
 			size += strm.read(&bound_max_z);
 		}
 
-		size += strm.read(&has_bounding_box);
+		size += strm.read(&has_bounding_sphere);
 		if (has_bounding_sphere)
 		{
 			size += strm.read(&bound_center_x);
