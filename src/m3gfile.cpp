@@ -124,9 +124,9 @@ void read(Stream& strm, section_head* data)
 
 	if (strm.error_code() != STREAM_SUCCESS)
 		return;
-	printf("compression scheme: %d\n", data->compression_scheme);
-	printf("total section length: %d\n", data->total_section_length);
-	printf("uncompression length: %d\n", data->uncompression_length);
+	//printf("compression scheme: %d\n", data->compression_scheme);
+	//printf("total section length: %d\n", data->total_section_length);
+	//printf("uncompression length: %d\n", data->uncompression_length);
 }
 
 template<>
@@ -143,8 +143,8 @@ void read(Stream& strm, object_head* data)
 
 	if (strm.error_code() != STREAM_SUCCESS)
 		return;
-	printf("object type: %d\n", data->object_type);
-	printf("length: %d\n", data->length);
+	//printf("object type: %d\n", data->object_type);
+	//printf("length: %d\n", data->length);
 }
 
 //==============================================================================
@@ -213,6 +213,7 @@ int load_section(Stream& strm, m3g_file_objects& objs)
 		{
 			obj->load(obj_strm, objs.file_version);
 			objs.push_back(obj);
+			obj->print(stdout, "", objs.file_version);
 		}
 		else
 		{
@@ -249,7 +250,7 @@ int m3g_check_file(char const* file_name)
 		return M3G_FALSE;
 	}
 
-	objs.print_all(stdout);
+	//objs.print_all(stdout);
 
 	return M3G_TRUE;
 }
