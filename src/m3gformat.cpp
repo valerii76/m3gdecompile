@@ -2265,7 +2265,18 @@ int blender_object::load(Stream& strm, int version)
 }
 void blender_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("Blender");
 	object3d_object::print(out, indent, version);
+
+	print_value(out, new_indent, "funcAlpha", func_alpha);
+	print_value(out, new_indent, "scrAlpha", src_alpha);
+	print_value(out, new_indent, "dstAlpha", dst_alpha);
+	print_value(out, new_indent, "funcColor", func_color);
+	print_value(out, new_indent, "srcColor", src_color);
+	print_value(out, new_indent, "dstColor", dst_color);
+	print_value(out, new_indent, "blendColor", blend_color);
+
+	OBJECT_PRINT_END();
 }
 
 // DynamicImage2D
@@ -2277,7 +2288,9 @@ int dynamic2d_object::load(Stream& strm, int version)
 }
 void dynamic2d_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("DynamicImage2D");
 	object3d_object::print(out, indent, version);
+	OBJECT_PRINT_END();
 }
 
 // Shader
@@ -2290,7 +2303,9 @@ int shader_object::load(Stream& strm, int version)
 }
 void shader_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("Shader");
 	object3d_object::print(out, indent, version);
+	OBJECT_PRINT_END();
 }
 
 // FragmentShader
@@ -2302,7 +2317,9 @@ int fragment_shader_object::load(Stream& strm, int version)
 }
 void fragment_shader_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("FragmentShader");
 	shader_object::print(out, indent, version);
+	OBJECT_PRINT_END();
 }
 
 // ImageCube
@@ -2330,7 +2347,31 @@ int image_cube_object::load(Stream& strm, int version)
 }
 void image_cube_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("ImageCube");
 	image_base_object::print(out, indent, version);
+
+	if (!is_mutable)
+	{
+		for (int i = 0; i < 6; ++i)
+		{
+			char ni[255];
+			strcpy(ni, new_indent);
+			strcat(ni, "\t");
+			fprintf(out, "%sface %d\n%s{\n", new_indent,
+				i, new_indent);
+			print_varray(out, ni, "pixels", mipmaps[i].pixels, 1);
+			print_value(out, ni, "mipmapCount",
+				mipmaps[i].mipmap_count);
+			for (int j = 0; j < mipmaps[i].mipmap_count; ++j)
+			{
+				print_varray(out, ni, "mipmapPixels",
+					mipmaps[i].mipmap_pixels[j].values, 1);
+			}
+			fprintf(out, "%s}\n", new_indent);
+		}
+	}
+
+	OBJECT_PRINT_END();
 }
 
 // PointSpriteMode
@@ -2348,7 +2389,23 @@ int point_sprite_mode_object::load(Stream& strm, int version)
 }
 void point_sprite_mode_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("PointSpriteMode");
 	object3d_object::print(out, indent, version);
+
+	print_value(out, new_indent, "pointFadeThreshold",
+		point_fade_threshold);
+	print_value(out, new_indent, "pointAttenuationA",
+		point_attenuation_a);
+	print_value(out, new_indent, "pointAttenuationB",
+		point_attenuation_b);
+	print_value(out, new_indent, "pointAttenuationC",
+		point_attenuation_c);
+	print_value(out, new_indent, "pointSizeClampMin",
+		point_size_clamp_min);
+	print_value(out, new_indent, "pointSizeClampMax",
+		point_size_clamp_max);
+
+	OBJECT_PRINT_END();
 }
 
 // RenderPass
@@ -2375,7 +2432,27 @@ int render_pass_object::load(Stream& strm, int version)
 }
 void render_pass_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("RenderPass");
 	object3d_object::print(out, indent, version);
+
+	print_value_oi(out, new_indent, "scene", scene);
+	print_value_oi(out, new_indent, "camera", camera);
+	print_value_oi(out, new_indent, "background", background);
+	print_value_oi(out, new_indent, "target", target);
+	print_value(out, new_indent, "flags", flags);
+	print_value(out, new_indent, "depthRangeNear", depth_range_near);
+	print_value(out, new_indent, "depthRangeFar", depth_range_far);
+	print_value(out, new_indent, "isViewportSet", is_viewport_set);
+	if (is_viewport_set)
+	{
+		print_value(out, new_indent, "viewportX", viewport_x);
+		print_value(out, new_indent, "viewportY", viewport_y);
+		print_value(out, new_indent, "viewportWidth", viewport_width);
+		print_value(out, new_indent, "viewportHeight",
+			viewport_height);
+	}
+
+	OBJECT_PRINT_END();
 }
 
 // RenderTarget
@@ -2390,7 +2467,14 @@ int render_target_object::load(Stream& strm, int version)
 }
 void render_target_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("RenderTarget");
 	object3d_object::print(out, indent, version);
+
+	print_value_oi(out, new_indent, "target", target);
+	print_value(out, new_indent, "targetLevel", target_level);
+	print_value(out, new_indent, "targetFace", target_face);
+
+	OBJECT_PRINT_END();
 }
 
 // ShaderAppearance
@@ -2405,7 +2489,14 @@ int shader_appearance_object::load(Stream& strm, int version)
 }
 void shader_appearance_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("ShaderAppearance");
 	appearance_base_object::print(out, indent, version);
+
+	print_value_oi(out, new_indent, "shaderProgram", shader_program);
+	print_varray_oi(out, new_indent, "shaderUniforms", shader_uniforms);
+	print_value(out, new_indent, "isValidateEnabled", is_validate_enabled);
+
+	OBJECT_PRINT_END();
 }
 
 // ShaderProgram
@@ -2419,7 +2510,13 @@ int shader_program_object::load(Stream& strm, int version)
 }
 void shader_program_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("ShaderProgram");
 	object3d_object::print(out, indent, version);
+
+	print_value_oi(out, new_indent, "fragmentShader", fragment_shader);
+	print_value_oi(out, new_indent, "vertexShader", vertex_shader);
+
+	OBJECT_PRINT_END();
 }
 
 // ShaderUniforms
@@ -2506,7 +2603,7 @@ int shader_uniforms_object::load(Stream& strm, int version)
 
 			UInt32 track_count;
 			size += strm.read(&track_count);
-			for (int j = 0; j < size; ++j)
+			for (int j = 0; j < track_count; ++j)
 			{
 				uniform_s::track_s t;
 				size += strm.read(&t.animation_track);
@@ -2517,7 +2614,7 @@ int shader_uniforms_object::load(Stream& strm, int version)
 		else if (u.binding_type == 1)
 		{
 			ForwardIndex i;
-			size += strm.read_varray(&u.node_from);
+			size += strm.read_array(&u.node_from, u.length);
 			size += strm.read(&i);
 			u.node_to.push_back(i);
 		}
@@ -2525,12 +2622,12 @@ int shader_uniforms_object::load(Stream& strm, int version)
 		{
 			ForwardIndex i;
 			size += strm.read(&i);
-			size += strm.read_varray(&u.node_to);
+			size += strm.read_array(&u.node_to, u.length);
 			u.node_from.push_back(i);
 		}
 		else if (u.binding_type == 3)
 		{
-			size += strm.read_varray(&u.source);
+			size += strm.read_array(&u.source, u.length);
 			size += strm.read(&u.property);
 		}
 		uniforms.push_back(u);
@@ -2539,7 +2636,138 @@ int shader_uniforms_object::load(Stream& strm, int version)
 }
 void shader_uniforms_object::print(FILE* out, char const *indent, int version)
 {
+	UInt32 count = uniforms.size();
+	OBJECT_PRINT_START("ShaderUniforms");
 	object3d_object::print(out, indent, version);
+
+	print_value(out, new_indent, "uniformCount", count);
+	for (unsigned int i = 0; i < count; ++i)
+	{
+		char ni[255];
+		strcpy(ni, new_indent);
+		strcat(ni, "\t");
+		uniform_s& u = uniforms[i];
+
+		fprintf(out, "%suniform %d\n%s{\n", new_indent, i, new_indent);
+		print_value(out, ni, "name", u.name);
+		print_value(out, ni, "type", u.type);
+		print_value(out, ni, "bindingType", u.binding_type);
+		print_value(out, ni, "length", u.length);
+
+		if (u.binding_type == 0)
+		{
+			if (u.type == SHADERVARIABLE_BOOL)
+				print_array(out, ni, "value",
+					&u.value._bool.front(), u.length, 0);
+			else if (u.type == SHADERVARIABLE_BVEC2)
+				print_array(out, ni, "value",
+					&u.value._bool.front(),
+					2 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_BVEC3)
+				print_array(out, ni, "value",
+					&u.value._bool.front(),
+					3 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_BVEC4)
+				print_array(out, ni, "value",
+					&u.value._bool.front(),
+					4 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_INT)
+				print_array(out, ni, "value",
+					&u.value._i32.front(),
+					u.length, 0);
+			else if (u.type == SHADERVARIABLE_IVEC2)
+				print_array(out, ni, "value",
+					&u.value._i32.front(),
+					2 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_IVEC3)
+				print_array(out, ni, "value",
+					&u.value._i32.front(),
+					3 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_IVEC4)
+				print_array(out, ni, "value",
+					&u.value._i32.front(),
+					4 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_FLOAT)
+				print_array(out, ni, "value",
+					&u.value._float32.front(),
+					u.length, 0);
+			else if (u.type == SHADERVARIABLE_VEC2)
+				print_array(out, ni, "value",
+					&u.value._float32.front(),
+					2 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_VEC3)
+				print_array(out, ni, "value",
+					&u.value._float32.front(),
+					3 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_VEC4)
+				print_array(out, ni, "value",
+					&u.value._float32.front(),
+					4 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_MAT2)
+				print_array(out, ni, "value",
+					&u.value._float32.front(),
+					4 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_MAT3)
+				print_array(out, ni, "value",
+					&u.value._float32.front(),
+					9 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_MAT3X4)
+				print_array(out, ni, "value",
+					&u.value._float32.front(),
+					12 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_MAT4)
+				print_array(out, ni, "value",
+					&u.value._float32.front(),
+					16 * u.length, 0);
+			else if (u.type == SHADERVARIABLE_SAMPLER_2D)
+				print_array_oi(out, ni, "value",
+					&u.value._index.front(),
+					u.length, 0);
+			else if (u.type == SHADERVARIABLE_SAMPLER_CUBE)
+				print_array_oi(out, ni, "value",
+					&u.value._index.front(),
+					u.length, 0);
+
+			UInt32 track_count = u.tracks.size();
+			print_value(out, ni, "trackCount", track_count);
+			for (int j = 0; j < track_count; ++j)
+			{
+				char nii[255];
+				strcpy(nii, ni);
+				strcat(nii, "\t");
+				uniform_s::track_s &t = u.tracks[j];
+				fprintf(out, "%strack %d\n%s{\n", ni, j, ni);
+				print_value_oi(out, nii, "animationTrack",
+					t.animation_track);
+				print_value(out, nii, "channelIndex",
+					t.channel_index);
+				fprintf(out, "%s}\n", ni);
+			}
+		}
+		else if (u.binding_type == 1)
+		{
+			print_array_fi(out, ni, "nodeFrom",
+				&u.node_from.front(), u.length, 0);
+			print_value_fi(out, ni, "nodeTo",
+				u.node_to[0]);
+		}
+		else if (u.binding_type == 2)
+		{
+			print_value_fi(out, ni, "nodeFrom",
+				u.node_from[0]);
+			print_array_fi(out, ni, "nodeTo",
+				&u.node_to.front(), u.length, 0);
+		}
+		else if (u.binding_type == 3)
+		{
+			print_array_fi(out, ni, "source",
+				&u.source.front(), u.length, 0);
+			print_value(out, ni, "property", u.property);
+		}
+		fprintf(out, "%s}\n", new_indent);
+	}
+
+	OBJECT_PRINT_END();
 }
 
 // Stencil
@@ -2565,7 +2793,39 @@ int stencil_object::load(Stream& strm, int version)
 }
 void stencil_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("Stencil");
 	object3d_object::print(out, indent, version);
+
+	print_value(out, new_indent, "stencilFuncFront",
+		stencil_func_front);
+	print_value(out, new_indent, "stencilRefFront",
+		stencil_ref_front);
+	print_value(out, new_indent, "stencilMaskFront",
+		stencil_mask_front);
+	print_value(out, new_indent, "stencilWriteMaskFront",
+		stencil_write_mask_front);
+	print_value(out, new_indent, "stencilFailOpFront",
+		stencil_fail_op_front);
+	print_value(out, new_indent, "stencilPassDepthFailOpFront",
+		stencil_pass_depth_fail_op_front);
+	print_value(out, new_indent, "stencilPassDepthPassOpFront",
+		stencil_pass_depth_pass_op_front);
+	print_value(out, new_indent, "stencilFuncBack",
+		stencil_func_back);
+	print_value(out, new_indent, "stencilRefBack",
+		stencil_ref_back);
+	print_value(out, new_indent, "stencilMaskBack",
+		stencil_mask_back);
+	print_value(out, new_indent, "stencilWriteMaskBack",
+		stencil_write_mask_back);
+	print_value(out, new_indent, "stencilFailOpBack",
+		stencil_fail_op_back);
+	print_value(out, new_indent, "stencilPassDepthFailOpBack",
+		stencil_pass_depth_fail_op_back);
+	print_value(out, new_indent, "stencilPassDepthPassOpBack",
+		stencil_pass_depth_pass_op_back);
+
+	OBJECT_PRINT_END();
 }
 
 // TextureCombiner
@@ -2598,7 +2858,32 @@ int texture_combiner_object::load(Stream& strm, int version)
 }
 void texture_combiner_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("TextureCombiner");
 	object3d_object::print(out, indent, version);
+
+	print_value(out, new_indent, "colorFunction", color_function);
+	print_value(out, new_indent, "colorScale", color_scale);
+	print_value(out, new_indent, "colorSource0", color_source0);
+	if (color_function != TEXTURECOMBINER_REPLACE)
+	{
+		print_value(out, new_indent, "colorSource1", color_source1);
+		if (color_function == TEXTURECOMBINER_INTERPOLATE)
+			print_value(out, new_indent, "colorSource2",
+				color_source2);
+	}
+
+	print_value(out, new_indent, "alphaFunction", alpha_function);
+	print_value(out, new_indent, "alphaScale", alpha_scale);
+	print_value(out, new_indent, "alphaSource0", alpha_source0);
+	if (alpha_function != TEXTURECOMBINER_REPLACE)
+	{
+		print_value(out, new_indent, "alphaSource1", alpha_source1);
+		if (alpha_function == TEXTURECOMBINER_INTERPOLATE)
+			print_value(out, new_indent, "alphaSource2",
+				alpha_source2);
+	}
+
+	OBJECT_PRINT_END();
 }
 
 // TextureCube
@@ -2610,7 +2895,9 @@ int texture_cube_object::load(Stream& strm, int version)
 }
 void texture_cube_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("TextureCube");
 	texture_object::print(out, indent, version);
+	OBJECT_PRINT_END();
 }
 
 // VertexShader
@@ -2622,6 +2909,8 @@ int vertex_shader_object::load(Stream& strm, int version)
 }
 void vertex_shader_object::print(FILE* out, char const *indent, int version)
 {
+	OBJECT_PRINT_START("VertexShader");
 	shader_object::print(out, indent, version);
+	OBJECT_PRINT_END();
 }
 

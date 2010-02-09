@@ -1131,7 +1131,8 @@ struct shader_uniforms_object : object3d_object
 	{
 		struct union_array
 		{
-			std::vector<Boolean> _bool;
+			/* std::vector<Boolean> _bool; */
+			std::vector<Byte> _bool;
 			std::vector<Int32> _i32;
 			std::vector<Float32> _float32;
 			std::vector<ObjectIndex> _index;

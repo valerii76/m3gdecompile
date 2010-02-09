@@ -308,4 +308,47 @@ inline void print_varray_oi(
 	fprintf(out, "%s};\n", indent);
 }
 
+inline void print_array_fi(
+	FILE *out,
+	char const *indent,
+	char const *name,
+	ForwardIndex *v,
+	int len,
+	int varray = 0)
+{
+	char new_indent[255];
+	strcpy(new_indent, indent);
+	strcat(new_indent, "\t");
+	if (!varray)
+		fprintf(out, "%s%s %s[%d] = {\n", indent, type_props_fi::name,
+			name, len);
+	for (int i = 0; i < len; ++i)
+	{
+		if (i < (len-1))
+			fprintf(out, "%s%s,\n",
+				new_indent, type_props_fi::to_string(v[i]));
+		else
+			fprintf(out, "%s%s\n",
+				new_indent, type_props_fi::to_string(v[i]));
+	}
+	if (!varray)
+		fprintf(out, "%s};\n", indent);
+}
+
+inline void print_varray_fi(
+	FILE *out,
+	char const *indent,
+	char const *name,
+	std::vector<ForwardIndex> &v)
+{
+	char new_indent[255];
+	strcpy(new_indent, indent);
+	strcat(new_indent, "\t");
+	fprintf(out, "%svarray(%s) %s\n%s{\n", indent,
+		type_props_fi::name, name, indent);
+	fprintf(out, "%sUInt32 count = %d;\n", new_indent, v.size());
+	if (v.size())
+		print_array_fi(out, indent, name, &v.front(), v.size(), 1);
+	fprintf(out, "%s};\n", indent);
+}
 #endif//__TYPE_PROPS_H__
